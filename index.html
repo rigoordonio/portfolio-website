@@ -1,0 +1,1421 @@
+<!doctype html><html><head><meta charset=utf8><meta name=viewport content="width=device-width,initial-scale=1,viewport-fit=cover"><style>:root{color-scheme:light;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}html{scroll-padding-top:env(safe-area-inset-top,0px)}body{margin:0;padding:0;font:14px -apple-system,BlinkMacSystemFont,sans-serif;background:#fff;color:#000}img{max-width:100%}[hidden]:not([hidden=until-found i]){display:none!important}</style></head><body>
+<title>Rigo Ordonio</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<script>/* theme before first paint: saved choice, else the system setting */
+(()=>{let t;try{t=localStorage.getItem('theme')}catch(e){}if(t!=='dark'&&t!=='light')t=matchMedia('(prefers-color-scheme: dark)').matches?'dark':'light';document.documentElement.dataset.theme=t})();
+</script>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Schibsted+Grotesk:wght@400;500;600;700;800&family=Geist+Mono:wght@400;500&display=swap">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Cdefs%3E%3CradialGradient id='g' cx='.38' cy='.36' r='.7'%3E%3Cstop offset='0' stop-color='%23ffb627'/%3E%3Cstop offset='1' stop-color='%23ff5a1f'/%3E%3C/radialGradient%3E%3C/defs%3E%3Crect width='64' height='64' rx='14' fill='%23121212'/%3E%3Ccircle cx='32' cy='32' r='15' fill='url(%23g)'/%3E%3C/svg%3E">
+<style>
+/* Layout: gallery-white page, one dark figure whose ember visor reflects live data and follows the cursor.
+   Every section holds one small interactive detail (a "spell"): visor, odometer, loupe, card deck, confetti.
+   Deliberately a single light look, matching the reference. */
+/* Metric-matched fallbacks: text keeps its line breaks while the web fonts load, so nothing jumps (CLS) */
+@font-face{font-family:"Schibsted Fallback";src:local("Arial"),local("Helvetica"),local("Liberation Sans");size-adjust:103.8%;ascent-override:94.1%;descent-override:24.9%;line-gap-override:0%}
+@font-face{font-family:"Geist Mono Fallback";src:local("Courier New"),local("Menlo"),local("Liberation Mono");size-adjust:100%;ascent-override:100.5%;descent-override:29.5%;line-gap-override:0%}
+:root{
+  --paper:#f7f7f5;   /* page */
+  --card:#ffffff;    /* raised surface */
+  --ink:#121212;     /* text, figure */
+  --ink-2:#5c5c58;   /* secondary text */
+  --rule:#e4e3df;    /* hairlines */
+  --ember:#ff5a1f;   /* visor hot */
+  --gold:#ffb627;    /* visor warm */
+  --ember-ink:#c2410c; /* ember for small text and icons: 4.8:1 on paper */
+  --sans:"Schibsted Grotesk","Schibsted Fallback",ui-sans-serif,system-ui,-apple-system,"Segoe UI",sans-serif;
+  --mono:"Geist Mono","Geist Mono Fallback",ui-monospace,SFMono-Regular,Menlo,monospace;
+  --gut-l:max(16px,env(safe-area-inset-left,0px));
+  --gut-r:max(16px,env(safe-area-inset-right,0px));
+  --ease:cubic-bezier(.2,.8,.2,1);
+  --glow:transparent;  /* night: light the elements emit */
+  --veil:#ffffff;      /* loupe fill */
+  --band:rgba(255,90,31,.12);
+  color-scheme:light;
+}
+/* night mode: the same design after dark; surfaces emit light instead of casting shadows */
+[data-theme="dark"]{
+  --paper:#0a0c11;
+  --card:#11141b;
+  --ink:#eceae4;
+  --ink-2:#a3a9b4;
+  --rule:#232835;
+  --ember:#34d399;
+  --gold:#a3e635;
+  --ember-ink:#86efac;
+  --glow:rgba(52,211,153,.14);
+  --veil:#11141b;
+  --band:rgba(52,211,153,.14);
+  color-scheme:dark;
+}
+
+*{box-sizing:border-box}
+html{scroll-behavior:smooth}
+body{background:var(--paper);color:var(--ink);font-family:var(--sans);font-size:17px;line-height:1.6;overflow-x:hidden;-webkit-font-smoothing:antialiased}
+body::before{content:"";position:fixed;inset:0 0 auto;height:env(safe-area-inset-top,0px);z-index:10;background:var(--paper)}
+a{color:inherit}
+:focus-visible{outline:2px solid var(--ember);outline-offset:3px;border-radius:6px}
+p{margin:0}
+p,li{text-wrap:pretty}
+h1,h2,h3{margin:0;font-weight:700;letter-spacing:-.035em;line-height:1;text-wrap:balance}
+h2{font-size:clamp(36px,5.6vw,68px)}
+h3{font-size:21px;font-weight:600;letter-spacing:-.015em;line-height:1.25}
+.wrap{max-width:1160px;margin:0 auto;padding-left:var(--gut-l);padding-right:var(--gut-r)}
+.label{font-family:var(--mono);font-size:12px;font-weight:400;line-height:1.6;letter-spacing:.08em;text-transform:uppercase;color:var(--ink-2)}
+.sec{padding-block:clamp(88px,12vw,160px)}
+.ember{background:linear-gradient(90deg,var(--ember),var(--gold));-webkit-background-clip:text;background-clip:text;color:transparent}
+.muted{color:var(--ink-2)}
+
+/* nav */
+.skip{position:fixed;left:var(--gut-l);top:calc(env(safe-area-inset-top,0px) + 12px);z-index:200;padding:12px 18px;border-radius:999px;background:var(--ink);color:var(--paper);font-weight:600;text-decoration:none;transform:translateY(-200%);transition:transform .2s ease-out}
+.skip:focus{transform:none}
+.progress{position:fixed;top:env(safe-area-inset-top,0px);left:0;right:0;height:2px;z-index:30;background:var(--ink);transform-origin:0 50%;transform:scaleX(0)}
+.nav{position:fixed;top:env(safe-area-inset-top,0px);left:0;right:0;z-index:20;padding-top:14px}
+.nav::before{content:"";position:absolute;inset:0 0 -24px;background:linear-gradient(var(--paper) 55%,transparent);pointer-events:none;z-index:-1}
+.nav .wrap{display:flex;align-items:center;justify-content:space-between;gap:16px}
+.brand{display:inline-flex;align-items:center;gap:10px;min-height:44px;text-decoration:none;font-weight:700;letter-spacing:-.02em}
+.brand i{width:12px;height:12px;border-radius:50%;background:radial-gradient(circle at 35% 35%,var(--gold),var(--ember));box-shadow:0 0 12px var(--ember)}
+.nav-pill{display:flex;gap:2px;padding:5px;border-radius:999px;background:color-mix(in srgb,var(--card) 78%,transparent);border:1px solid var(--rule);backdrop-filter:blur(16px);-webkit-backdrop-filter:blur(16px)}
+.nav-pill a{font-size:14px;text-decoration:none;color:var(--ink-2);min-height:44px;padding:0 16px;display:inline-flex;align-items:center;border-radius:999px;transition:color .2s ease-out,background .2s ease-out;font-variant-numeric:tabular-nums}
+.nav-pill a:hover{color:var(--ink)}
+.nav-pill a[aria-current="true"]{color:var(--paper);background:var(--ink)}
+.menu-btn{display:none;min-height:44px;padding:0 16px;border-radius:999px;border:1px solid var(--rule);background:var(--card);color:var(--ink);font:500 14px var(--sans);cursor:pointer;align-items:center;gap:8px}
+.menu-btn i{display:grid;gap:4px}.menu-btn i::before,.menu-btn i::after{content:"";display:block;width:16px;height:1.5px;background:currentColor;transition:transform .25s ease-out}
+.menu-open .menu-btn i::before{transform:translateY(2.75px) rotate(45deg)}.menu-open .menu-btn i::after{transform:translateY(-2.75px) rotate(-45deg)}
+@media (max-width:760px){
+  .menu-btn{display:inline-flex}
+  .nav-pill{position:fixed;top:calc(env(safe-area-inset-top,0px) + 70px);left:var(--gut-l);right:var(--gut-r);flex-direction:column;border-radius:22px;padding:8px;background:var(--card);box-shadow:0 24px 60px -20px rgba(0,0,0,.25);opacity:0;visibility:hidden;transform:translateY(-8px) scale(.98);pointer-events:none;transition:opacity .22s ease-out,transform .22s ease-out,visibility 0s linear .22s}
+  .nav-pill a{font-size:17px;min-height:52px}
+  .menu-open .nav-pill{opacity:1;visibility:visible;transform:none;pointer-events:auto;transition:opacity .22s ease-out,transform .22s ease-out,visibility 0s}
+}
+
+/* hero */
+.hero{padding-block:112px 40px;overflow:hidden}
+.hero-grid{display:grid;grid-template-columns:minmax(0,1.15fr) minmax(0,1fr);gap:clamp(24px,4vw,56px);align-items:center}
+@media (max-width:860px){.hero-grid{grid-template-columns:1fr}.figure-wrap{order:-1;max-width:340px;justify-self:center;width:100%}}
+.hero h1{font-size:clamp(44px,7vw,92px);font-weight:800;letter-spacing:-.045em;line-height:.96}
+.hero h1 .swap{display:inline-grid;vertical-align:bottom;overflow:hidden;height:1.02em}
+.hero h1 .swap span{grid-area:1/1;transition:transform .7s var(--ease),opacity .7s var(--ease)}
+.hero h1 .swap span:not(.on){transform:translateY(105%);opacity:0}
+.hero h1 .swap span.out{transform:translateY(-105%);opacity:0}
+.hero h1 .swap [data-w]::before{content:attr(data-w)} /* rotating words come from CSS, so the h1 text stays one clean sentence */
+.hero .sub{font-size:clamp(17px,1.5vw,19px);color:var(--ink-2);max-width:52ch;margin-top:28px}
+.ctas{display:flex;flex-wrap:wrap;gap:12px;margin-top:32px}
+.btn{display:inline-flex;align-items:center;gap:10px;min-height:52px;padding:0 24px;border-radius:999px;font:600 15px var(--sans);text-decoration:none;border:1px solid var(--ink);color:var(--ink);background:transparent;cursor:pointer;transition:transform .35s var(--ease),background .25s,color .25s}
+.btn.solid{background:var(--ink);color:var(--paper)}
+.btn:hover{transform:translateY(-2px)}
+.btn .arr{display:inline-block;transition:transform .3s var(--ease)}
+.btn:hover .arr{transform:translateX(4px)}
+.btn[aria-busy="true"]{opacity:.6;pointer-events:none}
+.stats{display:flex;flex-wrap:wrap;gap:12px 40px;margin-top:44px;padding-top:24px;border-top:1px solid var(--rule)}
+.stats div{display:grid;gap:2px}
+.stats b{font-size:clamp(26px,3vw,36px);font-weight:700;letter-spacing:-.03em;line-height:1.1}
+@media (max-width:560px){.stats{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:12px 16px}.stats b{font-size:24px}.stats span{font-size:12.5px}}
+.stats span{font-size:13.5px;color:var(--ink-2);max-width:20ch;line-height:1.35}
+
+.figure-wrap{position:relative;aspect-ratio:5/6;max-width:100%}
+#figure{width:100%;height:100%;display:block;overflow:visible}
+.fig-cap{position:absolute;left:0;right:0;bottom:-6px;text-align:center}
+.status-chip{display:inline-flex;align-items:center;gap:8px;font-family:var(--mono);font-size:12px;padding:8px 14px;border-radius:999px;background:var(--card);border:1px solid var(--rule);box-shadow:0 8px 24px -12px rgba(0,0,0,.18)}
+.status-chip i{width:7px;height:7px;border-radius:50%;background:#1fa463;box-shadow:0 0 0 0 rgba(31,164,99,.5);animation:ping 2s ease-out infinite}
+@keyframes ping{70%{box-shadow:0 0 0 8px rgba(31,164,99,0)}100%{box-shadow:0 0 0 0 rgba(31,164,99,0)}}
+
+/* ticker */
+.ticker{border-block:1px solid var(--rule);overflow:hidden;padding-block:18px;-webkit-mask:linear-gradient(90deg,transparent,#000 10%,#000 90%,transparent);mask:linear-gradient(90deg,transparent,#000 10%,#000 90%,transparent)}
+.ticker .track{display:flex;gap:40px;width:max-content;animation:slide 44s linear infinite}
+.ticker:hover .track{animation-play-state:paused}
+.ticker span{font-size:clamp(18px,2.2vw,24px);font-weight:500;letter-spacing:-.02em;white-space:nowrap;display:flex;align-items:center;gap:40px;color:var(--ink-2)}
+.ticker span::after{content:"";width:6px;height:6px;border-radius:50%;background:var(--ember)}
+@keyframes slide{to{transform:translateX(-50%)}}
+
+/* reveal */
+/* motion: fade-up replaced by the scan-line wipe in style#motion */
+
+/* about */
+.about{display:grid;grid-template-columns:minmax(0,.8fr) minmax(0,1.4fr);gap:clamp(32px,6vw,96px)}
+@media (max-width:860px){.about{grid-template-columns:1fr}}
+.lead{font-size:clamp(24px,2.8vw,36px);font-weight:500;letter-spacing:-.025em;line-height:1.25}
+.lead mark{background:none;color:var(--ink);background-image:linear-gradient(90deg,color-mix(in srgb,var(--gold) 55%,transparent),color-mix(in srgb,var(--ember) 35%,transparent));background-repeat:no-repeat;background-size:0% 38%;background-position:0 88%;transition:background-size 1.2s var(--ease)}
+.lead mark.on{background-size:100% 38%}
+.steps{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px;margin-top:40px}
+@media (max-width:560px){.steps{grid-template-columns:1fr}}
+.step{background:var(--card);border:1px solid var(--rule);border-radius:18px;padding:20px;display:grid;gap:8px}
+.step .label{color:var(--ember-ink)}
+.step p{font-size:15.5px;color:var(--ink-2)}
+.step p b{color:var(--ink);font-weight:600}
+/* small round photo badge (sized by transform only, so scrolling never shifts the layout): spinning gradient ring, photo bobs gently inside */
+.ava-logo{--p:0;position:relative;display:block;width:180px;height:180px;transform:scale(calc(.49 + .51 * var(--p)));transform-origin:0 100%;border-radius:50%;margin:0 0 20px;isolation:isolate}.ava-logo::before{content:"";position:absolute;inset:0;border-radius:50%;background:conic-gradient(#ff5a1f,#ffb547,#ffd9b0,#ff5a1f);animation:ava-spin 6s linear infinite;z-index:-1}.ava-logo::after{content:"";position:absolute;inset:-6px;border-radius:50%;background:conic-gradient(#ff5a1f,#ffb547,#ffd9b0,#ff5a1f);filter:blur(12px);opacity:.45;animation:ava-spin 6s linear infinite;z-index:-2}.ava-in{position:absolute;inset:3px;border-radius:50%;overflow:hidden;background:radial-gradient(circle at 50% 35%,color-mix(in srgb,#f1efe9 70%,#888),#f1efe9)}.ava-img{position:absolute;left:50%;top:6px;width:150%;max-width:none;height:auto;transform:translateX(-46%);animation:ava-bob 4s ease-in-out infinite}@keyframes ava-spin{to{transform:rotate(360deg)}}@keyframes ava-bob{50%{transform:translateX(-46%) translateY(-3px) scale(1.03)}}@media (prefers-reduced-motion:reduce){.ava-logo::before,.ava-logo::after,.ava-img{animation:none}}
+
+.facts{display:grid;gap:0;border-top:1px solid var(--rule);align-self:start}
+.facts div{display:flex;justify-content:space-between;gap:16px;padding-block:14px;border-bottom:1px solid var(--rule);font-size:15px}
+.facts span{color:var(--ink-2)}
+.facts b{font-weight:500;text-align:right}
+
+/* experience with odometer */
+.exp{display:grid;grid-template-columns:minmax(0,.7fr) minmax(0,1.5fr);gap:clamp(24px,5vw,80px);margin-top:56px}
+.odo-col{position:sticky;top:120px;align-self:start;display:grid;gap:14px}
+/* phones: one column, so the sticky year can't follow the roles; each card already shows its dates */
+@media (max-width:860px){.exp{grid-template-columns:1fr}.odo-col{display:none}}
+.odo{display:flex;font-size:clamp(80px,11vw,150px);font-weight:800;letter-spacing:-.06em;line-height:1.1;height:1.1em;overflow:hidden;font-variant-numeric:tabular-nums}
+.odo .dg{display:block;height:1.1em;overflow:hidden}
+.odo .dg span{display:flex;flex-direction:column;transition:transform 1s var(--ease)}
+.odo .dg span i{font-style:normal;height:1.1em;display:block}
+.odo-co{font-size:20px;font-weight:600;letter-spacing:-.02em;min-height:1.4em}
+.roles{display:grid;gap:14px}
+.role{background:var(--card);border:1px solid var(--rule);border-radius:20px;padding:24px 26px;display:grid;gap:10px;transition:border-color .4s,box-shadow .4s}
+.role.active{border-color:var(--ink);box-shadow:0 18px 40px -26px rgba(0,0,0,.35)}
+.role-top{display:flex;flex-wrap:wrap;justify-content:space-between;gap:6px 18px;align-items:baseline}
+.role-top .co{color:var(--ink-2);font-weight:500}
+@media (max-width:560px){.role-top .sep{display:none}.role-top .co{display:block;font-size:16px;margin-top:4px}}
+.role time{font-family:var(--mono);font-size:12.5px;color:var(--ink-2);font-variant-numeric:tabular-nums}
+.role .tag{font-family:var(--mono);font-size:12px;letter-spacing:.06em;text-transform:uppercase;color:var(--ink-2)}
+.role p{color:var(--ink-2)}
+.role > p,.role ul{max-width:68ch}
+.role ul{margin:0;padding-left:18px;color:var(--ink-2);display:grid;gap:6px;font-size:15.5px}
+.role details summary{cursor:pointer;min-height:44px;display:inline-flex;align-items:center;gap:8px;font-size:14px;font-weight:600;list-style:none}
+.role details summary::-webkit-details-marker{display:none}
+.role details summary::after{content:"";width:8px;height:8px;border-right:1.5px solid currentColor;border-bottom:1.5px solid currentColor;transform:rotate(45deg) translateY(-3px);transition:transform .3s var(--ease)}
+.role details[open] summary::after{transform:rotate(225deg) translate(-2px,-1px)}
+.tools{display:flex;flex-wrap:wrap;gap:6px}
+.tools span{font-family:var(--mono);font-size:12px;padding:4px 10px;border-radius:999px;background:var(--paper);border:1px solid var(--rule);color:var(--ink-2)}
+
+/* services + loupe chart */
+.svc-top{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1.2fr);gap:clamp(24px,5vw,72px);align-items:center}
+@media (max-width:860px){.svc-top{grid-template-columns:1fr}}
+.chart-card{background:var(--card);border:1px solid var(--rule);border-radius:24px;padding:20px 20px 14px;display:grid;gap:10px;min-width:0}
+.chart-head{display:flex;justify-content:space-between;gap:12px;flex-wrap:wrap;align-items:baseline}
+.chart-head b{font-weight:600;font-size:15px}
+.legend{display:flex;gap:14px;font-size:12.5px;color:var(--ink-2);flex-wrap:wrap}
+.legend i{display:inline-block;width:14px;height:2px;vertical-align:middle;margin-right:6px;background:var(--ink)}
+.legend i.f{background:var(--ember)}
+.legend i.b{height:8px;background:color-mix(in srgb,var(--ember) 18%,transparent)}
+.chart-box{position:relative;aspect-ratio:16/9;max-width:100%;cursor:none;touch-action:pan-y}
+#chart{width:100%;height:100%;display:block}
+.chart-note{font-size:12.5px;color:var(--ink-2);display:flex;justify-content:space-between;gap:12px;flex-wrap:wrap}
+.chart-note output{font-family:var(--mono);color:var(--ink);font-variant-numeric:tabular-nums}
+/* services accordion: rows split by 1px rules, no boxes; accent only on the + and on links */
+.acc{margin-top:64px;border-top:1px solid var(--ink)}
+.acc-item{border-bottom:1px solid var(--rule);scroll-margin-top:100px;transition:opacity .4s var(--acc-ease) calc(var(--i,0) * 40ms),transform .4s var(--acc-ease) calc(var(--i,0) * 40ms)}
+.js .acc.pre-in .acc-item{opacity:0;transform:translateY(8px)}
+.acc-h{font:inherit;letter-spacing:normal;line-height:inherit}
+.acc-btn{width:100%;min-height:44px;display:flex;align-items:center;justify-content:space-between;gap:16px;padding:26px 0;border:0;background:none;color:#4a4a47;font:600 clamp(22px,2.4vw,28px)/1.2 var(--sans);letter-spacing:-.02em;text-align:left;cursor:pointer;transition:color .2s ease-out}
+@media (hover:hover){.acc-btn:hover{color:var(--ink)}}
+.acc-meta{display:flex;align-items:center;gap:18px;flex:none}
+.acc-count{font:400 13px/1 var(--mono);color:var(--ink-2)}
+.acc-icon{position:relative;width:16px;height:16px;color:var(--ember-ink);transition:transform .3s var(--acc-ease)}
+.acc-icon::before,.acc-icon::after{content:"";position:absolute;left:0;top:50%;width:100%;height:1.5px;margin-top:-.75px;background:currentColor}
+.acc-icon::after{transform:rotate(90deg)}
+/* without scripts every service is listed open, so the rows show no toggle */
+html:not(.js) .acc-icon{display:none}
+html:not(.js) .acc-btn{cursor:default;color:var(--ink)}
+.acc-panel{display:grid;grid-template-rows:1fr}
+.js .acc-panel{display:none}
+.acc-inner{min-height:0;overflow:hidden;margin-inline:-6px;padding-inline:6px} /* side padding keeps focus rings inside the clip */
+.acc-list{list-style:none;margin:0;padding:4px 0 32px;display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,250px),1fr));gap:26px 40px}
+.acc-list li{display:grid;gap:6px;align-content:start}
+.acc-org{font:400 12px/1.5 var(--mono);letter-spacing:.06em;text-transform:uppercase;color:var(--ink-2)}
+.acc-title{font-weight:600}
+.acc-title a{display:inline-block;padding-block:12px;margin-block:-12px;color:inherit;text-decoration:underline;text-decoration-color:var(--ember);text-decoration-thickness:1px;text-underline-offset:4px;transition:color .2s ease-out}
+.acc-title a:hover{color:var(--ember-ink)}
+.acc-out{color:var(--ink-2);font-size:15.5px}
+/* services: rows lift into a detail card (svc-detail) that plays the service's spell */
+.acc-lead{display:flex;align-items:center;gap:16px;min-width:0}
+.svc-ico{flex:none;width:32px;height:24px;overflow:visible;fill:none;stroke:currentColor;stroke-width:1.5;stroke-linecap:square;--sp-bg:var(--paper)}
+.svc-ico .a{stroke:var(--ember)}.svc-ico .dot{fill:currentColor;stroke:none}.svc-ico .a.dot,.svc-ico .caret{fill:var(--ember);stroke:none}
+.svc-ico .band{fill:rgba(255,90,31,.12);stroke:none}.svc-ico .dash{stroke-dasharray:2 2}.svc-ico .node{fill:var(--sp-bg)}.svc-ico .link{stroke-width:1}
+.svc-ico .hv{transform-box:fill-box;transform-origin:50% 100%}
+@media (hover:hover){
+  .acc-btn:hover .svc-ico[data-spell=bars] .hv{animation:sp-twitch .55s var(--m-ease)}
+  .acc-btn:hover .svc-ico[data-spell=line] .dash{animation:sp-flow .55s var(--m-ease)}
+  .acc-btn:hover .svc-ico[data-spell=line] .band{animation:sp-glow .55s var(--m-ease)}
+  .acc-btn:hover .svc-ico[data-spell=pipeline] .dot{animation:sp-nudge .55s var(--m-ease)}
+  .acc-btn:hover .svc-ico[data-spell=pipeline] .node.hv{transform-origin:50% 50%;animation:sp-pulse .55s var(--m-ease)}
+  .acc-btn:hover .svc-ico[data-spell=cluster] .hv{animation:sp-drift .55s var(--m-ease)}
+  .acc-btn:hover .svc-ico[data-spell=prompt] .caret{animation:sp-blink .55s steps(1,end)}
+}
+/* each hover is about a fifth of the full spell */
+@keyframes sp-twitch{40%{transform:scaleY(.8)}}
+@keyframes sp-flow{from{stroke-dashoffset:4}}
+@keyframes sp-glow{40%{opacity:.4}}
+@keyframes sp-nudge{40%{transform:translate(2px,2px)}}
+@keyframes sp-pulse{40%{transform:scale(1.25)}}
+@keyframes sp-drift{40%{transform:translate(-1.5px,1px)}}
+@keyframes sp-blink{50%{opacity:0}}
+@media (prefers-reduced-motion:reduce){.svc-ico *{animation:none!important}}
+.acc-item.is-open .acc-lead,.acc-item.is-open .acc-meta{opacity:0}
+#services,.svc-detail{--acc-ease:cubic-bezier(.22,1,.36,1)}
+.svc-detail{position:fixed;inset:0;width:100%;height:100%;max-width:none;max-height:none;margin:0;padding:0;border:0;background:none;color:inherit;overflow:hidden;--acc-ease:cubic-bezier(.22,1,.36,1)}
+.svc-detail::backdrop{background:transparent}
+.svc-scrim{position:absolute;inset:0;background:color-mix(in srgb,var(--paper) 60%,transparent);opacity:0}
+.svc-card{position:absolute;display:flex;flex-direction:column;max-height:calc(100dvh - 32px);--pad:24px}
+.svc-surface{position:absolute;inset:0;transform-origin:0 0;background:var(--card);border-radius:24px;box-shadow:0 30px 60px -36px rgba(0,0,0,.35),0 0 0 1px var(--rule)}
+.svc-head{position:relative;display:flex;align-items:center;justify-content:space-between;gap:16px;padding:26px var(--pad)}
+.svc-lead{display:flex;align-items:center;gap:16px;min-width:0;transform-origin:0 0}
+.svc-dico{display:contents}.svc-dico .svc-ico{--sp-bg:var(--card)}
+.svc-meta{display:flex;align-items:center;gap:18px;flex:none;transform-origin:0 0}
+.svc-title{margin:0;font:600 clamp(22px,2.4vw,28px)/1.2 var(--sans);letter-spacing:-.02em;color:var(--ink)}
+.svc-close{display:grid;place-items:center;width:44px;height:44px;margin:-14px;padding:0;border:0;background:none;color:inherit;cursor:pointer;border-radius:50%}
+.svc-close .acc-icon{transition:none}
+.svc-body{position:relative;overflow:auto;overscroll-behavior:contain;padding:0 var(--pad) 4px;margin-inline:-0px}
+.svc-stage{height:clamp(96px,20vw,150px);margin-bottom:28px}
+.svc-stage[hidden]{display:none}
+.svc-stage svg{display:block;width:100%;height:100%;overflow:visible}
+.svc-list{padding-top:0}
+/* the spells: ink and accent from the page's tokens */
+.spell{--u:1;--sp-bg:var(--card);fill:none;stroke-linecap:square}
+.spell .rule{stroke:var(--rule);stroke-width:calc(1px*var(--u))}
+.spell .bar{fill:var(--rule);transform-box:fill-box;transform-origin:50% 100%}.spell .bar.top{fill:var(--ink)}
+.spell .hi{fill:var(--ember);opacity:0;pointer-events:none}
+.spell .band{fill:rgba(255,90,31,.12)}.spell .fc{stroke:var(--ember);stroke-width:calc(2px*var(--u));stroke-dasharray:calc(5px*var(--u)) calc(4px*var(--u))}
+.spell .veil{fill:var(--sp-bg);transform-box:fill-box;transform-origin:100% 50%;transform:scaleX(0)}
+.spell .hist,.spell .pipe{stroke:var(--ink);stroke-width:calc(2px*var(--u));stroke-dasharray:1;stroke-linejoin:round}
+.spell .join,.spell .core,.spell .packet{fill:var(--ember);transform-box:fill-box;transform-origin:50% 50%}
+.spell .node{fill:var(--sp-bg);stroke:var(--ink);stroke-width:calc(1.5px*var(--u))}
+.spell .ring{stroke:var(--ember);stroke-width:calc(1.5px*var(--u));opacity:0;transform-box:fill-box;transform-origin:50% 50%}
+.spell .link{stroke:var(--ink-2);stroke-width:calc(1px*var(--u));stroke-dasharray:1;opacity:.6}
+.spell .pt{fill:var(--ink)}.spell .pt.acc{fill:var(--ember)}
+.spell .box{stroke:var(--ink);stroke-width:calc(1.5px*var(--u))}
+.spell text{stroke:none;font:500 16px var(--mono)}.spell .q,.spell .chev{fill:var(--ink)}.spell .chev{fill:var(--ember)}
+.spell .mask{fill:var(--sp-bg)}.spell .caret{fill:var(--ember)}
+.spell .ans{fill:var(--ink-2);font:400 17px var(--sans)}
+html.svc-lock{overflow:hidden;scroll-behavior:auto}
+html.svc-lock body,html.svc-lock .nav{padding-right:var(--sb,0px)}
+html.svc-lock :is(.m-cur,.m-ring,.cur,.cur-ring){display:none}
+.acc-tags{color:var(--ink-2);font-size:13.5px}
+
+/* projects */
+.delivered{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:12px;margin-top:48px}
+@media (max-width:860px){.delivered{grid-template-columns:repeat(2,minmax(0,1fr))}}
+@media (max-width:560px){.delivered{grid-template-columns:1fr}}
+.delivered > article{background:var(--card);border:1px solid var(--rule);border-radius:16px;padding:18px 20px;display:grid;gap:4px;align-content:start;min-width:0;scroll-margin-top:100px;transition:transform .35s var(--ease),border-color .3s}
+.delivered > article:hover{transform:translateY(-3px);border-color:var(--ink)}
+.delivered small{font-family:var(--mono);font-size:12px;letter-spacing:.06em;text-transform:uppercase;color:var(--ink-2)}
+.delivered h3{font-size:17px;font-weight:600;letter-spacing:-.01em;line-height:1.35}
+.delivered p{font-size:14.5px;color:var(--ink-2)}
+.deck-wrap{scroll-margin-top:100px;display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1.1fr);gap:clamp(24px,5vw,72px);align-items:center;margin-top:110px}
+@media (max-width:860px){.deck-wrap{grid-template-columns:1fr}}
+.deck{position:relative;height:440px;max-width:460px;width:100%;justify-self:center}
+.pcard{position:absolute;inset:0;background:var(--card);border:1px solid var(--rule);border-radius:26px;padding:28px;display:flex;flex-direction:column;gap:14px;box-shadow:0 30px 60px -36px rgba(0,0,0,.35);transition:transform .7s var(--ease),opacity .5s;will-change:transform}
+.pcard .top{display:flex;justify-content:space-between;gap:10px;font-family:var(--mono);font-size:12px;letter-spacing:.06em;text-transform:uppercase}
+.pcard .top .area{color:var(--ember-ink)}
+.pcard .top .badge{color:var(--ink-2)}
+.pcard h3{font-size:clamp(24px,3vw,30px);font-weight:700;letter-spacing:-.03em;line-height:1.1}
+.pcard p{color:var(--ink-2);font-size:15.5px}
+.pcard .build{margin-top:auto;padding-top:14px;border-top:1px dashed var(--rule);font-size:14px}
+.pcard .build span{color:var(--ink-2)}
+.pcard .spark{height:64px;width:100%}
+.deck-ctrl{display:flex;align-items:center;gap:12px;margin-top:28px;flex-wrap:wrap}
+.round{width:52px;height:52px;border-radius:50%;border:1px solid var(--ink);background:transparent;color:var(--ink);font-size:18px;cursor:pointer;transition:background .2s,color .2s}
+.round:hover{background:var(--ink);color:var(--paper)}
+.count{font-family:var(--mono);font-size:13px;color:var(--ink-2);font-variant-numeric:tabular-nums}
+
+/* skills */
+.skills{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:28px 32px;margin-top:44px}
+@media (max-width:860px){.skills{grid-template-columns:repeat(2,minmax(0,1fr))}}
+@media (max-width:560px){.skills{grid-template-columns:1fr}}
+.skills h3{font-family:var(--mono);font-size:12px;font-weight:500;letter-spacing:.08em;text-transform:uppercase;color:var(--ink-2);margin-bottom:12px}
+.chips{display:flex;flex-wrap:wrap;gap:8px}
+.chips span{font-size:14px;padding:7px 13px;border-radius:999px;background:var(--card);border:1px solid var(--rule);transition:border-color .2s,transform .3s var(--ease)}
+.chips span:hover{border-color:var(--ink);transform:translateY(-2px)}
+
+/* contact */
+.contact{background:var(--ink);color:var(--paper);border-radius:32px;margin-inline:max(8px,env(safe-area-inset-left,0px));overflow:hidden;position:relative}
+.contact .wrap{display:grid;grid-template-columns:minmax(0,1.05fr) minmax(0,1fr);gap:clamp(32px,6vw,80px);position:relative}
+@media (max-width:860px){.contact .wrap{grid-template-columns:1fr}}
+.contact .halo{position:absolute;width:640px;height:640px;right:-200px;top:-220px;border-radius:50%;background:radial-gradient(closest-side,color-mix(in srgb,var(--ember) 55%,transparent),color-mix(in srgb,var(--gold) 15%,transparent) 60%,transparent);filter:blur(20px);opacity:.55;animation:drift 12s ease-in-out infinite alternate;pointer-events:none}
+@keyframes drift{to{transform:translate(-120px,80px) scale(1.1)}}
+.contact h2{font-size:clamp(40px,6vw,80px)}
+.contact .label,.contact .muted{color:#a9a8a2}
+.reach{display:grid;margin-top:32px;border-top:1px solid var(--reach-line,#2b2b29)}
+.reach div{display:flex;justify-content:space-between;align-items:center;gap:12px;padding-block:14px;border-bottom:1px solid var(--reach-line,#2b2b29);flex-wrap:wrap}
+.reach small{font-family:var(--mono);font-size:12px;letter-spacing:.08em;text-transform:uppercase;color:#a9a8a2}
+.reach span{overflow-wrap:anywhere;user-select:all}
+.reach div > span,.reach div > a{margin-left:auto;text-align:right}
+.copy{min-height:44px;padding:0 16px;border-radius:999px;border:1px solid #3a3a37;background:transparent;color:var(--paper);font:500 12.5px var(--mono);cursor:pointer}
+.copy:hover{border-color:var(--gold)}
+form{position:relative;display:grid;gap:14px;background:var(--card);color:var(--ink);border-radius:24px;padding:26px}
+.row2{display:grid;grid-template-columns:1fr 1fr;gap:14px}
+@media (max-width:520px){.row2{grid-template-columns:1fr}}
+label{display:grid;gap:6px;font-size:13.5px;font-weight:500;min-width:0}
+.lbl{display:flex;flex-wrap:wrap;align-items:baseline;gap:4px 6px}
+input,select,textarea{font:inherit;font-size:15px;font-weight:400;color:var(--ink);background:var(--paper);border:1px solid var(--rule);border-radius:12px;padding:12px 14px;width:100%;min-height:46px;transition:border-color .2s}
+input:focus,select:focus,textarea:focus{outline:none;border-color:var(--ink);box-shadow:0 0 0 1px var(--ink)}
+textarea{min-height:110px;resize:vertical}
+.req{color:var(--ember)}
+.hint{font-size:12.5px;font-weight:400;color:var(--ink-2)}
+.err{font-size:13px;font-weight:400;color:#c2410c}
+.err:empty{display:none}
+input[aria-invalid="true"],textarea[aria-invalid="true"]{border-color:#c2410c}
+.form-note{font-size:14px;color:var(--ink-2);min-height:1.4em}
+.form-note.ok{color:#15803d}
+.form-note.bad{color:#c2410c}
+.form-note a{color:var(--ink);text-decoration-color:var(--ember);text-underline-offset:3px}
+.hp{position:absolute;left:-10000px;top:auto;width:1px;height:1px;overflow:hidden} /* honeypot: hidden from people, filled in by bots */
+footer{padding-block:64px 28px;color:var(--ink-2);font-size:14px}
+.foot{display:grid;grid-template-columns:minmax(0,1.4fr) repeat(2,minmax(0,1fr));gap:32px 48px}
+@media (max-width:760px){.foot{grid-template-columns:1fr 1fr}.foot-brand{grid-column:1 / -1}}
+@media (max-width:480px){.foot{grid-template-columns:1fr}}
+.foot-brand{display:grid;gap:8px;align-content:start}
+.foot-brand .brand{color:var(--ink);justify-self:start}
+.foot-h{font-family:var(--mono);font-size:12px;letter-spacing:.08em;text-transform:uppercase;margin-bottom:6px}
+.foot ul{list-style:none;margin:0;padding:0;display:grid}
+.foot ul a{display:inline-flex;align-items:center;min-height:44px;min-width:44px;color:var(--ink);text-decoration:none;transition:color .2s ease-out}
+.foot ul a:hover{color:var(--ember-ink)}
+.foot ul a,.foot-brand p{overflow-wrap:anywhere}
+.foot-base{display:flex;justify-content:space-between;align-items:center;gap:12px;flex-wrap:wrap;margin-top:40px;padding-top:20px;border-top:1px solid var(--rule);font-size:13px}
+.foot-base a{color:var(--ink-2);text-decoration:none;display:inline-flex;align-items:center;min-height:44px}
+.foot-base a:hover{color:var(--ink)}
+.to-top{position:fixed;right:max(16px,calc(env(safe-area-inset-right,0px) + 16px));bottom:calc(env(safe-area-inset-bottom,0px) + 16px);z-index:20;width:48px;height:48px;border-radius:50%;border:1px solid var(--rule);background:var(--card);color:var(--ink);font-size:18px;cursor:pointer;box-shadow:0 10px 30px -14px rgba(0,0,0,.3);opacity:0;transform:translateY(12px);pointer-events:none;transition:opacity .25s ease-out,transform .25s ease-out}
+.to-top.show{opacity:1;transform:none;pointer-events:auto}
+#confetti{position:fixed;inset:0;width:100%;height:100%;pointer-events:none;z-index:150}
+
+@media (prefers-reduced-motion:reduce){
+  *,*::before,*::after{animation:none!important;transition:none!important}
+  .pre{clip-path:none} /* motion */
+  html{scroll-behavior:auto}
+}
+
+/* phones: small labels and secondary text one step larger, so everything reads comfortably at arm's length */
+@media (max-width:560px){
+  .label,.acc-org,.tools span,.role .tag,.role time,.legend,.chart-note,.foot-h,.status-chip,.pcard .top,.count,.copy,.hint,.acc-count,.skills h3{font-size:13px}
+  .acc-tags,.lbl,.foot-base,.chips span,.menu-btn,.role details summary,.pcard .build,.foot ul a,.foot-brand p,.reach small{font-size:15px}
+  .acc-out,.step p,.role ul,.pcard p,.facts div{font-size:16px}
+  .spell .q,.spell .chev{font-size:20px}
+}
+
+@media (max-width:860px),(pointer:coarse){.cur,.cur-ring{display:none!important}}
+
+/* ---- day / night ---- */
+[data-theme="dark"] mark{background:none;color:inherit;text-decoration:underline 2px #34d399;text-underline-offset:5px;text-shadow:0 0 18px rgba(52,211,153,.35)}
+[data-theme="dark"] .ava-logo::before,[data-theme="dark"] .ava-logo::after{background:conic-gradient(#34d399,#a3e635,#6ee7b7,#34d399)}
+[data-theme="dark"] .card,[data-theme="dark"] .step,[data-theme="dark"] .svc,[data-theme="dark"] .role{box-shadow:0 0 0 1px rgba(255,255,255,.04),0 10px 40px -12px var(--glow)}
+.theme-btn{position:relative;display:inline-grid;place-items:center;width:44px;height:44px;margin-left:auto;margin-right:8px;border-radius:50%;border:1px solid var(--rule);background:var(--card);color:var(--ink);cursor:pointer;transition:transform .2s var(--ease),box-shadow .3s}
+.theme-btn:active{transform:scale(.92)}
+.theme-btn:focus-visible{outline:2px solid var(--ember-ink);outline-offset:3px}
+@media (hover:hover){.theme-btn:hover{box-shadow:0 0 0 6px color-mix(in srgb,var(--ember) 18%,transparent)}.theme-btn:hover svg{transform:rotate(-12deg)}}
+.theme-btn svg{width:22px;height:22px;overflow:visible;transition:transform .45s cubic-bezier(.34,1.56,.64,1)}
+.tb-core{fill:currentColor;transition:r .45s cubic-bezier(.34,1.56,.64,1)}
+.tb-cut{transition:transform .45s cubic-bezier(.34,1.56,.64,1)}
+.tb-rays{stroke:currentColor;stroke-width:1.8;stroke-linecap:round;transform-origin:12px 12px;transition:transform .45s cubic-bezier(.34,1.56,.64,1),opacity .3s}
+.tb-stars{fill:currentColor;opacity:0;transform-origin:19px 5px;transform:scale(.3);transition:opacity .3s,transform .45s cubic-bezier(.34,1.56,.64,1)}
+[data-theme="dark"] .tb-core{r:7.5px}
+[data-theme="dark"] .tb-cut{transform:translate(-8px,5px)}
+[data-theme="dark"] .tb-rays{opacity:0;transform:rotate(45deg) scale(.4)}
+[data-theme="dark"] .tb-stars{opacity:1;transform:none;transition-delay:.15s;animation:tb-twinkle 2.4s ease-in-out .6s infinite}
+@keyframes tb-twinkle{50%{opacity:.35}}
+/* the reveal: new theme grows as a circle from the toggle */
+::view-transition-old(root),::view-transition-new(root){animation:none;mix-blend-mode:normal}
+::view-transition-new(root){z-index:2}
+.tx-fx{position:fixed;inset:0;pointer-events:none;z-index:9999;overflow:hidden}
+.tx-ring{position:absolute;border-radius:50%;border:2px solid transparent;background:conic-gradient(from 0deg,var(--r1),var(--r2),var(--r3),var(--r1)) border-box;-webkit-mask:linear-gradient(#000 0 0) padding-box exclude,linear-gradient(#000 0 0);mask:linear-gradient(#000 0 0) padding-box exclude,linear-gradient(#000 0 0);filter:drop-shadow(0 0 8px var(--r1)) drop-shadow(0 0 22px var(--r2));transform:scale(0);will-change:transform,opacity}
+.tx-grid{position:absolute;inset:0;opacity:0;will-change:opacity,clip-path}
+.tx-grid.night{background:linear-gradient(rgba(52,211,153,.07) 1px,transparent 1px) 0 0/44px 44px,linear-gradient(90deg,rgba(52,211,153,.07) 1px,transparent 1px) 0 0/44px 44px}
+.tx-grid.day{background:radial-gradient(circle at var(--x) var(--y),rgba(255,182,39,.28),rgba(255,90,31,.08) 40%,transparent 70%)}
+.tx-scan{position:absolute;left:0;right:0;height:2px;top:0;background:linear-gradient(90deg,transparent,var(--r1),transparent);box-shadow:0 0 16px var(--r1);opacity:0;will-change:transform,opacity}
+.tx-settle{animation:tx-breathe .5s var(--ease) both;animation-delay:var(--sd,0ms)}
+@keyframes tx-breathe{from{opacity:.55}to{opacity:1}}
+.no-vt,.no-vt *{transition:background-color .3s,color .3s,border-color .3s,fill .3s!important}
+/* contact is an inverted block by day; at night it becomes a lit panel (local token swap keeps its inner styles) */
+[data-theme="dark"] .contact{--ink:#0e1117;--paper:#eceae4;--reach-line:#262b37;box-shadow:0 0 0 1px rgba(52,211,153,.14),0 30px 90px -30px rgba(52,211,153,.25)}
+/* at night the silhouette is rim-lit so it reads against the dark page */
+[data-theme="dark"] #bodyg stop:first-child{stop-color:#262d3a}
+[data-theme="dark"] #bodyg stop:last-child{stop-color:#141820}
+[data-theme="dark"] #figure{filter:drop-shadow(0 0 1px rgba(52,211,153,.55)) drop-shadow(0 0 28px rgba(52,211,153,.16))}
+/* night visor: the forecast glows green */
+[data-theme="dark"] #vg stop:nth-child(1){stop-color:#ecfccb}
+[data-theme="dark"] #vg stop:nth-child(2){stop-color:#a3e635}
+[data-theme="dark"] #vg stop:nth-child(3){stop-color:#22c55e}
+[data-theme="dark"] #vg stop:nth-child(4){stop-color:#15803d}
+[data-theme="dark"] #vg stop:nth-child(5){stop-color:#052e16}
+[data-theme="dark"] #glow stop{stop-color:#34d399}
+[data-theme="dark"] .svc-ico .band,[data-theme="dark"] .spell .band{fill:rgba(52,211,153,.14)}
+/* old theme eases back slightly while the new one sweeps in */
+::view-transition-old(root){animation:tx-old 1.1s cubic-bezier(.65,0,.35,1) both}
+@keyframes tx-old{to{filter:brightness(.85)}}
+[data-theme="dark"] .contact form{--ink:#eceae4;--paper:#0a0c11}
+</style>
+
+<a class="skip" href="#main">Skip to content</a>
+<div class="progress" aria-hidden="true"></div>
+<canvas id="confetti" aria-hidden="true"></canvas>
+
+<header class="nav">
+  <div class="wrap">
+    <a class="brand" href="#main" aria-label="Rigo Ordonio, back to top"><i></i>Rigo Ordonio</a>
+    <button class="theme-btn" type="button" aria-pressed="false" aria-label="Switch to night mode"><svg viewBox="0 0 24 24" aria-hidden="true"><mask id="moon-cut"><rect width="24" height="24" fill="#fff"/><circle class="tb-cut" cx="25" cy="3" r="6.5" fill="#000"/></mask><circle class="tb-core" cx="12" cy="12" r="5" mask="url(#moon-cut)"/><g class="tb-rays"><path d="M12 1.8v2.4M12 19.8v2.4M1.8 12h2.4M19.8 12h2.4M4.8 4.8l1.7 1.7M17.5 17.5l1.7 1.7M4.8 19.2l1.7-1.7M17.5 6.5l1.7-1.7"/></g><g class="tb-stars"><circle cx="19.5" cy="4.5" r=".9"/><circle cx="22" cy="9.5" r=".6"/><circle cx="16" cy="2" r=".5"/></g></svg></button>
+    <button class="menu-btn" type="button" aria-expanded="false" aria-controls="site-nav"><i aria-hidden="true"></i>Menu</button>
+    <nav class="nav-pill" id="site-nav" aria-label="Sections">
+      <a href="#about">About</a><a href="#experience">Experience</a><a href="#services">Services</a><a href="#projects">Projects</a><a href="#contact">Contact</a>
+    </nav>
+  </div>
+</header>
+
+<main id="main" tabindex="-1">
+<section class="hero">
+  <div class="wrap hero-grid">
+    <div>
+      <p class="label">Global Business Analyst · Abu Dhabi</p>
+      <h1 style="margin-top:22px">I turn commercial data into <span class="swap" id="swap"><span class="on ember">forecasts</span><span class="ember" data-w="dashboards" aria-hidden="true"></span><span class="ember" data-w="automations" aria-hidden="true"></span><span class="ember" data-w="AI tools" aria-hidden="true"></span></span><br>leaders trust.</h1>
+      <p class="sub">8+ years across oil and gas, oilfield services, electronics manufacturing, FMCG and retail. I build BI, automation and AI tools that connect pipeline, S&amp;OP and FP&amp;A.</p>
+      <div class="ctas">
+        <a class="btn solid" href="#projects">View my work <span class="arr" aria-hidden="true">→</span></a>
+        <a class="btn" href="#contact">Let's talk</a>
+      </div>
+      <div class="stats">
+        <div><b data-count="8" data-suffix="+">8+</b><span>years in analytics and forecasting</span></div>
+        <div><b data-count="4">4</b><span>regions in one executive view</span></div>
+        <div><b data-count="8000" data-suffix="+">8,000+</b><span>SKUs forecast in retail</span></div>
+      </div>
+    </div>
+    <div class="figure-wrap">
+      <svg id="figure" viewBox="0 0 400 480" role="img" aria-label="A dark silhouette wearing a glowing visor that reflects a moving forecast line">
+        <defs>
+          <radialGradient id="vg" cx="0.5" cy="0.45" r="0.75">
+            <stop offset="0" stop-color="#fff3c4"/>
+            <stop offset=".22" stop-color="#ffb627"/>
+            <stop offset=".55" stop-color="#ff5a1f"/>
+            <stop offset=".85" stop-color="#b3200a"/>
+            <stop offset="1" stop-color="#3a0a04"/>
+          </radialGradient>
+          <radialGradient id="glow" cx=".5" cy=".5" r=".5">
+            <stop offset="0" stop-color="#ff7a2f" stop-opacity=".55"/>
+            <stop offset="1" stop-color="#ff7a2f" stop-opacity="0"/>
+          </radialGradient>
+          <linearGradient id="bodyg" x1="0" y1="0" x2="0" y2="1">
+            <stop offset="0" stop-color="#1a1a1a"/><stop offset="1" stop-color="#0c0c0c"/>
+          </linearGradient>
+          <clipPath id="visorClip"><rect x="92" y="128" width="216" height="74" rx="37"/></clipPath>
+        </defs>
+        <ellipse id="halo" cx="200" cy="168" rx="190" ry="120" fill="url(#glow)"/>
+        <g id="body">
+          <path d="M60 480 C66 372 118 330 168 316 L168 286 L232 286 L232 316 C282 330 334 372 340 480 Z" fill="url(#bodyg)"/>
+          <path d="M150 330 C176 352 224 352 250 330 L246 318 C222 334 178 334 154 318 Z" fill="#202020"/>
+        </g>
+        <g id="head">
+          <path d="M200 52 C140 52 108 98 108 158 C108 214 136 262 168 282 C184 292 216 292 232 282 C264 262 292 214 292 158 C292 98 260 52 200 52 Z" fill="#141414"/>
+          <path d="M120 120 C130 78 168 60 200 60 C236 60 270 80 280 120 C262 96 236 86 200 86 C164 86 138 96 120 120 Z" fill="#232323"/>
+          <rect x="84" y="152" width="18" height="22" rx="6" fill="#0c0c0c"/><rect x="298" y="152" width="18" height="22" rx="6" fill="#0c0c0c"/>
+          <g id="visor">
+            <rect x="86" y="122" width="228" height="86" rx="43" fill="#0b0b0b"/>
+            <rect x="92" y="128" width="216" height="74" rx="37" fill="url(#vg)"/>
+            <g clip-path="url(#visorClip)">
+              <polyline id="refl" fill="none" stroke="#fff6dc" stroke-opacity=".55" stroke-width="2" points=""/>
+              <polyline id="refl2" fill="none" stroke="#fff6dc" stroke-opacity=".22" stroke-width="1.2" stroke-dasharray="3 4" points=""/>
+              <ellipse id="glint" cx="150" cy="146" rx="46" ry="9" fill="#fff" opacity=".45" transform="rotate(-8 150 146)"/>
+            </g>
+          </g>
+        </g>
+      </svg>
+      <div class="fig-cap"><span class="status-chip"><i></i>Open to roles and projects</span></div>
+    </div>
+  </div>
+</section>
+
+<div class="ticker" role="group" aria-label="Industries">
+  <div class="track">
+    <span>Oil &amp; Gas</span><span>Oilfield Services</span><span>Electronics Manufacturing</span><span>FMCG</span><span>Retail &amp; E-commerce</span><span>S&amp;OP</span><span>FP&amp;A</span>
+    <span aria-hidden="true">Oil &amp; Gas</span><span aria-hidden="true">Oilfield Services</span><span aria-hidden="true">Electronics Manufacturing</span><span aria-hidden="true">FMCG</span><span aria-hidden="true">Retail &amp; E-commerce</span><span aria-hidden="true">S&amp;OP</span><span aria-hidden="true">FP&amp;A</span>
+  </div>
+</div>
+
+<section class="sec" id="about">
+  <div class="wrap about">
+    <div class="facts rv">
+      <h2 class="label" style="padding-bottom:16px">About</h2>
+      <span class="ava-logo" role="img" aria-label="Rigo Ordonio"><span class="ava-in"><img class="ava-img" src="data:image/webp;base64,UklGRkRVAABXRUJQVlA4WAoAAAAQAAAAlQEAfwIAQUxQSEULAAABsIf/27G32Rk8jd2UW5p6qm13SN13K6ZiLKautm0zNWdvdeeawZQaMdvwOf+ok+c+r/NXvI2ICSCxlwwNHcY3HBUaWpJAWKpZPN9yYrNmhVWtep/rK9yWb5/f+PY/66NoVSL5+gOhtzH7K76z4VrmveNvvvGJ4Ju13rFjJ9/xXVPVy2azhcec41u88IfNZrPtiYlJ4ruaFxMTE+qqVd4hITUyMzP5djMzMzM5X2b/E+KrUU2bbuUC/1WgPn3IDnHbO2/qUs/57DAXzmurRaW3b09nRxq7fbuv4jjZbEX+veFFdrxn9zgrzeOPz87MzGQHvuPxQvpSsUl7tsBZTZSlxFtRbJEDVWXuTrbOkYryDVvqj28oifN3bLEZ3V01xPMLttzca9X1w2c9W7G9lna8Gc7WnNFSNQYsZcuOe14vuv1gZwu/1Fwr2qaytSf8XVwlWuWw5ScVU4hWLMHLFdWhHcvwn6rK0O2aEPhUJVXoksxijCqrCGEpLMgLQWrQIptFWVULWrAws5SgPYvjfzoQLQ4+rwIDU+SRPkYB+mSxQHeYn8sslui35jeSEVFoDEPCxkL90vS2SeVKL6Nz+ozFOtvoVrFcF3kYXPAOwXBvcyv1DUu2p7m1Z0gUOwAJrxiGRFmGxDPpmDjJkOh6STxdzOxTFu/hJ0zsrWT5cAMDc5vGAg5zNq8wFrGfcfnPkdE7TqZVloXsbFieO4WUTobty0LO+8awSkuJ/zWsRDFFGFasmC42Nao+GWLi3UYVwXL+xqSmXMXEFhb0Vya1QVI/lzSo1ZLiOebU5ISoppnTOMbEcFlNNachssrsbkr+C2TFPU3pRRZ2D1PqeG9IN1CcrWxInaXF9Q2p+UVp1TMkGiitSqY0XForvDHBxQ1phLiKGdKALGkFGRKtl1ZTU9ogrTwnTKSZ0qegCI3ABB0AxUFQRAmLjendDFlNNSaKlZUXGXOcrIrd65MOig2gcAKFn6x8QPGbEyayyJi9/xFVRnljovKi4tPmVElWJ0GR8hEmeDsovnogQVVQBMzDBL0Aik4PrXgeE2WiIeFUlyHhZ8eEC2NiACiyQBF3P0VIIiZOMCYOPnLFMVAUScEEHQSFByjcN2KCbIsxQWGg8JiJCeqThgn6FBSvx2KCToGiRoqcvjcquiCmf4LNKlhM/5FZe/0upNxVhkXlhZRKph20TEZpTqZFbUHhOQcT1C9dQjkGRhsk9JOJfS0hbzLw1mcFVMzE6BgoSqRhgo6DwgsUgaBwm4wJKi+e4oZW6F27bDq7GBrRx2fOnBdMbTJ5tz179qQJpZ7RXd8jCxP0kkwamh+1lch0PwXwzBVId1JAp+rx8uitAURdxHHueR2oeUgaE0gJx0pjmhaU2yeM2VpAG+yi2BWkBoWiRfE16WF4jiS+UQTKlcRuTfhYEFc6aIKbICJIE4PyMOHUQAzpnqpAFaKkwE66QO2lEK4Nr0rBi5Sx+CYhlNAGGiODLq7qMOiaCOqSPm6TwN+VFOJTCbxOCvm9APY8oxE1YqxvIqnkUeubphPHLO+HQipR4R/L20Uq+R1bfcqHOrHZ8s6TSna5aHWZzTXi6cgUtvoMUsgKV9n6c5z14emrLMBf9aFJPEvQl9TxSxZhcXXofgETkxkSnbNk0MpJG7qwDOuTNrYVQgNtKPE5JmoyJqphIiAdE+6MiR6gyBFDFV2YlS2GvQGqEM1yLK4Jq3MFcSVQETaxJM+VVoNKf4iCo7oVU4IxLM0fxqtA/QhxMH+mAV1ZoscXGJ9rb5EwTwsyvIos1h5GV2iwXPjd5wwukCWb9ZK5uYmGk7sY26+y4aSjzxiZ968s3rTyJraJBXytWohxPf2bhJhPVDStySzkg2P8zGq0lJh3b50BCWY+csOZRjROVDe2JyYmlg3wNJy3k+R1411VqhgNbZAaMw99sYXBbBEcc8aoUaURwcwHNm/e3N9ENkvv+muHD1cwjQFZJsDMKQkJ6/xvfp2H/029RVZ5MZtow8qVK2/nm0ZUrlxZWm0GsiEPCBNU7ZEj2aBHjqwho8Ib/2LDjtoYKKCdUWzgkQfXiMbPLzyeTT1+iJ9UnujEht+hUmmBVO2Uw+Z/rlOnTh0l4T58+N+shuOGD68qhEXfszJGbPC3vtcPHGCFPOlmbT414jJZJyM9LazY04msl0eLWpVfh99ZNX8pb0nvDdvM2jnAgnqvYwU9VNFqGuxPYxX9N8RSilxJZS2tYSWl4llP86pYxzNnWFMTLKNKBKtqajeLeOIkK+vV1y3hsX9ZXVP/qOP4guNZY1MuBbs7ttBYVlr7oSd9HNl+Vtw1bds4rJanNYeZRwxq7pBaXGD1Pb96tZfDqX+RVfjYV47mRdbir72dHclzdjVi+yRXxxHGqjzGYXRnZZ72loM4rE3MAx3C0FR9yhlY8Fzez2aFzu5Z4JqzTk9yKWijlYpHeRasqazWRQrUXNbrzQVpEWv2FwXGeS6rdqxbAXGdyMq9o4CMZu0+/nSBmMz6vawgzGEFj2xQAJI1jM/WzG+uX+aqGLfLZ16bWcnzmuYrz5Ws5y3ykf9KVvScDvmnJKt66rJ6+cT5D11jPlM5fxxkdU8o75YPisXpG+eeKet/t56KZp3/PvgurWSt/zLgrrSIUDv+3u1ufMSKv/8uNEzSPL5zth4MiXKMiWBM2NZhwoUx8ScoLmCiRiwm/mBIdL+AiVWMCOc3UyHROI8hMYgR4TKKIUGMiS12SLjGMiR+tEOi9FFGxDMHGBJ9GRLVoyDhFMaQKJENCecuDAliTIzPw0QCQ8LlDCZ+tGNiB0OiYRQm1jAmFmDi1WRMvMuQ8J+NiQYMicBtmCjL91OkYKJeLibiGBOnQRGDiTXZmNjHmNiOibqRmFjFmFgIigWY8AzHRH/GRF9Q9MJE5eOYaMWYaP7/wIRkYCKUH1YRAorqoHi0/edAURIUofdVlAGF11hMUH1QNMrABPUBxYegqH0CE/TMSUzQTlD4nMUEXQHF0jxMEGPCuR8mqCgonDtiglqCotIRTFAfUFTYjgmaD4pZOZig3aDYD4reKZigGFCcBcUpULhlP/Lfg04YE66LMEHBoChzX0VZUBT7AxNUHxStQNEaFG7DMUEfgKLdGUzQclA0iMIE7QVF4QuYoFhQrLdjgnIw4Y6KXFCkY4LKg6IcKII+wwQ1BkXAPEzQ27mYcF6NCXo/ERO0HxTtEjFBZ0HxLyi8czDhzpiwrcYEBYOiHChcX8MENUjABH0EimanMEELQLEKFEH7MUF7QbHvvopDoKgZhwm6CIoDoHDJxQSBYpIdE8mMifMPgEkFxTt5mKBcTHgwJtwvYIJKgaICKPyXYoKagsJzMiaodwYmaC0oelzGBB0ARd14TNAlUBwBRaFcTHgxJmyTMUHFQVHejgnnzpiguqcxQX1BMRQUZX7CBC0BhdshTNDSbExQKig+tGOCGBPOz2OCQpIwQc+Coj0oyn6HCeoHioGg6HMNE7QSFKtAsRkU1SMxQb+A4rs8TNBFUKSBYqAdE5SHCS/GhGcCJqg8KCo+tMKlCyboBVCE3VfRDhS+szFBH4FiGCjaxWCCloIiHBRrQOG9HxP020MrfgfFT3ZM0KWH7MWDYh8oXOyY8GFMuA7EBIWAwuU1TFCTy5igwaBochwTtAwUqx9asQwTL/yDiaEMieapmOjDiHB9lyFBjIn5mFjKkLAdhoT3J4yIImsYEi0ZEj4/QcL9MEOiMGPiHCZqJUCidSxDYh1DoutlTIxkRNh650GiJGt6PnKdgAkvxoQtDxOHGRNXQHHxATDxoCibhwk3UHg+KhLrbnSzOzjbMTg1U4p3QvNpUbqDbqF39OyNAABWUDgg2EkAAPDDAZ0BKpYBgAI+YSySRqQioaSoc4rAkAwJZ26+cy4AGSXt/GMcj53fH99NKiloXejfJA07r15/q/xZ90vzP3ovRv8697r+p9n/DGzC7keBNCDcf6Fy4ZQJ44eoj0xvQj/Xk0zfoSINuD5JT0RPScM2WEWBxLwOTtwzYRYlefvTWgO8jt/XQ5z9tj/cjIvV0eygmaMzUyb9CSZB6131YDSGpZzbUNYxVlEl1ddRAHAAMhD5OmgrrJRJN68po/JFNJhr0yLs4ZsbHtjXxIP2fAu1rr1nrYtfTmpk3uWqvxARir5vXfW/8BIyDopMwZsWdZy2fSJMwl6o1Gctu7Iwsa/miTBVADsiqOmp8jbsoSTIPWxa+kG+oJW/VuMQGsJE4UHIXAMjRGeOOhX9eAialOKZZEVl6AqBi+CsC08f3/ywVRAmWTNSIaYGDZN+g2vaCd9EZfF6cZRWAxSEMOnCr8OOi2HtLOLfS+oH8Gd8Uy5TFZGRENMDBsm/Qepjz5R/lA35igvyx056zKxqYmH9Hs9Sh24UALS4L5731MxTH4Spvtkou1EM4DWiWcfV0jlnJ4J15B62LX05nqNnm6f1r8O1e5T2PxHFFa0fhq1snPaM78Xj/S8/7Sj4pXb0+zO/d8ygXcwkPALazar5Y3ndnmLhgc3JsB21fhvHQ5RjaJTHsWvpzUyb8uR1YtHYslOFtDVBrBQvDZakZhjMc8JgkGu/J4D9k2j6NEkcvtVjyE2R6+KKsnGFdt1IR00uOtndDEhMU9rNPAeY7PdrlhqpBhr6c1MmfxUUCNbFrE7nq5Yw0+tIDogs3p+iRkW4QuigKCNlbuTzepyCQ/fKa24TCfe861BviiRNKi3igTI4UiRYjFa4GnNTJv0JJKaP43O7hAI/QFRC4vq3e3bSvuIdALxzYMx2HeQ2D8kF6IqkYVjZ5wegTE+0Mu//NLGeC507Pq4y+oB1YNlwUe6EkyD1sWrmwpR8g48RgztuKSRb19pEhr2wlrJltF1T3op75WUbCNvSUrz4D/ZXVCqOG1jSbzJ3kg2D3gXJadPrpeyb9CSZB62K0ZHDzfV9MeEHyMfz7WsCtCklThauObiiJ9Z43Nzh37McSdy/JeKFMX+CGWsoKfbCcJdUgw19OamTTO7jhzMBGgxPSsQxIhRvEGes7OC6T1Ak7ZJGX/0lcYjszboTqk0q7UZOAd6S46B8XoSTIPWxa99x/ZjEmDnit35GepzPwNDkdwgnZICvBiYgJGO7EGw3wXxmsdA+2Df9nwEcoYi6QXdATIGnNTJv0JJkEfjxOm3NSjHHMLzLMxh0t8ShAStxllBhDLQ5tiKLLyecKSRb0halKJL+Fm4MPpo0oThGcmIlDBsm/QkmNGTc+VD4Zn+95uumLvSc0TmDkK2zX5aWf0tZTQyjffR6uZyEPlA42/TDOUCIT/yoCuIQVCOPQ/GqFQIVvEys3YTdzKvj2UD31o5xn9YMeCXWUGP1FpzUnbsnXqVD5sct8xP6QYrOCFNJVn9RlyXShYwwMkVmqw2evDe1ANzdfqpF/BdCHB5SKnIkxvkhNIPFjh/HP2zOVLT4e/qiAqmNIe/2OAds72J/XogiROktZrKGaAYWXji3La7h4eULLA9z5AamWcI6CiohwsjbDpW1vtExMGlgz6gLQFfRiDJh1lLROUrmhit1DQBP6rffL7AH4hu1G14cY2Xt5xkJXqBtB64WbtHKTDMua9/ee/Ln2cH3//NMIYx/u7DUfs+JuEc7VExbEHU3IuxvqgwcoNM4xgszJijY8tidfPZyr17bGyxHR2/6bvvzUiB9j0XNlQTEXPph6VQmfgQ7enWT9c0omQdOaZHr/s8nkWAv8SynTkNCX/lZLyonURMMHlPbI5GdNT6raVe2TmrniTt5D2r4eslvVF1cZQY9Wq5kCbRi82sSrm4Sd6FFOOngMNbSZ79c48acIe6afyfASPm0gNf93R68q3T3pRB7gVmyvfCeOJiseop0cdfjkeEdsfyFtD1zXDKDkdGjv7bBGMsUW352XjAKm0TF2WLN6frokEA6bDd9ScxI+nFHLKA9oSh20wVSDS9uo6ja/K349eped6f9d87qeeJXeOX8lqQpv1zGA2YaT03GlntEZGvdMf1M+XaoaRoNIgUdQEhPMGb5aFUg01s9iALFS9OdTNg1KXHvX+r8ciTAio3N858UWjaAeDp/Ob5y37fRBqklA2m3LIk25ENQRKTL3aM3Y+qN/gSUfI6fPoAsEoxNUVNUILl/w9TGMb+5HYF9hYKXTGdciVJ90lj4YXu1wbZAM0FZjJ4rNfNAxdue3upNvvRMamjf9awN7aF37lZ5+Jy7mIHuM82A+EHdR9xbcJpMMaU9XbkH57bYGrl4bujzMgGCk/QhoYoPL4EMzDpi9oP597pv+WVfhMHmur+ZOJcyoyMHwjy6AK9Ufq+8vIq4GW+QnYDhDwg3DVtyQeP7XY7NZvt3D8YJch2LNym068/zh6z172YH6MKqzn5n3MJtv8wgvsqAgIAq0Wm35U7hcVpV4X1175moA6kQuibh+/SYrVZooMyAAATOi1Qtqp0CWXsaZkE1lYjvSTDJoWfBdvE6/uhRxfvKrRWbkfY8zX+jqHhzVjr28MZhUAOErs7nOfK0yZcqmEHkF0US+2QDhT4y0odW7Ci8tkLNFGNtZQSETuQzrmFJyytIwClqnIFcA5DijGSsxLe3Xz3oGZp5oqrpcsxE/tCgC+IlPuzR8qqbpbbiLf1aa+xH86aDu/omzFbdYoN6eXl7MyowyV8fpjwZ36BbB3o5IwpGQPMtvqhFTcT9xvuMi0eG+H9g4iRPB9ysr0qDtKG2WqBRYxqtPOKv7dqXgntjXGmMFOLFrCtu2Gk3SXrlCk8SPtUDW5vk/IfLaKCflcURdGCCKLsbX3IHpRuuVdfSVoQ+upt4BEt5t8x3DbmyIYLNg57c+okR0cFb5/u/9i+ukfS/hwXtPcYbgsEbSZhpiXUFAYaTWZyJHM1lvuRAdaJS4Km+h9gmREWtuCvG/MyhPCsJpI86W0vBfBTEQw696S3sFebvJLswBV09Egd8XC38mIrH17+XLHPmBveNtyVWyNmZkcSTcTsOgRY2lQO8Q1+LuiSeXbtkMJt7vDjEjayKgvqsrw9EEqmVBKALzJvAGFzvEtncyOFRAokBQqXuGKXdR4enmFGkMQkvxzYEnJBYTYjVlnSFYj7VuAP5oKCxmpuMSWjBs1iNFIqIFkwVYHmyxBHrgdf2OahOB5EBFeUp6UNZ+HNWvkohALcEGfg9NlOFexEsUIjIEqbD8VWxHBcaN2eoCKiV10/TaaoxTRloxlZUbkVnp0j2Q+4XXXsglM9Q9nWADQmFFfwIc91GuLt8irRoJayRoh3bT7sNtve7NJTRBLI33WGBwtnGy8jAgV4MPUOAmwSDuKd6t3HnOp3cvuExaAYn2r6jocNcB5cGHQ08aFl6+Vwj4qAlBFN7cX1YJKcCURxE/n7O4jPNdQthc4tSdJHYUPOBQy3YxZVkBt4HQhZ/P6dwhK7jTWaTJiXSjQ5lJ8Mc7vFHt4Nez02IAEQRLER9wOryeWdRhBvkMPis/qnrWTIsGpjaZQoUuQZgDqa02iUFZZYZ0q3ECaNcrLJNmnwmaMuI1e41MtsK9Hs/9rM0r4JD77XVO5dxqMKbp4XN2dNTjzgpxWxyff4MbnYvgrGYN0Uv1yuMmDDx3OZFRMt9OLchNlb4pRzqrJ6YDvsMu8ckb70ymfWVGvEY2d+xl0GUV2ISSF6sWU5l1Yn7SwaYhSLkVb3cN3oNHNKhSxiuIg3dt6vwjWw2OJcmNRUv1SyAR1gWddft4TJyv6wVH156MHfZfpM25DDklZDXfDnTeez29J1PMTBf4iy6hbCaMHxiGWOINoEUHHkznefAKDW00uVbi+Rn1LA1Yw6tf9COlZV+PDJ1ZsQpFRzya91RV26KSsvv3j0VwCTWq5SG+FpPWFszErAkLUL1IKuY18wky4Pzrw9dp1+9wKRFQeEjdlmlbL/kmF71i9mQQZNcRQW4Dy10C6JXC3z/aBQK1yPhSj8uCjEFx8jbCJfufMAmeHqiflK24w9H3IF4bLvkdDkJyRXaGt28L1eBffKCN79hbl/dWVMFKGwWnaLJ7WJkEHoxEquG6SRznYChC8DxN/ZPCtmrB7pPeL5YofAEYDXbnuJDn6XxW7Z01OOHnewY9Iv+1/tQlS1fcTS638RXaDXKsaFcMlrKlf0sx5naqS2HwBIl+cxtYrRM3PnoZKCQmR8+J4oFJtlKfXMdmZ4dHlR74VEGutjXTuLIQVMh2LXuQKRogwFFCKhMenb2VKtMkYKrcMzh7SDD5PA66mWulIK8n9pErXHxDOyGKeIct9pBMBEC+mp9mM0apMsjj/rtSFQJg0SxQcJgwN7QT+msRIERSKHUlP9Qy7fqCotghz4gNrWPi5ewnZ0kJcDj0EsdndpmjMjEwpPLG7oOk5eY7TsRPhhRm2rY/k+1WHWpe4Az5UZaUgSMN6yE2mY/DfuRbuXMkepD+9ixIjfcB0SQ/tnCVgw9JDNvRUIcTgUDajiPYsR2VZY/mK+89ZcwOlcENTaaJU2D4ErtqFMAMu3ap3yqkbTEOHn88vA7zj74oAaBtg4VxcAJKSDzVVF2YPfV2PrPdWXtGHvgz6LfZVkQPgt7auOQGGnNdG1Q+R59T49e3oR3aFZ88RxgUxS2dRfiovi3fH0jfNdSWA8gYc9ecz/c6nPmJJ2puWiP1oUEwHdYMcE1icpj/PjBFJQV+AGMOLdw5Hhhr3cGkuwItre5ScHWxIC75ExlaAD++pSAAIjTL6/DKYVThtHaazxwGkk+Sop6xRsS7pmltslCOZZFrp3kAwqVOxyQAPskF42jN/340HmvjL84Rt8MjoPONnboiQqkDVymbI+l+0PlYqPQ3Fr22sO+EOzxnq7aKwax07pLJgLlvAmGpLlzY3jWAdU4jizqYeHrjxu9Sa+NJqup0f7giskaZ3GKCZTCEbRQ0oexTatyaBzDKkJL3Du0prWvyMp1xNNCyYTT8chTfN04YK1lpiJF4FB0i5a6FNXXILeAYJLVkAk6oOVkK2+iFhpREOHYqMPWUtH7pQMnTjGShVXQl+Of5gU0KztejOEcxRQAaeFgAAAM20huqt31V9N2vc/Di9eZhABcakRi993MyM9CVRF2MVVLe59e/RC4MGEj4bP7b8uGAWEaRQ91U6bVYeaUH6D0I1OSYuV9x0ZNkXXMZOUBZzE+KgYGAcbqtItd2qG5btW2iUo66oURewGMIVEzkInDDUdTeBAYwudmIEWmVassPnb8iox6oA6Y9+YctWhmibmtnFoy5+F2dURsDqv+zZytNV2G2IEaiwUTY/KRcsBnevqWW7sAn5JlTFnQXhknuc9BrGMYZxIKUOayKe240CMA2rf4nL/jk8fO/2AqnJTna/ZHgATEg0Z6pPMFWyX28ohUlnIcrAAAGb3zEj3RLIt1KoVLefgC5qKVaFXxUD/vP4dyWn/609REZcL7OWvzKulbCrWIfElxP2TX7FVjbaDGwdYvKgxRheCVvYCnajFpKaVC3/ZVc962OV+XwyqhnSQkLprMKjWuKXQ0n/OTbQqDZX41Wg8lo0I862qCLzb4ditU/NAXsgqAmT3CQSUzqfM4otaJdGrngtXItpDqEQRLQ/WRbo0JanslMFPu9X10ZUZ7CY3qZMDUg3IGrwXRKfh6sEyJ1/yPitvn+JXeo6xp8ozKpu6mnkYph8V6sCnFLCVPw1EuQw9YoqceEknnlZKvmEqS62Ey9ieAAAXvM886HtWksEqUac7JIUy0aGSn8VaOmsyX4jTXl/1867M3kkzSmPSLODqVmqCjYty986OzpyccFiq1fuMC8J1vZWxtv+gflHdhL2aHqBaTx8upIbfegj7bFf1py9oDtGUDa10xd5gBDGExFJQK/wCQoim6iVqlzFOUrOoe93ArQD0tBmEizx6tG1mkQcdhnIKuH3w2yzd7+ioI8cehn/m34kQwN67X+nUw1tHBAogSv2ubHYImAr9hO0PydmsXOUjej8axLIAAAAZeeNkVcwvwTywuao+ObxiqEWCfQK4t2WPsKl6RvKE8FkKkfklXiRywfbO6yM1rfYKf6b32OEYw4AeoQ8zP1/COOFMMqqHwIThWrE0H3x83bomNX4yluqIFAwpQsk6ryuIlImLszKgpuMRUzRTixoEBAq6f3BIhSUj9eewSJ1YYNAxdB9MsgWZtsQjDz0GF0EdvYK3Njg+da2+hptl+OGoQMdCXOO+9UfHTAWXl9stRCb64cVlsnops0kLGA2WLzSEVkg1AAAAC1G53d0EFYEc5btXP9uMX7OkHVg7rnmHQJmuKuvagNFbz1P9V/oW1gAkN9I+9WAfEud2u3riEFraOm2N4pIRIOrNjJ8TVIu16H1PiXySAcnUv7so8CPYQiKM+v9XdYuoDaH6uCU2s08Mzz7dvnLK3d0hvmG35EzUxsW/CCCPEtwrq8vOV9DBdyfDjcOEIHaOvR9kmh8cOWYKY4iIVwuV6S2BfUxJjWcBYw7kKAbKq8w2bLNqqaAZOH4ajZyo/WfCLqeRcT+b9I0NrLgBmDSDQP67xkOb7HVGbNV34rHl+/oFkYMJBDlty64iVtg47BXT3BLVpdFc/ca7p0v/4xztvwt2esDkLYao/t3/7EEN6j/AAAAAZqsZ7QGdu+d00mSgrDf75Omz2e6p6JqBn2yYGJp/hVlEiO6jVM4XSP+0JOWAgnM2S4k8bQ3GCUSFZGBUHTWVQlAcTCOJcBMqLPBaY29GamDWNFlpUkSk5bcbG++J4MjIZCbqAHa6+6Bplm3qiic0L5YrnH0ndo7GnXZbH1zmdopgNV1YR2M1kC0O+9HkljjaUfhly21RHLQmyezIsb0zKxjoK9pY45kT30t6SrcaByjBwXPxS55kibjlvK+KyR+j3RuY8Q1f3/wr3CUabo/8nx6m0OxDzbpergKo14lt0Qn7alLqhEyBxTVZ+wc/C9SKir2aEQptccRuQj2nTIkzHbE5bXtRt4mrXt7gEbUSiGBSWODrLIWC8R1f5swDcZfiAXM2PcaswEnhTSMRfgzMrS0J0BM39xzygDM6BML2SMKKFz/aHl/zzsgD9W+a0TxTOllLEJyZ6gs0qpxSIr9UNwbc1X60FWFrKKTcwBTW/hXjwwvY3y1fKLSieRRRPNaAx5ob//VpdBIAADW00VfyrJQkt0jnXm09YuVYj8rszpMFsrDkaPatoK1aUNw0fqNxtqFlGLFG7NwnTvxeXlvJ7bTi0Mu6wDlesaEbYnOtz4iutMH7mEPA42DsQ2rq8AvHRkZ5MKPKVUpm1Z5MYa7onm2z7dBUC+0cJdn06WJb8wdOroefyE9LS4HhLf9Ov9TVjZOPK/9qN3EKqFK1U8UN/cuvFBoo+GC2cGU9714alo9w/9sgLxg+oFKtmO8tw/P7NZ650H9zpxcUfbRkYzuBNAyl5qcJYOjUdnqhyVHAEPJyV7GdL795TUMr+xPBmVm0Aei+ZmRd5iGbHtzawHQjwYMucjFyA0vM870APx7PUGhdxup+cXo8pxb+/hPI5o2eLtD5fe5k9IJ2AMM4vFeUF2ZkAeSA7hNl+Hs0Xaazlsvd3n3hA7J+bt8E49fAAAU2jA36zGSjMrMhcS6CNaGr7mjOAxO7Zo4rZGWWRgPqAzvjaDLrFZhYFaUs9t8kqinjCQgGEP3eNY6QVAYx+7QbwxLTRK/78+sthJGgWLDgVh2dtphPdQvQ8U/NaBDnjv3mKUp7f+Hqgsv+npY2YvMsFBCQGLWfrPTuCDH9xIt9rtPNPg7zpHPDXGaWHyZKmhA62cOn6drTOK9WhmC6wBvpbDB8+l8aNpTU3SMKu0RrHTPM2+DLZVGsgDnaM/SNwqg24s240rrsOUSX3uUQCjAJN+7cLYGiVLcx75pSfaPdQN8PcClmB7x5lYaSmxph0mqvqY/kWnqOLvG7OJN1HUKQRgOTFBxaCWAjVC5FHTAh1Ei9AwCvhaj7m8ipCr2rgL/tjaQcuV+Py9+4ILhb1VoEB9xex8t8y3UQwAABKji2InzuMfQYHBfRcChaC2roMDRmgUg49QBilb/60DuAVPSfUPLxUoWPVoIeUnt3y5iR5TsfKo2S7Yg0JbD7f3UJU2cuTxlqTdfLTOtSnkIY+xg822jLe/Iltig0kIrscMeaoJcnpjC4HCF4aR/9Beyr4ACF/H3cc8l6GNbuDXM/9/8jYGG4SXXmiJBu/q3rVXiWI5sanwbUSU9AZ+9QC9JZtNfs0T1BMvm6LvkcAj0m95N4GgL5KRn7EQr+UYZgnw5Oa95p7RU+4q1H6g4GJhnP3b3gI2LAFGEOvH4RC5cwPnfYI0YGG0NvdCOxD5fzRV3NgAACA+avc8MyfZJnjTsscjns/pan+5yVccPwQWzf1AuRTqvCaFXK6+DRAabsME9gIsBv/j4PFkbgXDIo0FnAxHGrAH6x97wAXgimyf3NNnJtpd+uEPZ0dgkAc3MG372V7KY5FEG5V3hpPGYury5ECWt2jF1kKl4Bk2Ogckn+JgiU1A30CZJncSdLk6tKe3ZpJcN5EObYqzUdsVc+VZF0gOms/Cl8omEQUAFCFrTrxcBHk2q02dWnCBVFkjiF5DomKAjzZPjaOsvCAX1U0igJv+rCfGhGEJshdMiOxAs3toISLkOprwKcHRRKPz/tsCTTxioNYpZKBML4xEyPitIdCGBsua2a1XygAAFT86Vnq+B8WNpn/OoObdrDGzQyG6tj5B9f5r+TzEn1JGUTm3gBPUdsa+QPBeEP+0oy/ux8nvYOcHmcSWDm9OdvtjtMRQleYlVuqyZC/zcjX+y/s968Eec9l6eQFAU8xfsj5K744WNRaAfug9DoaAqok6rBw0+OTsByVJ7hXPWH/ozUh6joZS+5STgybno9a0ymIXFdMcc292E7x0OepXhgDAtZ18ezV9//lzLfeZzGaLyX8aXNy4zf62zh60kAAAA4eKIxMhCRXLyEHp7fjZY1DvpcprW83e21l5NRliEX5Zh3to6hPGaap8/MACnpg5tCbfvATZAUBJ9nITzkqybselOCVChIwkNO8QRotWVxuf56eJrEbvuP4InAbxpSGuWuiJON6cckp4lJJDacHcxDD4QoAK1UuUFz7ufe6V0t1YzPWJ4ygurc5ijtARh/sl+2W9chwt7WeRjHkwOAAAAXwpRYkg/qADvDXRXU0U67D9RdTLSk/mRR2XJe1mT9X+QKhFgQBNtbmxCusv/u8iLrlukIl1z3olCb8uslvRwbK0MPfmD+kEtKwxxd2GdeN5oN717L4Q9uSEbtEfNzn536IaAor+IZpOK4Dort5zf1dW+G87xqx+WLTbOUMQXrhsPM2sfpZAirmLwiWgSh/hn1mrb4fDMXLwtTjBbmvxYWgpaITb4L183i1GsMktlP/SXuKgkdaWE+xygmcYYpP86enteAAADXvQVt2oZNvjdYKvTCIRqfo3I/l1bENdVk17Ys6bj5vtmdkt2Y3jIqNwASWjGAUBaxS5ESSFoYCbW7lILH9X3qoLsU5Ae19HTGywllRxLJE16RkeMrRMMNLdwdBPVpw1MrvxwhEDr8DrUPsEMpELsRCx2LBaSoHnykezTqNSb9yC1n7LRLUDIWWwAIkUINYlDSNw8tcNuOOwTwWfhVBRExdqP2Gmsr/YbqowOYaPxCuZTKsk9lyd8sj/Ih7TPT408Je47wGUbJx9vAxWRJ3rr43oxVgDptIxUWJsvzdbsfQIAAAAFauqsHXLr4CH0SCj/1lWroNsYMqIlCyUiOk+joUr60PyK0upKunjD9bo0V9ji8d4XY/vJlndU3g09LJjZeCfnpFyJAi3f6dIzkhJlQyX0x3063BW6ZNitqh4wW82zrgUwJnh1HgJOIeM1aJgNb+4spIewgtduxeFi2rG9D62aDDBRs+ZWjszM8XzQPa+cCI+uV7JL2tANT3tmYCmq4XWF4K5hLsNtKegWFCL7qgnLpDHkeo1f7CQonBtZioMpbgMGZcuOhNaUMnjp7lK8h4RQd1tAzQsmZHTYSk8ZmzM+zuLc/avC5RqWYLZ2Y0aPrn569jI6pPNBEJfF7Fw+nknGb5Mn7C57pYWFYMpn3t4vcU8XE6SPrHZNU7v08kOIorBU8yFmB3xlbKOwpZA9i2X0toakF6oIXpV8XwP3n9kpLC57MfYVfWMJ5BwKWyDlAcEGFhAdC/Ax0BVqRWFDfQSgjf025L5MsTkXkiMlkBdVO0EvrilIz2/ZRJHLgCklmFrgwLem72c6tDBbmQt0v7hThNAzA+yx58i+SYDE+x/EBNY5se2rT97sBSYiKvKLGwxyW/f1Z26LHx3YfsJNCla97firW5eyBdxyle1c+qCA15HWhrz7u6dO4S7HrcrFuMOELnXP44AHYCwv4ZSXJY1FI0rgjDWMx5m/bsB1WgZ9PED0/6zE6YK7qZ7y4UJXHz2O4AYD/eQgSC9ubzSJQvgpkcgoATFjYVrhxy6lqwliFZOuiOvL2mGTUnnwgUvzBBByU4r4xBM+FGOkOqFrFAaeObfX0SC9NjpMbcsMjw3lB8edh+TV5I9xYNT6/bitLZbQG3EMmGlSt6L/1Pwj2OJr8sHFxAc8bjp9JkZX1AU9Uc6jaWCoH6LojfLyGiEIQeGThBVr60wm4JX32NRMBp+fzaICBJqGjTH8gU+NjbV3DkhFHOUoZQHT1UNpMSNv9x+hqLJUe+qJoPDbx8ZZNrEf97cZ+0ZJit3EdWx4dvReEcd9U7vuUBARLD5Mxis8t2AlrrCvG9yoGRclbt63tb6HjaVVe0lnGXDkH8ycKC4Jlzos4w5TiU8P8gm+IP1ZBu4Bm14TzJmdyDBTcAuXCeTq5Qlas9aX4z/8gDVQYKh81gSzEiMw52QYxiUe7jKkZ9/veT9g03vdKvSvwM2lH8WlMe5+iTwXMjM8RaBj3aKIngEhZUQ1EonyzYd92DcoCtchjXexV3YEu7eJi1qZuINyrezdo0JZP6e5Po4hydpvFBrcACizDuzcfhvmtffn8tVXyXIAcpRBmjoH8WJuQD7mVCCmOe14RB4go+SAwZ8QOcfjixot0+cXQLxVZPXNereqU85eHOX7F8D1Y5o21aSmt9L9fy33s+Vr3tTfefNRsB2wr8+39J4KLnjWWDkTQabwzEhW/1vb8dY5SZu2VPOt4mRt9OuqoEIVNbRmkRL2VgugGm1jk7UuGN3zU4HerJjW3Dt3mBBz3m46OU7r8Xlyh4nUu3WS2tdfXHNe2UJyF31g7SJMGBsoPaHZ8Q9zHRH8uff79ConVLUIQNIK3CpKwzJzpNKocTu/HJyG+zQoZzKlerZKADxmAi0mua522JVniAXO99ANNZTXqmFdeno+GR7rJSgJB0W9E2oSJkYrplVdzr15fUeoEUTdFveUsnUcVYNJ04ospA9dU1q6GY5sAI+oS0Loy+tdjNWDFf6dkRVExsQokCb6g76k5NNMy+5eCYXVkKMAgTw+8lbaW0uMAsOSlCkzzkL6CUgsiSvV5hmEVqR5Afk5Xe7G9WnwNGGXCb19F7kDvIxKzUjWr5IpCWgr2D/ohv5EJn7FNEM5fbhnJ1H71AAexNpTfqOLybyU7+IUYRSonDbN3beVWPySHb5MtwAS3//0ntf8qRciPVuc8bM7XlzIfLCJMINW/qCy3ciLpeJD3GphHz1m8X8FTL6y0jNtICR+xyDy2pct78gxR5kRKusmkKIXlG3cz6UgiPMM4KGVtxIKejuIMM0VS4XALS6JKw2LhcfeVpirqX3YeFjz47NGmMX8JzQmo8NWs5WXzTKVxnIIq4l4VAk+xPFMIekvauM/NmL/4SEjH4YWbzWGfiwHJ4uLbo0LOYYeO6gDaWl5LtD4yUuJ72dsi8YbhdoIRifDoWBq7DLIzyTDSw773Gd83tqK5th37puoCEjL9DH/JrJcinVIGbJDtU/gOiUumezoNhqeYwKXqUVAEA23cG1f4PYQfdXu5wRUQ29SIPYX5j+ki4hkND9/260jt2YgkbAu2K6Z3BEVWjZBRt40F3fmVwbKwFArYWIm7rWdUGWaufgz7KWh/oJTE5Sv0XUfLuei+TreP5j8Yd59FWWbrh3R8j4B5coYl8IFu755rznB79mvwgqCKlNQN+JRAidPIy/QnKkOhqznAcA5aXjnt/ZnCeUn5tQio1ONaAeirrvtjEbR3kFBjbqdGQfRPJ70wNIUK2np+6NlCspXCnIAZRYeOTsJXOHc9Gqhiz0EeDFUqagk9YAO78IbSGgH6EWYVXEd0TzrCQAVbetXcgyWie7SMZYCAgiBsGKqLCRdzUlhYP35Lyi7Qywf5olLyCu4R0TF4onTBeic8atO8E4Qu/cn0CxNWU3b1GiKcgDZ/ocdL6kkiCrBS2c82CEKMLAzHt9qahvjSyprrJBgLdbjKfg8Yvy71yEYCSKeaKOTDzhXn4aMdEVJIN/VudAV+rCcizkc0hi+af09ff+yaPZLtCyWSG/S4Ip3B7fN5tx0tMmUDGPvokTOtCsnXDq2QvSKqkxiE/ArwBcKXQsbJeJiYiLkiFfz0//x9mQo3xPILJIemei6AK/kSX7f5ZW3WVqnnmiCv9dgdMY+RDlyzSbW3JnAgGhvasRdYu2iMxbLNWCwiNlhOiJ/iliqom/ww6bX95riHz8uLUyHD9oCu43R1+SJjnSBnHD5q97phX//7V66co/Rul4b1y66vbr+SJiUFg2pBjJq1CCyMyXHzlSEPR7Ei4AmL2XuqZvd/a+1bIA83K6L+zXBJd7x6ExzqI0dM6Mzu/NEI9lElXwVp/BB9rpK51sYCAfSO1b+sA7+dSZiFsR5NEkcByKrRfFnuNMZjr2qpICcrRhOy8E44J22NM0U0Bd2tCXYUDI6rJtxVK0vwBv0sCFegxj7wlXecC3KMCl877mCNmZd4WTiamjl1Cd/3UEFK94UT4Qqxm1WQKRz2ItlMbpD3wAhrQQh2RFG9Ki1FWBjCDyWyn0obdhAqVR8Sso9Eumf9qcvMcNJHfCHXaGtcouVmY6p0pwZxnsf2Hnhro04R/NnKGGw1m8ft1Nmx7W3c0MPNvrnqEJykuSPy1Ibsq4T+IX1Z3UIj7EpK2CVj0YKnMrMPgecQyD7U8912KYGs9uf0FZTMHrsXblZBzgCvdQrN75ADbvKevxZRy2F3BZ+CrM5Qt35eXYZiH+ICkNOhLfWI8Lk9dyNL5ffqPFY/EILcx8COli3gtTH7BEPHECwvDc/lLfdK3Z0mOzGW9efrEMIVytKmEK73bz/OYuuuwHFWNTkwUlZH5eL8TkdelviMPakAk/kxdB7zVCcbFyMM88P598i3apmNN8uhBeeiW1FPs5gFx9/N80KMOCdLQIe58Cu4j4w7Mk44OTBzZuLUfrWrGSk0QisGO5dlTsLjS6DGx2TnlfWjLouWYMdv4Mslsv0qzGPwk2g4RXdntap6+3XXO1y6Te/bsTDPsVO3rqlLXprr4y1x+7jj/+bZs1QJvM+NL2fZzPcZ/z6jEZGpU2qFZKofAEAzfOzkKOALnQ3+EEjxuEF5W991yfLo31gp6vXB6B4/P5Q/UUBbb9Y8jahLpwjHX2mxc7KTHCGWG0goAGjtEMtIkigwFayj39qJi4NWULM1h3VNwsdczqfajnBDhp6O/lYwqU1Mcj9qVwkSw38VEQ5w4wD0R1+xwawvvslsIGU825nC7YSsh0VZmpvXiDu0ahxUTlb4ythcwAW9mG5LGilVfUaq9k4OZYn/PL4aM2l8t/nJ057PkvUndwTzA4zC3l5oxqPukKVCw1u0k/44Ag/EdHT5/mQVfQQ+1zW0MbY7HUrbyyyskZlKeqzyrTUbl3MrRhbrD2k4hAKWW15lW6N6UnUPFFK5V6XSGn3vGSO+9PHlmWuKKOorPr7kP66WlNQyI4P/XMCkl5QsEd1GWuNPLGtBzKUXeGhpgT3vlsJas9gRvm53T/tQ08NftYZIvNMtR7wKdXDgnVPpD3KR1PMu6fuD1zvcSjpB3CxaU53rwqADLipIxf+4glDt0Ezf3ke+fHg+N+zu88jZJ0nP2asXwqFFwEpIKP/HfdXxT105vF2uLk9xF/niGj4tItu6dX3/ISdbK3PSqJJVIyDNYxXvtUg3K8SgAVMGfsbuX7W+2bwYt8Ywwn3C0oYcbtKWtMJzXEZL4UIpTkdvByIRPhioecgBF/dlIPvKj8uwcJLCa+HF4Bj2MIEW4L/lFuh9KWe/rEuTBX7j7MNN+AY7ff6hRCOcUyhjD+2UixmkjKTDBeBVAk8Pcac534se0FEup+taZgRz0i9FqLEZW0D3tJCFfT4MaGjKCWyhd59tLMXe73lBhUYk2xV7yVjKAnZ6lJu7EUzFxbscru43Lkq48vpNoFcJiGWyZUGaxzD64ny4Vzg28+xPLiNmGwxZFL2iQxiSVYOZwx4TELR9/Pi74bq6UqpWp0sPbz2ecsexhz0IZ5EWw2ex3TmNTrMMcBd/UHej1/FskWVrcwwtNSGkF+7x8Zw+1F1W1slGDzjSZBnxf93DttH0ViLkPT+lkxLZY4ndzE0TQn6t1b8EZBua3SAAjA1GQbfarSEbb4SbyRYmLfd8jshmavcgxRALYSXeCsg4jpA6/qupqwrhVL4SiVfwCXgvSWOCa5eqosZaicyeH3vppUSAcDHCQYebK9O/ZB0ZBq+HYqo6k3Tovl6/3288rJOD4TXez4+9rYxx0D633t+2EFJA9uo658GRJXCeY7g2NltxY+HL1T1iJcqldkV7COShZZI/T8JqCmnc26eu3dggjStOQApk48eniJOs20Hn+EdaGqxV6WZefVceg/QtcLUq+1G3S0LgxJujNVvYcAfYNz3k2L50gpNZ48911kQug+aZJI6Yawhs9fYttqy4E8Q+RGbO4lGwkHJMKf+kP4Nc29dztQCrEsdMafW1wQc4yBk9TPp8HxV0CGb4Jl+Fn6tuQ3rULqr/Gjxg95qpbu/wCYbLQ4yDZjpdgk8DgJYxcXrikBl6RcBeNaAWCsdUjDYlv84FkkHzos+shuap+jg3DXMpVyaPVDr4rw4AehLsawwGAQsaK9sKygaS3hcJA2ZBw5fH970/Ob1/65vfOPGwJOrojUKJ+oXosWTlYZapB7du+LpPEeB8u0SFevmXKvWCcM/xANeA0zON/xWHkWa5NeB+kl4b+ewDM9xRyzqwI2KO5Yzrly7uvPPYIDuJYaJLRks1Sr55HdBgCvWoRCOy0M42Jo1TH45+Ge7zaChsgVA/zQ1DDIE10LEJFQk3b2FNkIpvJS4+mG2OuyJS19qsUBuCmcIE/ffm0P6H/a/Zc5oz5naQn/golObQHNOfOkVz73tGKs377VaYE7muG/CDhKC2y3Z5bYPjSSPcik5UA8c45pFBmW6JAQ2erPheH06jz4ddwfHhLLU1n1aWid/0N9D2WWOL97Prl6pxAVxafpzVEsuJ9lun5rpSfLhEouw8yiPIGKnbkP9MOQnh8rvYGlvLhpafImhRH1fA8E99ge75DMoC9GXbj4KXhlg+3cXbZEQIvPsNwuKV7lxMqfxRGzb+u4QU1jmFGoMQhHJC1rLh5Gf5aAXcx4+E76evG17nF4txsnMAH/7JJ+McQHqoEX03bsa4PWO0yMUe7nXgkOMnPs8ZuBu0P4zCUVwlzExKcOWP+nunkDDo9x/VUF9PhhWIj7+xE7FGgEe97Qikar73r4DvtUbeIOH8CW1hddxsffusJy2ffdKaVBdLFbQ1I6eIXSqjvJQLc3XzbVzyQStHGn2QaytpHNNvc0WR0e9hzA0OMmi5c/rHmKBXAmkiD8yGMfadppPeT9Pgi43MrmOffgoz+6P27aEbbUID7/cZC/g0zleeXBv8xhG+thPS7Tl/60FEPrJ7cZCz7wzzQXJxbAzijut3/a+qmJVtaCkSVGA6jExvEtpjMB1n0h1N19AkfJFUZOuyvZBMO/H2Ht+guRnd7wTnQsleupJN5Op/pMk95bTX7S1e5Q8r0BVKHwotOpAeBozyMvXJBrqRiT2ZN9CMNwo00b8PjE5XEbys1ws0bj7QX8ahfg9c1SFkT66UyMNwD1oNmingV+xa92h9rFRGjRRfIXn3kEPj+rjkQliO07iCmUtyzBAn85k+YpzqQrrs0oALtbG0Z9ZxblYhDaSqPg//W/299tRv1flMjNO7KV1bty5VJ2omrTQaVeKpQSnQL2waaT4q5RMThDLi1opsxH+UqSwnU+DyxGacdU3pT1fv8Qdewe4LcvS4IpTeTSJUTulzsQFNbK+lNoYohVblWWMcqPf+E8Y0kqyGaqYAtspog3sYfrWdr+zA4HvOeS5kYzS72uq0ZX885GsaNnuuuznYCM4x3/scjz4ZKm2JaaKSjZu5f4Dga26coL9k1SCQcqtOORXpfvtYVNeohmpdaJcLb/Y6BdjltiZfaBbqy6meAP4ohe1eJAQmmSMohy+bgQxgFMDrGu6mSMAEdjOmub2OJJAvRS199xR50vuMnIZIGp83SetHuX5tli6KAk/F4OfMHlT1wntKxDa8DzkeezNBF3cyccfcUTJ5OLgT0DsZsAhIriJL0N9kZZRRGfW4jP9EJHEgCryvoYiZ1xEV1W62GY8XaSuS7NMvDMRYNvwMDSWqbcDEb4xU2oqATRA1z4dj2F7gmCXT4JSbT7Las9uEI5kEsdTkS0IKELyMLHLWLpOMKkXSm7a0bbx8mB8kihoV6B+m99Z+kJKFeId8ugTDHVc+JNcgCMYcccFy8xM6ziyX4t26kVi4G42Ymm9hod5QZ806EM1Xhfx1YEIJ44mVM5Lt+/XErdgoAPV1x0a9Io5jClKrJryGvYrrx9Xws6lhbCJYzG5qjko/ZwrP6w5q8KeadadDD082CuPf9DZTPr+A1vRR49q3Y+BgvMH2qZqOlTq9lXggUwQ9DGBG2zvPF25jxVWT2eMxUmZTNBFXUNyS4SxLzqInc6Dpasyx/Qzgf9+oO8m2l25+Tq4ev1s5c/JyOPswqNyKKy7TCF2S4prT4yp08/UO169TzAb86CGbP1qCSNSLAKaW4oXFOD3aNeeB7LISaMpUAOxBx3QbtaN/g/liKTdM6hmIHRIC0TcZ6sjeaON4zIbHdT1RYQK25DvQCoG6c0RwRa1QPOofi2p4P6F1E+KbWgVUzsJrVIgc50f8ecEuF8t66SvbgsFH8Bh9DTFbYekd81qcw+zqyk2+1I4x7ihQSzoyhDyvURbHS9bqklir6HWJ0q20u242FbiWRSsQLQxqvdvNxCTCbM4JVLp1B+HJpSjchrZ9METkFxfntG3gLWeJJAhJqM5nxc8/UbNPFb64dTDY5OdRYGt+qKoQO956xq8cnftKZnbrUz7bfQZnVhWtTlTF3ebydd858xWwW/w9lgCONGCL476csj+yP1zH2OfEEUDaIRpi3KNCJ2qfN2h1vRkAZ5EBmK+n3ZzTS660tRTqc60TQZOHZ5kgLOtxJ9yQ21TQ5g9+pz+oor3kHmUr2d7O4E+0Qh+8IFAi9z6Y5RVTFG51r5zv5wFWIzFXUtYHxoPVC4j3KA9d48a/I6NK1XnvpdAU0OHQka1ZvtWO5Kog4JNRzJT/QUqaPXQQsF7sk/pyeXFCZHjJ+TdVlPt4RBr80zRnM54gcUqvWniHT06gdabczNtfpVcMNnr1NUVoJp1wmKio8/hUaSugSb4LXtowWqforlr5ybqYt4S/ZRc/P16K8zGBgAW33HtC1aFiMSoFrQCVGYTsiIYCRIXuIaAhymDVCMRLJKaChpxDUdh02Y7+C+GDEvY1nNC6PHIItQW7sxmJuyLJqnWNwEym8FM3g1fpdTeAis+vhkvcoEgLXIfDfOLyyxLqVxSnbSqfODinYqD39d7Y4J0HONMSMsZk4LXgZNUS83318WWi7oSJrRXHIr1I9HKMdjY6InamKHMQpBqWgmKPGYjT+svR7MK1pn54Hqqi5btq1zKAPgFVpqfYXZef8mwF57eekPlFOizkL0LAaC+Y0GSL3aAs9S0JLN94ArFW9wPmAMH3PR7MK3lEtnxk9VfBuvpIVxBFlLnR95JvTlnB5fF9udeWVNsNDA73U5oZC0CIYVh4hoUZlkwhBBMJkrPje9fjyKbcpKVpRyG3INzVf082ghmBrB4sFjhOjh+sIsnhtOzLGbg5nMWeEKgpZMndAkoylXMyidNbBHf/QLZHB0JzDJ6JM0N4chGfPSm+pmnr0uqMTg4V9W1YhaAmfqAKDB9IDsUo+XOBQvIZmM5Xfc1h/VxFlUrkADbo/8apwVZ5k20ll2VkAz4mgUK722NfFebBJPssX5Pq/b9IgSdRZPs16v8pNPihkE8GQmwFMUDFwAYaX+MHUIrgIIoo5x2FqAbt8P+xzt0yEgh8AiAFKpOeLbcy8BlnuV2xK4SgsTGLg2iTkRSjpZY6mS391xgAcDBseitTvfHW8/eUtnJ5zuHynOdzGTqNkfHLqtEYG6v1PMPadkEHNsl7pykmlwj75Zq3ZJPM26U0PpvDf8WhoSp5zfa4rm46I6Wt2aL8vSBK90vZr3c8K8an3Uxl7m8D1Wl+etArH/UHvc48sFqzvSjd3zgpPQqLTq5rBe2pFA8Q0ElGFo0fdnbbcqjD/8CXw0OZIYzwQxePfxAR6gMbQRqDLET0I3NB2/efqk7escjH7cuOQzTiJMSwia890cOoa4ioJ01NAKMhLrpxraetr2hUi9PygGKvZqCQ9cbVbP29xun7XvHNdpHg+1AgSeNG9ypreZ2QkGa0gTOnljgjxTmvMHgmGn3lwBEs8eZVKnkS2RdOrZb1oV0Ub9jrHk7JO5v1r+fBmO2T6KwitJpL7ag9D3osR6ehZZHpewaVWBHrbEysGqJ+8cRVP3tZO7mqXYMOFgoGrMkyWK6eh11PGRd00zWEDE7SuKxH9hCWaYXc0kcy/0mxonbRydbhu2ti/0knNRUvgdsaYJqgrzRbUR6qqXDu8SzbfLnCRR3ilAX4FzwD0UjOlghXEmLCOvJjTpoh+oU2z2lWHHxeUXixGmEMPz8SDt/I/zR+qa2gg/Dr9sXeGAIAyYCslcw6ItVBBnobFP8Krvz7CChEBuszYwQnTK9QcPAshIY66sW1NMBxIZmek5qhq6fscLNkcYBzcsfJl6MbONGsm6sJU45XvD90Iq//oH8yFtaPDPJHO7W7p/v6arYelhSvwS2jHG/w1jRmrEi6L2rpJUCaoWJrctQDB8cYu7fw2c5MOTCaBEiBb65T6S4jIoSmbTDbQ+nAU4edqEpBBFrNClqVUT5KXhjIUkeLB33gWiJ7fl+RiEix3b0F7M5FhHi5JdaKphJi56Z8gVD8HUZ3c46ABYa6yBanT8EYV0/GFdEGDGqOJ/tXOOagrCrhTAKm8Dgbr7HV8ODKCsmYUNNr+uBuAwC3i0QuTKlyjb5NDnj5pDjo1jM3MXwonFMU1kvcYZ9536qPsUtbXdmZNNfIcq56+ccvxI3z4jeOV/KWjHinvPcijToqyenjmB08R4BuI+XK6SXwNoV6m5h6pcIzzsorZtaYAFZbf8I2VW7E1WTt6j5rFjhnXzhUBL7+a4b3skuG1+ZgkMzzjZbZWuCBaJuNYeynfziSP2YyNVWUfTTseQkQBvcw05Joj65vGWULEn0H2VYY7+4r2w763hcC5MjVLNpZDwRmAjLbUPJbtZSb3IwbNng/oAcfkYsKgNzaxghsVSrGuy0SdZsosnPxwY8/9yGXwYRYmcNNC8ZtY6Wn8Tsdsa8LI3VG3vIDR3ZGZokOt7jthnZ34KsolS7he+6aoj4rVsyO+SAKdf+VSskrQ1KspRAiBcNzC4pt32d3IVTnMtXWhoNkoVvNCoAc9ukDFk26y1TIwjGkgXFh4jsmUSiMpa5z6bvCMCA3VRGSXm5N43bpH1Q9Emffa8HBg/9vD5v36/n0hsFggFxMWBX2s955wOXlKa27OUbs4wMk0fj3RJ6DzPxIUZNbyzr0BKCj0Vj/xmg55avi9K9/62TNcRYCvCeh4S+OvWPnqeOlSOtLLhNb1khwnmdU5pWrSX5Y0LR4PclkfFc/IR/hlkpopg9INw+4r2w4aopfrA8oPAvANuHIGmP0Bha/sqtUyrCiwzWI9k/haMxwEt1aNRLYzv/PDESbqUj6QmO1l9Pur4f/qhmb4FbI/ztCEo2Md+c3Jqbu3M315WUdhDM/cy4FDLGbiHq0VjOOBrWgNJEwPIjtWVOsD1AcjQ4+csgl0ZARAdxPdrGn8oNQG7Ue4lM01UCFzU9wWUcc4ZiKYHwOzxNhBWJEBvKt1+Eb1EECHwoiOngn8Z0rvs6Tz88PoFKGeV/tp4K6O1nSC23grSMbnyhRqSAjNCVsixv9w6V0XhywKip6+US/Faqq3JT//+rpnxdvx4xj98L/ZYwfEqwrmgQrS1qycY46JFzcb4QCKE/JYlrE7OZ1tNuZ72BzeVkK5r9slZDbdyRRwLz4P8YK+B15dc6WU3D6v6D4aEIW33qnWeSMPN0EsLj3CatNVXlyF8Rjwe9eD0DerOrYt0wkus5IYLxAv/Er9bGRNFPkQ23NFPtq/tnNlb9140YDv24smZhzcSd3bhOFF0iOD5pDvg6Wy3Wy/FbhfV3m+d50w9B/2zGooCSlTfkC3YBkxqLoIJXTbrubQGKVommqMrFJ22rAGYtUyN5SQ7IgTsS4oN9QRz8FoewxcVPAw+YL4EFVqGznWvadVoiWrdixvxwgphNySB5yCnifGBL5PK+wrPntErL55SLtR/Y3NhNyWiwU71alb2M991goz4v1+cpLATT+TcS01F2i4wLCkFQgPESq9ZXFUPbZZl3UW0gfr3ezIK5toyg2vC9mLoVMsOLfDQG8tzqg16tD6CZZnwZ+lOXf3n73ZzWm9tVGUTfQs2i1AN6/NpXAIf0J043kCqU+UfE8WP4Mqng8aj6uqvuL57O+wa4fuiMVEwpNbJ1SfjhqOpSAPl46YB9P0Ip9OAZ4yAn9PxMsgI4jAh3xGoeEkmdus6LJXUo3361L9DbxSvD5dh3M4sMEOAfKjllUqdu5SPi0Ly3Cc5nCcHZqTX3Kr0S8dWSm6MICcdcxrZCoTDoLK9l9cIxh2h2e9011bzz/GAtdapF2DlBtiy2duvzesfL5ppcao3g/2FE2vja3R76hCZs1dBDgc6ygAmeIS0igfgb/KuPvyKEQwpJhk+fiJ0LnzI/wz3Bwy2aQQ20oqOQFsuX1nS5dKxqu6YETva9A6heqmcwFGAKsz9SgusXY5UUHi1EeR7OZ+sw7CVphHQkGiEnsGR8iK3LYDsuc/HxrbyD3LsW04VmyV6z65ZICswIeyTZn0wF+fQ5HgeZGsITN94838fXx+A2avD047g/04SuQfATOEoftSfbepPKPagLOmcDwDdrdGPWoKTxKO/kTdeY00NuTM+TJ7xSkaVLLgDOcaa2YmUsYhrw6MSslk0AGM/8owT2IBetdY38DRM1qgCzPuM7oQJMRwqRIvVsWY0C46u+/17IRV3pJK0ijGCQGj1V2sm9+lpkqNWmbs0I5q2WcZrsxleUyskY/Ez5s7XRGmeviySQ//7D17377EQcVpGmHgLAubJOhyN0saAx5RcJXwS0Adc3b82NYIkkISISoVCXqv/V0RIvZOMAfFxzdcZ09C+MOIOB74LetfSQ7VIKXBnQtN06MERgtA+TpYMRJPs4MHP7eaD44SExf2MLrLSJvB1HJaQH++INgqoK1MBqwLTB4tNmS7K8EtFEbCI8BXhXgeYTVLQEiyq1H1zRDpdHmrz5cOuCaWqy+kGko5cDgINQwcstTnN4IpCvNREHEpvusg543vyPa7nnto89EwW04rksleh4nJJtB7IvCH0oUwzYpocTGKfsiPjP8koTuWLHWYof7yTgJrU5ifwqF1v5u0UgaTp48a7YB6uh2SLSairjccKZG/RrdbDWq2UlZ529rOkGj6+idcQaCY4sITfPMGBk64i7SAAA+RTXrm0g7uG7F6tew51QKjKYD52K7PHHtWvdE/VYFOJ+c6rzYhZazYUlORkgL9Pz+tFl7L0OstBGFtVEYerxF0GmAidj8DhuwzS1Eu06pewUrl88wfwpMmyyMutbICGTvDb19/mbefPd2vaFYMXXcIo65ZO8iRWOFo1JmgTDvDCUbeAfmVI5cHNGnkSffTU9EUL301OJpmsUXU/8pa8ReP9ttwCuIqhZQXdZCETR34HTjiIC2u1WmmcTIsFZMnuvWwtzBMmFNZVQMCpcyyDlE7xrajAjYT6cpCdCH4LYD1WWSpFAixKslJTKVgqT4csao1zv7DX3BumeXZru7O6h8pE1P94RtPR8ttNhPQh9E+NBz8RMfy1PjgOgBWAaujvIPrM3MyfIyRj8nv6KvOuT6R1BrmmGbtKvW+oqlC2rvJxsXqKj3alN1/maeCGUJsNtxqrxfqPCh8PFbIUk/30lvUJwZfDt9o6P1uDU/4B9wJAAeNLihYVzKOHvmKLSxbR/jQQWYq6Ny8MflETOpNbIdDKQ8ylDhGtKAeWzggkLEgI2QvvOBYH7I4i/pBVr+EU2zO9w3Ve9VOPHt9Hefql4v4y9SC1sp0xQ0qgFWc25uNI+soGmI9nnesdqxJUNaTqMmsnQCxcdKMFzon7RGSPJXO3w5g6jF5Qe6MznOpQ8zNQ0+RQOnv527CJstm2nPGuywFYhrv/auRKj3DZ4Lbxg98Q2QKN5xteIPQpkLsIt6niV5gloJNKK3E+gUVLyIdrTwtaY5JXhY8TAp5iu6LrA6E05/hu6lW7xAmmrxecW61gsvUgWPXE4503MRsaCHwiArJHuQ6W2p5xXYhiPdPR63iDom4kegRCuaIj9/KJMPFWcn0NUccp4N4LfBByOpRZuBxNcyjPsBi749iDACr6vploc3OT5HXRMqxDwBUu68XO4IDLUSCzE5YXhsyHCVmG/q+7F/8FPJNJFtHQ+RSPgX8P6ZD6nOwJBn+OTx3jEdf631dqU6XG3apX+Mea9vvXDTfIFMcD6WmBnOPuMAUgw5dw5sYvf3ji5w+/D4hXSygbCo8wez/X+24ENTJS6lQhToBZoUmSqXqHdy00QhCWcoaYRniOeKL3qEpc9Q4y4O5bSUwemuo9mKN3h3hGY5tkbof6bmZjYt3gL0PCIXxiUeG2xDHCpQSehkXLd6UTlg5gWGWNUhBptmGHee1J3DUS1q5vw7Z+OkieZO51iq+CD6Doz9HWoGuaaroWz+hoEic+Nh2Rxzxk+sBVuoOnMPbghvUDcBxe0f8cI77nQ6yRJS1hrA4DoOWrLsZPPZH45ftlCKMEqaZHBZSesAeYVVRJKTIndr6BGaRnK+SldMVZ3gQVkbOdzxzCV/eVJzkoe5kQxPwEAc6gVWTTIAB7MwbKEelRBQ4TLRqlyq6f0E70dW1CavRcAOe2c/IK+b15pzgpeWOIOeyeKJLCAT3hUMyMn7UGTev8pZ0wcOhtUkiAGvNd4n3H8Avo5Km3nF9FUon182RIVS7CCmpsYDN56Wt6RNM3RX3joepy67eWxoEel3Fi9wHWDPt8i4Lvh5AKTK57Qg9rOwtOmyhZRPmhNATLyLcKvFIz/2Uqffe9klv5/Wt0VpgFPrLGZaa2SZ0U2gS5aQFinRna60+aNdRiICaXLnk/9PTVLigV1dyggYnFl7Rr3SHwdxnpfaSrx00ScqFISj3ifaKr8ekHMDf3zxf6gMuklR5YrbZDjxUwS7tKNETwZNK2X2VOVg0FvnlK0y8ayQyFhi2nHclsvRJ8rdJ0VlTCKgXtr6OQN9DAitu5jEB4OiYW+tWkCEFST0vhpzOyOXU+u5DxhnPli1i90fahMG9y1uvhZ7q7Jf4Mf4adZHANo+78NIFMtuN1eB/OWJgMOA1yzs3fs2q8NOJq56pGgGVmK1T7aLzLtWoewXu5EK2oMg/BGdQy6ir0a/EfAjt17Gs66hn8NhHSxGqZ1ZHibRzOiBQV6U36HYdSsoxyFzQT6PvsUQcuK6wrrLxnAZ5WJCnTauFkonkfua7HgkSXrlkV+0l2kbULxqarLRecRYVP5ZkR4oFalDwiws+Td+Q+L4oy4dPzlPTPfMGqYW4/z2y/+/hGyX+bgDAMI/hR58WAB39uDjsnwETe5N1lHJDl3o6+j5oc9erb9CwCuY6LNze4cztmeOWGWTcNAE+jLn46Nm+7elxA3Vqd/fqpSf2w/V9klmuK/pz/lcnOaTmVOBedgQkReQAUIla8MeAHFMXto1DzoULSCJKCUngN4s28shEKxPTmthl6ep47yKBXsMI7XRWCLKITR3+G4oRAF35QKTFa/LjnucKA6vIlte2b8vW4UZ1Si3if+Tw5Dj25wb/lcKsaoKk8GdQE4KORB2kjfD/wKKfMIgOlzOigYJ2tZGWkq+4Ju9UKXJiElST40N29IlmuNzyUAZ+bzHEy2ds1GFFWQqfPzCcDWctFspJ0AFQY5rWBW7PRwbM0+bAu65jdYmXrpVwQsAsLFOJWtUSpK7JnLBQPfTFh/znZkyKpOjZ/shk3bSau2Gm7hg9PbFsRrjij1q6XCyTlU7uUB68en0SlR8Gf0eG0Uuw38ZioJYbnJ06W6PYKhwJ5gPy2N6otToL0Ooc2nCkzS19H6akGPxpg2/z9NUu68r2yuWOH2dEuRnT9WTWc9EA9STjR9UGHcEQNBMn90VoIp3RTo4vvDrChtUZ59BTCwPWiXCoMaLadFQl9+2quyUS8sK9DWrBwwkC2nzNXo9rc68PuX5pcjlkemuuw8giOZrCCNb7I5TsTOzemKTO1WDeUTdChRXOMJuC6PkMjqvKgg8W5MljbtYIYwYDBXJ1ix9fHlb45CA/1DS+EDiu8tnOiu3eyp8xk6q/BAtul+B4NvBgr6GVF+Sbrl8rwKHPocWaaPXYEY8xs1iM2/GIX3GjthG25sUVIuAj3j36o/zUS2pfRgl3ehoZJzSxzdx7ijw8tX2ieNqm5PyAT+o+DUhQAW81brsLa4TNDL9KnToNhCpUpUtsz3h8PDkbXnlmLgTzrmoJzka/jAmO6DXdLLtw8EMn6zx0sA/+5b4SBHkeV7uunrFmjMMP51uwEsGNaE4b8FwJXpfjoXSyAjQglujv63T2gXtnFV6WfuMAAAA=" alt="" width="407" height="640" decoding="async"></span></span>
+      <div><span>Name</span><b>Rigo Karl Ordonio</b></div>
+      <div><span>Role</span><b>Global Business Analyst, EnerMech</b></div>
+      <div><span>Base</span><b>Abu Dhabi, UAE</b></div>
+      <div><span>Stack</span><b>Databricks · Power BI · Salesforce</b></div>
+      <div><span>Education</span><b>BSc Industrial Engineering</b></div>
+    </div>
+    <div>
+      <p class="lead rv">My career has followed the data from the <mark>warehouse to the boardroom.</mark> Retail inventory, SAP operations, S&amp;OP, global pipeline governance: the job has stayed the same. Connect what sales expects, what operations can supply and what finance plans, then make the data <mark>clean enough that leaders trust it.</mark></p>
+      <div class="steps">
+        <div class="step rv"><span class="label">Step 1</span><p><b>Start from the decision</b> a leader needs to make, not the dataset.</p></div>
+        <div class="step rv" style="--d:.06s"><span class="label">Step 2</span><p><b>Fix data quality and governance first,</b> so every report after it holds up.</p></div>
+        <div class="step rv"><span class="label">Step 3</span><p><b>Automate the repeatable parts,</b> then add AI where it saves real time.</p></div>
+        <div class="step rv" style="--d:.06s"><span class="label">Step 4</span><p><b>Close the loop</b> by tracking actions and forecast accuracy over time.</p></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="sec" id="experience" style="padding-top:0">
+  <div class="wrap">
+    <p class="label rv">Experience · newest first</p>
+    <h2 class="rv" style="margin-top:18px;max-width:14ch">Five roles, four industries, one thread.</h2>
+    <div class="exp">
+      <div class="odo-col" aria-hidden="true">
+        <span class="label">Since</span>
+        <div class="odo" id="odo"></div>
+        <div class="odo-co" id="odo-co">EnerMech</div>
+      </div>
+      <div class="roles">
+        <article class="role rv" data-year="2024" data-co="EnerMech">
+          <div class="role-top"><h3>Global Business Analyst<span class="sep"> · </span><span class="co">EnerMech</span></h3><time>Dec 2024 – present</time></div>
+          <span class="tag">Oil &amp; gas, energy services · Abu Dhabi</span>
+          <p>Global owner of the Business Forecasting Tool for BD across the Americas, APAC, Europe and AMEC.</p>
+          <details open><summary>Highlights</summary><ul>
+            <li><b>Global P&amp;L and KPI restructure:</b> led the analytics side of the move from regional to Global Business Line management, redesigning P&amp;L reporting, KPIs and performance views with BD, Ops, Finance and FP&amp;A across Americas, APAC, AMEC and Europe.</li>
+            <li>Govern the global database of commercial opportunities and enforce stage compliance, qualification reviews and pipeline hygiene.</li>
+            <li>Validate booking and revenue forecasts against pipeline evidence and track accuracy for Finance and FP&amp;A.</li>
+            <li>Report pipeline health, conversion, win rate and gap-to-target; produce executive packs for the SVP and Board.</li>
+            <li>Delivered the Unified Forecast Model, KPI Transformation and BD Reporting Automation.</li>
+            <li>Building an AI assistant on the Data Lake and Microsoft Teams.</li>
+          </ul></details>
+          <div class="tools"><span>Databricks SQL</span><span>Power BI</span><span>Salesforce</span><span>Azure</span><span>Excel</span></div>
+        </article>
+        <article class="role rv" data-year="2022" data-co="Henkel">
+          <div class="role-top"><h3>Supply Chain Analyst, BI &amp; Planning<span class="sep"> · </span><span class="co">Henkel</span></h3><time>Sep 2022 – Nov 2024</time></div>
+          <span class="tag">FMCG · Dubai</span>
+          <p>Subject-matter expert for Azure analytics in supply chain planning.</p>
+          <details><summary>Highlights</summary><ul>
+            <li>Developed Azure-based analytics and Excel VBA reporting automation for the Azure BI rollout.</li>
+            <li>Led data-quality improvement to strengthen confidence in planning data.</li>
+          </ul></details>
+          <div class="tools"><span>Azure</span><span>Excel VBA</span></div>
+        </article>
+        <article class="role rv" data-year="2020" data-co="Emerson">
+          <div class="role-top"><h3>Supply Chain Analyst 2, S&amp;OP<span class="sep"> · </span><span class="co">Emerson</span></h3><time>Sep 2020 – May 2022</time></div>
+          <span class="tag">Electronics manufacturing · USA</span>
+          <p>Linked the sales pipeline to supply decisions for the data logger product line.</p>
+          <details><summary>Highlights</summary><ul>
+            <li>Built demand and supply plans from Salesforce pursuit data for the S&amp;OP demand planning meeting.</li>
+            <li>Led S&amp;OP analytics, forecasting models and scenario analysis in Excel and ERP.</li>
+            <li>Delivered the EU SCIP Compliance Project, Global Demand Workbook and S&amp;OP Tool Enhancements.</li>
+          </ul></details>
+          <div class="tools"><span>Salesforce</span><span>Excel</span><span>ERP</span></div>
+        </article>
+        <article class="role rv" data-year="2019" data-co="Schlumberger">
+          <div class="role-top"><h3>Supply Chain Analyst<span class="sep"> · </span><span class="co">Schlumberger</span></h3><time>Nov 2019 – Aug 2020</time></div>
+          <span class="tag">Oilfield services · UAE</span>
+          <p>SAP operations and the dashboards that tracked them.</p>
+          <details><summary>Highlights</summary><ul>
+            <li>Managed SAP-based supply chain operations.</li>
+            <li>Built Power BI dashboards for order tracking, inventory planning and KPI monitoring.</li>
+          </ul></details>
+          <div class="tools"><span>SAP</span><span>Power BI</span></div>
+        </article>
+        <article class="role rv" data-year="2018" data-co="Beauty Oasis">
+          <div class="role-top"><h3>Inventory Controller / Data Specialist<span class="sep"> · </span><span class="co">Beauty Oasis</span></h3><time>May 2018 – Oct 2019</time></div>
+          <span class="tag">Retail &amp; e-commerce · UAE</span>
+          <p>Forecasting at SKU scale.</p>
+          <details><summary>Highlights</summary><ul>
+            <li>Managed forecasting for 8,000+ SKUs in Excel and ERP.</li>
+            <li>Led an ERP data migration and inventory process optimisation.</li>
+          </ul></details>
+          <div class="tools"><span>Excel</span><span>ERP</span></div>
+        </article>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="sec" id="services" style="padding-top:0">
+  <div class="wrap">
+    <div class="svc-top">
+      <div>
+        <p class="label rv">Services</p>
+        <h2 class="rv" style="margin-top:18px">Data in, <span class="ember">decisions</span> out.</h2>
+        <p class="muted rv" style="margin-top:22px;max-width:44ch">Data analytics, forecasting, machine learning, data engineering and AI for employers and clients. Open a service to see the projects behind it, or hover the chart to check a forecast the way I do before it reaches the Board.</p>
+      </div>
+      <div class="chart-card rv">
+        <div class="chart-head"><b>Bookings vs forecast, USD m</b><span class="legend"><span><i></i>Actual</span><span><i class="f"></i>Forecast</span><span><i class="b"></i>Range</span></span></div>
+        <div class="chart-box" id="chart-box"><canvas id="chart" role="img" aria-label="Line chart of monthly bookings with a forecast and range for the next six months. Illustrative data."></canvas></div>
+        <div class="chart-note"><span>Illustrative data, not employer figures</span><output id="readout">Hover or drag to inspect</output></div>
+      </div>
+    </div>
+    <script type="application/json" id="services-data">
+    [
+    {"id": "data-analytics", "name": "Data Analytics", "spell": "bars", "projects": [
+      {"title": "KPI Transformation", "org": "EnerMech", "outcome": "One KPI set and executive view across 4 regions: the Americas, APAC, Europe and AMEC.", "tags": ["Power BI", "Databricks SQL", "Salesforce"]},
+      {"title": "Azure BI rollout", "org": "Henkel", "outcome": "Azure analytics for supply chain planning, with data-quality work that raised confidence in planning data.", "tags": ["Azure", "Excel VBA"]},
+      {"title": "Supply chain dashboards", "org": "Schlumberger", "outcome": "Power BI dashboards for order tracking, inventory planning and KPI monitoring.", "tags": ["Power BI", "SAP"]}
+    ]},
+    {"id": "forecasting", "name": "Forecasting", "spell": "line", "projects": [
+      {"title": "Unified Forecast Model", "org": "EnerMech", "outcome": "Pipeline and revenue forecasts in one model across 4 regions.", "tags": ["Databricks SQL", "Power BI", "Excel"]},
+      {"title": "S&OP Tools & Global Demand Workbook", "org": "Emerson", "outcome": "Demand and supply plans built from Salesforce pursuit data for S&OP decisions.", "tags": ["Salesforce", "Excel", "ERP"]},
+      {"title": "SKU demand forecasting", "org": "Beauty Oasis", "outcome": "Forecasts for 8,000+ SKUs across a retail and e-commerce range.", "tags": ["Excel", "ERP"]},
+      {"title": "Forecast Analytics", "org": "Personal · live app", "outcome": "Forecast dashboard on synthetic prospects and jobs data: a Python pipeline loads and checks PostgreSQL, and a React app shows pipeline, revenue against targets, and an AI chat.", "tags": ["React", "PostgreSQL", "Python", "Gemini"], "href": "https://business-forecasting-project.onrender.com/"}
+    ]},
+    {"id": "machine-learning", "name": "Machine Learning", "spell": "cluster", "projects": [
+      {"title": "Sales-to-Revenue Forecast with ML", "org": "Demo · in progress", "outcome": "Blends pipeline stage probability with history, benchmarked against a weighted-pipeline baseline.", "tags": ["Python", "Databricks"], "href": "#ai-portfolio"},
+      {"title": "Win-Probability Scoring", "org": "Demo · in progress", "outcome": "Scores each opportunity by its likelihood to win from stage, age, value and region.", "tags": ["Gradient boosting", "Power BI"], "href": "#ai-portfolio"},
+      {"title": "Demand Forecast for 8,000 SKUs", "org": "Demo · in progress", "outcome": "SKU-level forecasting on a public retail dataset, with accuracy by SKU class.", "tags": ["Seasonal models", "Machine learning"], "href": "#ai-portfolio"}
+    ]},
+    {"id": "data-engineering", "name": "Data Engineering & Pipelines", "spell": "pipeline", "projects": [
+      {"title": "BD Reporting Automation", "org": "EnerMech", "outcome": "Automated BD pipeline reporting, cutting manual effort.", "tags": ["Databricks SQL", "Salesforce", "Power BI"]},
+      {"title": "Supply Chain Reporting Automation", "org": "Henkel", "outcome": "VBA and Azure automation for more accurate planning reports.", "tags": ["Azure", "Excel VBA"]},
+      {"title": "ERP data migration", "org": "Beauty Oasis", "outcome": "Led the ERP data migration and a cleaner inventory process.", "tags": ["ERP", "Excel"]},
+      {"title": "EU SCIP Compliance", "org": "Emerson", "outcome": "Product data compliance for the EU SCIP database.", "tags": ["ERP", "Excel"]}
+    ]},
+    {"id": "ai-llm", "name": "AI / LLM Solutions", "spell": "prompt", "projects": [
+      {"title": "AI assistant on Data Lake & Teams", "org": "EnerMech · in progress", "outcome": "Retrieves and analyses company data from inside Microsoft Teams.", "tags": ["RAG", "Data Lake", "Microsoft Teams"]},
+      {"title": "Ask-the-Pipeline RAG Assistant", "org": "Demo · in progress", "outcome": "Plain-language questions over pipeline data and SOPs, with sources cited.", "tags": ["RAG", "SQL", "Teams"], "href": "#ai-portfolio"},
+      {"title": "Budget vs Actual Variance Explainer", "org": "Demo · in progress", "outcome": "AI-drafted commentary for each monthly budget-vs-actual variance.", "tags": ["Power BI", "LLM"], "href": "#ai-portfolio"},
+      {"title": "AI Opportunity Intelligence Agent", "org": "Personal · GitHub", "outcome": "Daily briefing on five energy accounts: collects public news, scores each opportunity with a local Qwen model and emails a summary.", "tags": ["Python", "Ollama", "Qwen3"], "href": "https://github.com/rigoordonio/ai-opportunity-intelligence-agent"},
+      {"title": "LinkedIn Job Match", "org": "Personal · GitHub", "outcome": "Claude Code skill that ranks fresh remote LinkedIn jobs against a CV and emails the best matches each morning.", "tags": ["Claude Code", "Python", "Gmail"], "href": "https://github.com/rigoordonio/linkedin-job-match"},
+      {"title": "Weekly Oil & Gas AI Post", "org": "Personal · GitHub", "outcome": "Claude Code skill that drafts a weekly LinkedIn post on oil and gas AI news and publishes only after email approval.", "tags": ["Claude Code", "Composio", "LinkedIn"], "href": "https://github.com/rigoordonio/weekly-oilgas-ai-post"}
+    ]}
+  ]
+    </script>
+    <div class="acc" id="svc-acc"></div>
+    <dialog class="svc-detail" id="svc-detail" aria-labelledby="svc-detail-title"><div class="svc-scrim"></div><div class="svc-card"><div class="svc-surface"></div><div class="svc-head"><div class="svc-lead"><span class="svc-dico"></span><h3 class="svc-title" id="svc-detail-title">Service</h3></div><div class="svc-meta"><span class="acc-count svc-count"></span><button class="svc-close" type="button" aria-label="Close"><span class="acc-icon" aria-hidden="true"></span></button></div></div><div class="svc-body"><div class="svc-stage" aria-hidden="true"></div><ul class="acc-list svc-list"></ul></div></div></dialog>
+  </div>
+</section>
+
+<section class="sec" id="projects" style="padding-top:0">
+  <div class="wrap">
+    <p class="label rv">Projects</p>
+    <h2 class="rv" style="margin-top:18px;max-width:16ch">What I'm building next.</h2>
+
+    <div class="deck-wrap" id="ai-portfolio">
+      <div>
+        <p class="label">AI portfolio · demos in progress</p>
+        <h3 style="font-size:clamp(28px,3.6vw,44px);font-weight:700;letter-spacing:-.035em;line-height:1.05;margin-top:16px">Nine AI builds on public or synthetic data.</h3>
+        <p class="muted" style="margin-top:16px;max-width:42ch">Deal through the deck. The first three are where I'm starting: BI, RAG and FP&amp;A together.</p>
+        <div class="deck-ctrl">
+          <button class="round" type="button" id="prev" aria-label="Previous project">←</button>
+          <button class="round" type="button" id="next" aria-label="Next project">→</button>
+          <span class="count" id="count" aria-live="polite">01 / 09</span>
+        </div>
+      </div>
+      <div class="deck" id="deck" aria-roledescription="card deck"></div>
+    </div>
+  </div>
+</section>
+
+<section class="sec" id="skills" style="padding-top:0">
+  <div class="wrap">
+    <h2 class="label rv">Skills &amp; tools</h2>
+    <div class="skills">
+      <div class="rv"><h3>BI &amp; data</h3><div class="chips"><span>Power BI</span><span>Databricks SQL</span><span>Azure</span><span>Excel VBA</span><span>Salesforce</span><span>SAP Scripting</span></div></div>
+      <div class="rv" style="--d:.06s"><h3>Commercial analytics</h3><div class="chips"><span>Pipeline health</span><span>Win rate</span><span>Conversion</span><span>Forecast accuracy</span><span>Gap-to-target</span></div></div>
+      <div class="rv" style="--d:.12s"><h3>Pipeline governance</h3><div class="chips"><span>Opportunity lifecycle</span><span>Stage compliance</span><span>Qualification reviews</span><span>Data governance</span></div></div>
+      <div class="rv"><h3>Planning &amp; forecasting</h3><div class="chips"><span>S&amp;OP</span><span>Demand planning</span><span>Supply planning</span><span>Scenario analysis</span><span>FP&amp;A alignment</span></div></div>
+      <div class="rv" style="--d:.06s"><h3>AI &amp; automation</h3><div class="chips"><span>AI assistants</span><span>RAG</span><span>Reporting automation</span><span>Process improvement</span></div></div>
+      <div class="rv" style="--d:.12s"><h3>Stakeholders</h3><div class="chips"><span>Board packs</span><span>4-region collaboration</span><span>BD</span><span>Operations</span><span>Finance</span></div></div>
+    </div>
+  </div>
+</section>
+
+<section class="sec gh" id="github" style="padding-top:0">
+  <div class="wrap">
+    <div class="gh-head rv"><h2 id="gh-h">GitHub</h2><a class="gh-total" href="https://github.com/rigoordonio" target="_blank" rel="noopener"><span class="gh-count">Activity on GitHub</span> <span aria-hidden="true">↗</span></a></div>
+    <div class="gh-grid rv" role="img" aria-label="GitHub contribution graph for the last year"></div>
+  </div>
+</section>
+<style>
+/* GitHub contributions: public data fetched live, one square per day, brighter = more commits */
+.gh-head{display:flex;justify-content:space-between;align-items:baseline;gap:16px;flex-wrap:wrap;padding-bottom:18px;border-bottom:1px solid var(--pk-line)}
+.gh-head h2{font-size:clamp(20px,2.4vw,26px);margin:0}
+.gh-total{display:inline-flex;align-items:center;gap:6px;min-height:44px;color:var(--pk-dim);text-decoration:none;font-size:15px;transition:color .2s}
+.gh-total:hover{color:var(--pk-fg)}
+.gh-grid{display:grid;grid-auto-flow:column;grid-template-rows:repeat(7,auto);grid-auto-columns:minmax(10px,1fr);gap:4px;margin-top:24px;overflow-x:auto;padding-bottom:6px;scrollbar-width:none}
+.gh-grid::-webkit-scrollbar{display:none}
+.gh-grid i{aspect-ratio:1;border-radius:3px;background:color-mix(in srgb,var(--pk-fg) 7%,transparent);opacity:0;transform:scale(.6);transition:opacity .5s,transform .5s cubic-bezier(.34,1.56,.64,1);transition-delay:calc(var(--k) * 14ms)}
+.gh-grid.in i{opacity:1;transform:none}
+.gh-grid i[data-l="1"]{background:color-mix(in srgb,var(--pk-acc) 30%,transparent)}
+.gh-grid i[data-l="2"]{background:color-mix(in srgb,var(--pk-acc) 55%,transparent)}
+.gh-grid i[data-l="3"]{background:color-mix(in srgb,var(--pk-acc) 80%,transparent)}
+.gh-grid i[data-l="4"]{background:var(--pk-acc);box-shadow:0 0 10px color-mix(in srgb,var(--pk-acc) 50%,transparent)}
+@media (hover:hover){.gh-grid i:hover{outline:1px solid var(--pk-fg);outline-offset:1px}}
+@media (max-width:560px){.gh-grid{gap:3px}}
+@media (prefers-reduced-motion:reduce){.gh-grid i{transition:none}}
+</style>
+<script>
+/* fills the graph from GitHub's public contribution data; if it can't load, the grid stays empty and the link still works */
+(()=>{const g=document.querySelector('.gh-grid');if(!g)return;const out=document.querySelector('.gh-count');
+const cells=[];for(let k=0;k<371;k++){const i=document.createElement('i');i.style.setProperty('--k',k/7|0);cells.push(i);g.append(i)}
+new IntersectionObserver((es,o)=>{if(es[0].isIntersecting){g.classList.add('in');o.disconnect()}},{threshold:.2}).observe(g);
+fetch('https://github-contributions-api.jogruber.de/v4/rigoordonio?y=last').then(r=>r.ok?r.json():Promise.reject()).then(d=>{
+  const days=(d.contributions||[]).slice(-371);g.textContent='';
+  days.forEach((c,k)=>{const i=document.createElement('i');i.dataset.l=c.level;i.style.setProperty('--k',k/7|0);i.title=`${c.count} contribution${c.count===1?'':'s'} on ${c.date}`;g.append(i)});
+  const t=d.total&&(d.total.lastYear??Object.values(d.total)[0]);if(t!=null)out.textContent=`${t.toLocaleString('en-US')} contributions in the last year`;
+  g.setAttribute('aria-label',out.textContent);g.scrollLeft=g.scrollWidth}).catch(()=>{});
+})();
+</script>
+
+<section class="sec contact" id="contact">
+  <div class="halo" aria-hidden="true"></div>
+  <div class="wrap">
+    <div>
+      <p class="label">Contact</p>
+      <h2 style="margin-top:18px">Let's turn your data into <span class="ember">decisions.</span></h2>
+      <p class="muted" style="margin-top:22px;max-width:44ch">Open to Business Analyst, FP&amp;A, commercial analytics and AI data engineer roles, and to project work in data analytics, forecasting, machine learning and AI.</p>
+      <div class="reach">
+        <div><small>Email</small><span id="email">rigoordonio@gmail.com</span><button class="copy" type="button" id="copy">Copy</button></div>
+        <div><small>LinkedIn</small><a href="https://www.linkedin.com/in/rigo-karl-o-22a229134" target="_blank" rel="noopener" style="text-decoration:none;min-height:44px;display:inline-flex;align-items:center">rigo-karl-o-22a229134 ↗</a></div>
+        <div><small>GitHub</small><a href="https://github.com/rigoordonio" target="_blank" rel="noopener" style="text-decoration:none;min-height:44px;display:inline-flex;align-items:center">rigoordonio ↗</a></div>
+        <div><small>Location</small><span>Abu Dhabi, UAE</span></div>
+        <div><small>CV</small><span>Available on request</span></div>
+      </div>
+    </div>
+    <form id="enquiry" novalidate>
+      <div class="row2">
+        <label><span class="lbl">Name <span class="req" aria-hidden="true">*</span></span><input id="f-name" name="name" type="text" required autocomplete="name" aria-describedby="e-name" placeholder="Your name"><span class="err" id="e-name"></span></label>
+        <label><span class="lbl">Email <span class="req" aria-hidden="true">*</span></span><input id="f-email" name="email" type="email" required autocomplete="email" inputmode="email" aria-describedby="e-email" placeholder="you@company.com"><span class="err" id="e-email"></span></label>
+      </div>
+      <label><span class="lbl">Company <span class="hint">(optional)</span></span><input id="f-co" name="company" type="text" autocomplete="organization" placeholder="Company"></label>
+      <label><span class="lbl">What do you need?</span><select id="f-svc" name="service"><option>Data analytics</option><option>Forecasting</option><option>Machine learning</option><option>Data engineering &amp; pipelines</option><option>AI / LLM solutions</option><option>A full-time role</option></select></label>
+      <label><span class="lbl">Message <span class="req" aria-hidden="true">*</span></span><textarea id="f-msg" name="message" required aria-describedby="h-msg e-msg" placeholder="A few lines about the problem or role"></textarea><span class="hint" id="h-msg">What decision or report are you trying to improve?</span><span class="err" id="e-msg"></span></label>
+      <div class="hp" aria-hidden="true"><label>Leave this field empty <input id="f-hp" name="_gotcha" type="text" tabindex="-1" autocomplete="off"></label></div>
+      <button class="btn solid" type="submit" id="send" style="justify-self:start">Send enquiry <span class="arr" aria-hidden="true">→</span></button>
+      <p class="form-note" id="form-note" role="status" aria-live="polite"></p>
+    </form>
+  </div>
+</section>
+</main>
+<footer>
+  <div class="wrap">
+    <div class="foot">
+      <div class="foot-brand">
+        <p class="brand"><i aria-hidden="true"></i>Rigo Ordonio</p>
+        <p>Global Business Analyst in Abu Dhabi, UAE. Data analytics, forecasting, machine learning and AI.</p>
+      </div>
+      <nav aria-label="Footer">
+        <p class="foot-h">Sections</p>
+        <ul><li><a href="#about">About</a></li><li><a href="#experience">Experience</a></li><li><a href="#services">Services</a></li><li><a href="#projects">Projects</a></li><li><a href="#contact">Contact</a></li></ul>
+      </nav>
+      <div>
+        <p class="foot-h">Contact</p>
+        <ul><li><a href="mailto:rigoordonio@gmail.com">rigoordonio@gmail.com</a></li><li><a href="https://www.linkedin.com/in/rigo-karl-o-22a229134" target="_blank" rel="noopener">LinkedIn ↗</a></li><li><a href="https://github.com/rigoordonio" target="_blank" rel="noopener">GitHub ↗</a></li></ul>
+      </div>
+    </div>
+    <div class="foot-base"><span>© <span id="year">2026</span> Rigo Karl Ordonio. All rights reserved.</span><a href="#main">Back to top ↑</a></div>
+  </div>
+</footer>
+<button class="to-top" type="button" id="to-top" aria-label="Back to top">↑</button>
+
+<script>
+(()=>{
+document.documentElement.classList.add('js');
+const RM=matchMedia('(prefers-reduced-motion: reduce)').matches;
+const fine=matchMedia('(pointer: fine)').matches;
+const $=s=>document.querySelector(s);
+const mouse={nx:.5,ny:.4};
+addEventListener('pointermove',e=>{mouse.nx=e.clientX/innerWidth;mouse.ny=e.clientY/innerHeight},{passive:true});
+
+/* ---- spell 1: visor figure ---- */
+const fig=$('#figure'),head=$('#head'),visor=$('#visor'),body=$('#body'),halo=$('#halo'),vg=$('#vg'),refl=$('#refl'),refl2=$('#refl2'),glint=$('#glint');
+let sx=.5,sy=.4,figVis=true;
+new IntersectionObserver(([e])=>figVis=e.isIntersecting).observe(fig);
+const series=t=>{const pts=[],pts2=[];for(let i=0;i<=40;i++){const x=92+i*216/40,u=i/40;
+  const y=176-26*u+9*Math.sin(u*9+t*1.2)+4*Math.sin(u*23-t*.7);pts.push(x.toFixed(1)+','+y.toFixed(1));
+  pts2.push(x.toFixed(1)+','+(y+12+6*Math.sin(u*5+t)).toFixed(1))}return[pts.join(' '),pts2.join(' ')]};
+const frame=now=>{
+  const t=RM?2:now/1000;
+  sx+=(mouse.nx-sx)*.06;sy+=(mouse.ny-sy)*.06;
+  const dx=(sx-.5),dy=(sy-.45);
+  const breathe=RM?0:Math.sin(t*1.3)*1.6;
+  body.setAttribute('transform',`translate(${dx*-4} ${breathe*.4})`);
+  head.setAttribute('transform',`translate(${dx*14} ${dy*8+breathe}) rotate(${dx*5} 200 170)`);
+  visor.setAttribute('transform',`translate(${dx*6} ${dy*4})`);
+  vg.setAttribute('cx',(.5+dx*.6).toFixed(3));vg.setAttribute('cy',(.45+dy*.5).toFixed(3));
+  halo.setAttribute('opacity',(.75+.25*Math.sin(t*1.7)).toFixed(2));
+  const [a,b]=series(t);refl.setAttribute('points',a);refl2.setAttribute('points',b);
+  glint.setAttribute('cx',(150-dx*40).toFixed(1));
+};
+if(RM)frame(0);else{const loop=now=>{if(figVis)frame(now);requestAnimationFrame(loop)};requestAnimationFrame(loop)}
+
+/* ---- headline word swap ---- */
+const sw=[...document.querySelectorAll('#swap span')];
+if(!RM){let k=0;setInterval(()=>{const a=sw[k];k=(k+1)%sw.length;const b=sw[k];
+  a.classList.remove('on');a.classList.add('out'); /* aria-hidden stays as authored: screen readers always hear "forecasts" */
+  b.classList.remove('out');b.classList.add('on');
+  setTimeout(()=>a.classList.remove('out'),750)},2600)}
+
+/* ---- counters ---- */
+if(!RM)document.querySelectorAll('[data-count]').forEach(el=>{const end=+el.dataset.count,suf=el.dataset.suffix||'',dur=1000;let t0=0;/* motion: count up when in view */
+  const step=now=>{const p=Math.min(1,Math.max(0,(now-t0)/dur)),e=1-Math.pow(1-p,4);el.textContent=Math.round(end*e).toLocaleString('en-US')+(p===1?suf:'');if(p<1)requestAnimationFrame(step)};el.textContent='0';const cio=new IntersectionObserver(([en])=>{if(en.isIntersecting){t0=Math.max(performance.now(),650);requestAnimationFrame(step);cio.disconnect()}});cio.observe(el)});
+
+/* ---- reveal (only items below the fold at load) ---- */
+if(!RM&&'IntersectionObserver'in window){const io=new IntersectionObserver(es=>es.forEach(e=>{if(e.isIntersecting){/* motion: scan-line wipe */const t=e.target;window.motionWipe?window.motionWipe(t):t.classList.remove('pre');io.unobserve(t)}}),{rootMargin:'0px 0px -8% 0px'});
+  document.querySelectorAll('.rv').forEach(el=>{if(el.getBoundingClientRect().top>innerHeight){el.classList.add('pre');io.observe(el)}})}
+const marks=[...document.querySelectorAll('.lead mark')];
+const mio=new IntersectionObserver(es=>es.forEach(e=>{if(e.isIntersecting){setTimeout(()=>e.target.classList.add('on'),RM?0:300);mio.unobserve(e.target)}}),{rootMargin:'0px 0px -15% 0px'});marks.forEach(m=>mio.observe(m));
+
+/* ---- spell 2: year odometer ---- */
+const odo=$('#odo'),odoCo=$('#odo-co'),roles=[...document.querySelectorAll('.role')];
+odo.innerHTML=[0,1,2,3].map(()=>`<span class="dg"><span>${[0,1,2,3,4,5,6,7,8,9].map(n=>`<i>${n}</i>`).join('')}</span></span>`).join('');
+const strips=[...odo.querySelectorAll('.dg > span')];
+const setYear=(y,co)=>{String(y).split('').forEach((d,i)=>strips[i].style.transform=`translateY(${-d*1.1}em)`);odoCo.textContent=co};
+let activeRole=null;
+const roleScroll=()=>{let best=roles[0];roles.forEach(r=>{if(r.getBoundingClientRect().top<innerHeight*.5)best=r});
+  if(best!==activeRole){activeRole=best;roles.forEach(r=>r.classList.toggle('active',r===best));setYear(best.dataset.year,best.dataset.co)}};
+setYear(2024,'EnerMech');
+
+/* ---- spell 3: forecast chart with loupe ---- */
+const cv=$('#chart'),cx=cv.getContext('2d'),box=$('#chart-box'),out=$('#readout');
+const months=['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
+const N=24,split=17;let seed=7;const r=()=>(seed=(seed*16807)%2147483647)/2147483647;
+const vals=Array.from({length:N},(_,i)=>+(12+i*.42+2.2*Math.sin(i*.9)+(r()-.5)*2.4).toFixed(1));
+const yMin=8,yMax=26;let W=0,H=0,pad={l:34,r:10,t:10,b:24};let loupe=null;
+const X=i=>pad.l+i*(W-pad.l-pad.r)/(N-1),Y=v=>pad.t+(1-(v-yMin)/(yMax-yMin))*(H-pad.t-pad.b);
+const tk=n=>getComputedStyle(document.documentElement).getPropertyValue(n).trim();
+addEventListener('themechange',()=>{try{render()}catch(e){}});
+const drawChart=(c)=>{c.clearRect(0,0,W,H);c.font='11px "Geist Mono", ui-monospace, monospace';c.textBaseline='middle';
+  c.strokeStyle=tk('--rule');c.fillStyle=tk('--ink-2');c.lineWidth=1;
+  [10,15,20,25].forEach(v=>{c.beginPath();c.moveTo(pad.l,Y(v));c.lineTo(W-pad.r,Y(v));c.stroke();c.textAlign='right';c.fillText(v,pad.l-8,Y(v))});
+  c.textAlign='center';for(let i=0,st=W<520?6:3;i<N;i+=st)c.fillText(months[i%12]+(i<12?' 25':' 26'),X(i),H-pad.b+14);
+  // band
+  c.fillStyle=tk('--band');c.beginPath();for(let i=split;i<N;i++){const s=(i-split+1)*.45;c.lineTo(X(i),Y(vals[i]+s))}
+  for(let i=N-1;i>=split;i--){const s=(i-split+1)*.45;c.lineTo(X(i),Y(vals[i]-s))}c.lineTo(X(split-1),Y(vals[split-1]));c.closePath();c.fill();
+  // actual
+  c.strokeStyle=tk('--ink');c.lineWidth=2;c.beginPath();for(let i=0;i<split;i++)i?c.lineTo(X(i),Y(vals[i])):c.moveTo(X(i),Y(vals[i]));c.stroke();
+  // forecast
+  c.strokeStyle=tk('--ember');c.setLineDash([5,4]);c.beginPath();for(let i=split-1;i<N;i++)i>split-1?c.lineTo(X(i),Y(vals[i])):c.moveTo(X(i),Y(vals[i]));c.stroke();c.setLineDash([]);
+  c.fillStyle=tk('--ink');c.beginPath();c.arc(X(split-1),Y(vals[split-1]),3.5,0,7);c.fill();
+};
+const render=()=>{drawChart(cx);if(loupe){const R=Math.min(70,W*.16),z=2.2;
+  cx.save();cx.beginPath();cx.arc(loupe.x,loupe.y,R,0,7);cx.clip();cx.fillStyle=tk('--veil');cx.fillRect(loupe.x-R,loupe.y-R,2*R,2*R);
+  cx.translate(loupe.x,loupe.y);cx.scale(z,z);cx.translate(-loupe.x,-loupe.y);drawChart(cx);cx.restore();
+  cx.strokeStyle=tk('--ink');cx.lineWidth=1.5;cx.beginPath();cx.arc(loupe.x,loupe.y,R,0,7);cx.stroke();
+  cx.lineWidth=4;cx.lineCap='round';cx.beginPath();cx.moveTo(loupe.x+R*.72,loupe.y+R*.72);cx.lineTo(loupe.x+R*1.05,loupe.y+R*1.05);cx.stroke();cx.lineCap='butt'}};
+const csize=()=>{const d=Math.min(devicePixelRatio,2);W=box.clientWidth;H=box.clientHeight;cv.width=W*d;cv.height=H*d;cx.setTransform(d,0,0,d,0,0);render()};
+new ResizeObserver(csize).observe(box);
+document.fonts&&document.fonts.ready.then(render);
+const inspect=e=>{const k=cv.getBoundingClientRect();loupe={x:e.clientX-k.left,y:e.clientY-k.top};
+  const i=Math.max(0,Math.min(N-1,Math.round((loupe.x-pad.l)/((W-pad.l-pad.r)/(N-1)))));
+  const kind=i<split?'Actual':'Forecast';out.textContent=`${months[i%12]} ${i<12?2025:2026} · ${kind} ${vals[i].toFixed(1)}m`;render()};
+box.addEventListener('pointermove',inspect);box.addEventListener('pointerdown',inspect);
+box.addEventListener('pointerleave',()=>{loupe=null;out.textContent='Hover or drag to inspect';render()});
+if(!fine)box.style.cursor='auto';
+
+/* ---- services accordion: data lives in script#services-data ---- */
+/* services:render:start (tools/build.mjs runs this same code to pre-render the section for search engines and no-JS visitors) */
+const svcEsc=s=>String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
+/* row icons: each service's spell in miniature, drawn like the + (1.5px square-ended strokes, accent on one part); .hv parts move on hover */
+const svcIco={
+  bars:'<path class="base" d="M2 22.25H30"/><rect x="4.75" y="14.75" width="4.5" height="7.5"/><rect x="11.75" y="9.75" width="4.5" height="12.5"/><rect class="a hv" x="18.75" y="3.75" width="4.5" height="18.5"/><rect x="25.75" y="11.75" width="4.5" height="10.5"/>',
+  line:'<path class="hv band" d="M18 11L24 6.5L30 2V9.5L24 12.5Z"/><path d="M2 19L7 16L11 17.5L18 11"/><path class="a hv dash" d="M18 11L24 9.5L30 5.75"/>',
+  pipeline:'<path d="M4 18C10 18 10 6 16 6S22 18 28 18"/><circle class="node" cx="4" cy="18" r="2.75"/><circle class="node hv" cx="16" cy="6" r="2.75"/><circle class="node" cx="28" cy="18" r="2.75"/><circle class="a dot hv" cx="10" cy="12" r="1.75"/>',
+  cluster:'<path class="link" d="M8 7.5L24 6.5L16 18Z"/><circle class="dot" cx="6" cy="7" r="1.6"/><circle class="dot hv" cx="9.5" cy="5" r="1.6"/><circle class="dot" cx="8.5" cy="10" r="1.6"/><circle class="dot" cx="22.5" cy="5" r="1.6"/><circle class="dot hv" cx="26" cy="7.5" r="1.6"/><circle class="a dot" cx="14" cy="18.5" r="1.6"/><circle class="a dot hv" cx="18" cy="17" r="1.6"/>',
+  prompt:'<rect x="1.75" y="5.75" width="28.5" height="12.5" rx="6.25"/><path d="M6.5 9.5L9 12L6.5 14.5M12 12H18.5"/><rect class="a caret hv" x="21" y="9" width="1.5" height="6"/>',
+};
+const renderServices=list=>list.map((s,i)=>{const n=s.projects.length,id=svcEsc(s.id),ico=svcIco[s.spell];
+  return `<div class="acc-item" id="${id}" style="--i:${i}"><h3 class="acc-h"><button class="acc-btn" type="button" id="${id}-btn" aria-expanded="false" aria-haspopup="dialog" aria-controls="svc-detail"><span class="acc-lead">${ico?`<svg class="svc-ico" data-spell="${svcEsc(s.spell)}" viewBox="0 0 32 24" aria-hidden="true" focusable="false">${ico}</svg>`:''}<span class="acc-name">${svcEsc(s.name)}</span></span><span class="acc-meta"><span class="acc-count">${n} project${n===1?'':'s'}</span><span class="acc-icon" aria-hidden="true"></span></span></button></h3>`
+    +`<section class="acc-panel" id="${id}-panel" aria-labelledby="${id}-btn"><div class="acc-inner"><ul class="acc-list">`
+    +s.projects.map(p=>`<li><span class="acc-org">${svcEsc(p.org)}</span><p class="acc-title">${p.href?`<a href="${svcEsc(p.href)}"${/^https?:/.test(p.href)?' target="_blank" rel="noopener"':''}>${svcEsc(p.title)}</a>`:svcEsc(p.title)}</p><p class="acc-out">${svcEsc(p.outcome)}</p><p class="acc-tags">${p.tags.map(svcEsc).join(' · ')}</p></li>`).join('')
+    +`</ul></div></section></div>`}).join('');
+/* services:render:end */
+const acc=document.getElementById('svc-acc');
+const svcData=JSON.parse(document.getElementById('services-data').textContent);
+if(!acc.children.length)acc.innerHTML=renderServices(svcData);
+const accItems=[...acc.querySelectorAll('.acc-item')];
+
+/* ---- services: tap a row and it lifts into a detail card that plays the service's "spell" ----
+   Motion values, all from the page's tokens or the brief:
+   press 0.97 / 100ms ease-out, release and card travel on one spring (stiffness 400, damping 30);
+   fades and stagger use --acc-ease cubic-bezier(.22,1,.36,1): 300ms in, 200ms out, 50ms steps, 8px rise;
+   reduced motion swaps all of it for a 150ms opacity crossfade and the spells' end states. */
+{ /* block scope keeps these names away from the page's other scripts */
+const ACC_EASE='cubic-bezier(.22,1,.36,1)',M_EASE='cubic-bezier(.16,1,.3,1)';
+const SPRING_K=400,SPRING_C=30;
+/* the spring as a CSS linear() curve, for the Web Animations API (falls back to --m-ease where linear() is missing) */
+const SPRING=(()=>{let x=0,v=0,T=0;const pts=[0],h=1/600;
+  while(T<2){for(let i=0;i<10;i++){v+=(-SPRING_K*(x-1)-SPRING_C*v)*h;x+=v*h}T+=10*h;pts.push(+x.toFixed(4));if(Math.abs(x-1)<1e-3&&Math.abs(v)<1e-2)break}
+  pts[pts.length-1]=1;
+  return CSS.supports('animation-timing-function','linear(0, 1)')?{easing:`linear(${pts.join(',')})`,duration:Math.round(T*1000)}:{easing:M_EASE,duration:550}})();
+const dlg=document.getElementById('svc-detail'),card=dlg.querySelector('.svc-card'),surface=dlg.querySelector('.svc-surface'),scrim=dlg.querySelector('.svc-scrim');
+const dLead=dlg.querySelector('.svc-lead'),dMeta=dlg.querySelector('.svc-meta'),dIco=dlg.querySelector('.svc-dico'),dTitle=dlg.querySelector('.svc-title'),dCount=dlg.querySelector('.svc-count');
+const stage=dlg.querySelector('.svc-stage'),dList=dlg.querySelector('.svc-list'),closeBtn=dlg.querySelector('.svc-close'),root=document.documentElement;
+
+/* 1. press feedback */
+let pressed=null;
+const press=(b,down)=>{const from=getComputedStyle(b).transform;b._press?.cancel();
+  b._press=b.animate([{transform:from==='none'?'scale(1)':from},{transform:down?'scale(.97)':'scale(1)'}],down?{duration:100,easing:'ease-out',fill:'forwards'}:{...SPRING,fill:'forwards'});
+  if(!down){const an=b._press;an.onfinish=()=>an.cancel()}};
+acc.addEventListener('pointerdown',e=>{const b=e.target.closest('.acc-btn');if(!b||RM||e.button>0)return;pressed=b;press(b,true)});
+const release=()=>{if(pressed){press(pressed,false);pressed=null}};
+['pointerup','pointercancel'].forEach(t=>addEventListener(t,release));
+acc.addEventListener('pointerout',e=>{if(pressed&&!pressed.contains(e.relatedTarget))release()});
+
+/* 2. the spells: one inline SVG per service, ink + accent from CSS, aria-hidden */
+const ns=(t,a)=>`<${t} ${Object.entries(a).map(([k,v])=>`${k}="${v}"`).join(' ')}/>`;
+const svgWrap=(kind,inner)=>`<svg class="spell" data-spell="${kind}" viewBox="0 0 480 140" preserveAspectRatio="xMinYMid meet" aria-hidden="true" focusable="false">${inner}</svg>`;
+const seeded=s=>()=>(s=(s*16807)%2147483647)/2147483647;
+const SPELL={
+  bars:{ /* Data Analytics: bars grow on a staggered spring, the tallest flashes the accent */
+    h:[46,70,58,96,84,112,74],
+    art(){return svgWrap('bars',ns('path',{class:'rule',d:'M20 128.5H460'})+this.h.map((h,i)=>ns('rect',{class:'bar'+(h===112?' top':''),x:43+i*60,y:128-h,width:34,height:h})).join('')
+      +ns('rect',{class:'hi',x:43+5*60,y:16,width:34,height:112}))},
+    play(svg){const bars=[...svg.querySelectorAll('.bar')];
+      return [...bars.map((b,i)=>b.animate([{transform:'scaleY(0)'},{transform:'scaleY(1)'}],{...SPRING,delay:i*60,fill:'backwards'})),
+        svg.querySelector('.hi').animate([{opacity:0},{opacity:.9,offset:.4},{opacity:0}],{duration:450,delay:450,easing:ACC_EASE,fill:'both'})]},
+  },
+  line:{ /* Forecasting: history draws left to right, the dashed forecast follows, its range fades in around it */
+    hist:[92,84,88,76,80,70,74,62,66,56,58,48],fc:[48,44,46,38,36,30],
+    art(){const hx=i=>20+i*(280/11),fx=i=>300+i*32;
+      const hp='M'+this.hist.map((y,i)=>`${hx(i).toFixed(1)} ${y}`).join(' L'),fp='M'+this.fc.map((y,i)=>`${fx(i)} ${y}`).join(' L');
+      const up=this.fc.map((y,i)=>`${fx(i)} ${y-i*5}`),dn=this.fc.map((y,i)=>`${fx(i)} ${y+i*5}`).reverse();
+      return svgWrap('line',ns('path',{class:'band',d:`M${up.join(' L')} L${dn.join(' L')}Z`})+ns('path',{class:'fc',d:fp})
+        +ns('rect',{class:'veil',x:296,y:0,width:184,height:140})
+        +[40,80,120].map(y=>ns('path',{class:'rule',d:`M20 ${y}.5H460`})).join('')
+        +ns('path',{class:'hist',d:hp,pathLength:1})+ns('circle',{class:'join',cx:300,cy:48,r:3.5}))},
+    play(svg){return [
+      svg.querySelector('.hist').animate([{strokeDashoffset:1},{strokeDashoffset:0}],{duration:450,easing:ACC_EASE,fill:'backwards'}),
+      svg.querySelector('.join').animate([{transform:'scale(0)'},{transform:'scale(1)'}],{...SPRING,delay:400,fill:'backwards'}),
+      svg.querySelector('.veil').animate([{transform:'scaleX(1)'},{transform:'scaleX(0)'}],{duration:350,delay:420,easing:ACC_EASE,fill:'backwards'}),
+      svg.querySelector('.band').animate([{opacity:0},{opacity:1}],{duration:300,delay:600,easing:ACC_EASE,fill:'backwards'})]},
+  },
+  pipeline:{ /* Data Engineering: a packet draws the pipe through three nodes, each node pulses as it passes */
+    d:'M60 100C150 100 150 40 240 40S330 100 420 100',nodes:[[60,100],[240,40],[420,100]],
+    art(){return svgWrap('pipeline',ns('path',{class:'pipe',d:this.d,pathLength:1})
+      +this.nodes.map(([x,y])=>ns('circle',{class:'ring',cx:x,cy:y,r:13})+ns('circle',{class:'node',cx:x,cy:y,r:13})+ns('circle',{class:'core',cx:x,cy:y,r:3.5})).join('')
+      +ns('circle',{class:'packet',cx:0,cy:0,r:5,style:'transform:translate(420px,100px)'}))},
+    play(svg){const p=svg.querySelector('.pipe'),L=p.getTotalLength(),D=600,frames=[];
+      for(let i=0;i<=30;i++){const pt=p.getPointAtLength(L*i/30);frames.push({transform:`translate(${pt.x.toFixed(1)}px,${pt.y.toFixed(1)}px)`})}
+      return [p.animate([{strokeDashoffset:1},{strokeDashoffset:0}],{duration:D,easing:'linear',fill:'backwards'}),
+        svg.querySelector('.packet').animate(frames,{duration:D,easing:'linear',fill:'both'}),
+        ...[...svg.querySelectorAll('.ring')].map((r,i)=>r.animate([{opacity:.9,transform:'scale(1)'},{opacity:0,transform:'scale(1.9)'}],{duration:300,delay:i*D/2,easing:ACC_EASE}))]},
+  },
+  cluster:{ /* Machine Learning: scattered points drift into three clusters, then thin links join them into a network */
+    centres:[[110,52],[360,48],[240,104]],
+    pts(){if(this._p)return this._p;const r=seeded(11),p=[];
+      this.centres.forEach(([cx,cy],c)=>{for(let k=0;k<6;k++){const a=k/6*6.283+r(),d=k?10+r()*14:0;
+        p.push({c,x:+(cx+Math.cos(a)*d).toFixed(1),y:+(cy+Math.sin(a)*d*.8).toFixed(1),sx:+(24+r()*432).toFixed(1),sy:+(14+r()*112).toFixed(1)})}});
+      return this._p=p},
+    art(){const p=this.pts(),hub=c=>p[c*6];
+      const links=p.filter((q,i)=>i%6).map(q=>`M${hub(q.c).x} ${hub(q.c).y}L${q.x} ${q.y}`).concat([[0,1],[1,2],[2,0]].map(([a,b])=>`M${hub(a).x} ${hub(a).y}L${hub(b).x} ${hub(b).y}`));
+      return svgWrap('cluster',links.map(d=>ns('path',{class:'link',d,pathLength:1})).join('')+p.map(q=>ns('circle',{class:'pt'+(q.c===2?' acc':''),cx:q.x,cy:q.y,r:4})).join(''))},
+    play(svg){const p=this.pts();
+      return [...[...svg.querySelectorAll('.pt')].map((el,i)=>el.animate([{transform:`translate(${(p[i].sx-p[i].x).toFixed(1)}px,${(p[i].sy-p[i].y).toFixed(1)}px)`},{transform:'translate(0,0)'}],{duration:550,delay:i*10,easing:M_EASE,fill:'backwards'})),
+        ...[...svg.querySelectorAll('.link')].map((el,i)=>el.animate([{strokeDashoffset:1},{strokeDashoffset:0}],{duration:280,delay:560+i*8,easing:ACC_EASE,fill:'backwards'}))]},
+  },
+  prompt:{ /* AI / LLM: a question types out behind a caret, then the answer streams in word by word */
+    q:'Why is the forecast down?',a:['Two late-stage deals slipped to next quarter.','Sources: CRM pipeline, S&OP notes.'],
+    art(){let w=0;const words=l=>l.split(' ').map(t=>`<tspan class="tok">${svcEsc(t)} </tspan>`).join('');
+      return svgWrap('prompt',`<text class="q" x="68" y="44">${svcEsc(this.q)}</text><text class="chev" x="42" y="44">&gt;</text>`
+        +ns('rect',{class:'mask',x:66,y:24,width:380,height:28})+ns('rect',{class:'box',x:20,y:14,width:440,height:48,rx:24})
+        +ns('rect',{class:'caret',x:68,y:28,width:2,height:20})
+        +this.a.map((l,i)=>`<text class="ans" x="42" y="${98+i*26}">${words(l)}</text>`).join(''))},
+    play(svg){const n=this.q.length,w=svg.querySelector('.q').getComputedTextLength(),T=n*14,toks=[...svg.querySelectorAll('.tok')];
+      /* mask and caret rest after the last letter (settleCaret); typing slides them there one letter at a time */
+      const type=[{transform:`translateX(${(-w).toFixed(1)}px)`},{transform:'translateX(0)'}];
+      return [svg.querySelector('.mask').animate(type,{duration:T,easing:`steps(${n},end)`,fill:'backwards'}),
+        svg.querySelector('.caret').animate(type,{duration:T,easing:`steps(${n},end)`,fill:'backwards'}),
+        svg.querySelector('.caret').animate([{opacity:1},{opacity:0,offset:.25},{opacity:1,offset:.5},{opacity:0,offset:.75},{opacity:1}],{duration:toks.length*38,delay:T,easing:'steps(1,end)'}),
+        ...toks.map((t,i)=>t.animate([{fillOpacity:0},{fillOpacity:1}],{duration:150,delay:T+i*38,easing:ACC_EASE,fill:'backwards'}))]},   /* tspans take fill-opacity, not opacity */
+  },
+};
+/* the caret's end position depends on the font, so it is placed after layout (also the reduced-motion end state) */
+const settleCaret=svg=>{const q=svg.querySelector('.q');if(!q)return;const w=q.getComputedTextLength();
+  svg.querySelector('.mask').setAttribute('x',68+w);svg.querySelector('.caret').setAttribute('x',68+w)};
+
+/* 3. lift into a card and back: one spring drives every shared element, so reversing mid-way keeps position and speed */
+const S={x:0,v:0,t:0},clamp=v=>Math.max(0,Math.min(1,v)),lerp=(a,b,p)=>a+(b-a)*p;
+let curIt=null,raf=0,last=0,geo=null,spellAnims=[],inAnims=[],lastFocus=null;
+const rect=el=>el.getBoundingClientRect();
+const apply=()=>{const p=S.x,q=1-p,g=geo;if(!g)return;
+  scrim.style.opacity=clamp(p).toFixed(3);
+  const x=lerp(g.from.left,g.to.left,p),y=lerp(g.from.top,g.to.top,p),w=lerp(g.from.width,g.to.width,p),h=lerp(g.from.height,g.to.height,p);
+  surface.style.transform=`translate(${(x-g.to.left).toFixed(2)}px,${(y-g.to.top).toFixed(2)}px) scale(${(w/g.to.width).toFixed(4)},${(h/g.to.height).toFixed(4)})`;
+  surface.style.opacity=clamp(p*2.5).toFixed(3);
+  for(const [el,d] of [[dLead,g.lead],[dMeta,g.meta]])el.style.transform=`translate(${(d.x*q).toFixed(2)}px,${(d.y*q).toFixed(2)}px) scale(${lerp(g.s,1,p).toFixed(4)})`;
+  closeBtn.firstElementChild.style.transform=`rotate(${(45*p).toFixed(2)}deg)`;
+  stage.style.opacity=clamp((p-.35)/.45).toFixed(3)};
+const tick=now=>{const dt=Math.min((now-last)/1000,1/30);last=now;
+  for(let i=0,n=Math.max(1,Math.ceil(dt*240)),h=dt/n;i<n;i++){S.v+=(-SPRING_K*(S.x-S.t)-SPRING_C*S.v)*h;S.x+=S.v*h}
+  if(Math.abs(S.x-S.t)<1e-3&&Math.abs(S.v)<1e-2){S.x=S.t;S.v=0;apply();raf=0;S.t?opened():finish();return}
+  apply();raf=requestAnimationFrame(tick)};
+const run=t=>{S.t=t;if(!raf){last=performance.now();raf=requestAnimationFrame(tick)}};
+/* where the row's pieces sit relative to the card's (the card's own transforms cleared for the reading) */
+const deltas=it=>{dLead.style.transform=dMeta.style.transform='none';
+  const rl=rect(it.querySelector('.acc-lead')),rm=rect(it.querySelector('.acc-meta')),dl=rect(dLead),dm=rect(dMeta);
+  return {lead:{x:rl.left-dl.left,y:rl.top-dl.top},meta:{x:rm.left-dm.left,y:rm.top-dm.top}}};
+const stroke=()=>{const sv=stage.querySelector('svg');if(sv){const r=rect(stage);sv.style.setProperty('--u',(1/Math.max(.2,Math.min(r.width/480,r.height/140))).toFixed(3))}};
+const measure=it=>{const b=it.querySelector('.acc-btn'),t=getComputedStyle(b).transform,c=rect(card);
+  geo={s:t==='none'?1:new DOMMatrixReadOnly(t).a,from:rect(b),to:{left:c.left,top:c.top,width:c.width,height:c.height},...deltas(it)}};
+const place=it=>{const r=rect(it.querySelector('.acc-btn')),vw=root.clientWidth,left=Math.max(8,r.left-24),pad=Math.max(16,r.left-left);
+  card.style.left=left+'px';card.style.width=(vw-2*left)+'px';card.style.setProperty('--pad',pad+'px');
+  card.style.top='0px';card.style.top=Math.max(16,(innerHeight-card.offsetHeight)/2)+'px'};
+const fill=it=>{const s=svcData.find(x=>x.id===it.id),sp=SPELL[s.spell];
+  dTitle.textContent=s.name;closeBtn.setAttribute('aria-label','Close '+s.name);dCount.textContent=it.querySelector('.acc-count').textContent;
+  const ico=it.querySelector('.svc-ico');dIco.innerHTML=ico?ico.outerHTML:'';
+  stage.innerHTML=sp?sp.art():'';stage.hidden=!sp;dList.innerHTML=it.querySelector('.acc-list').innerHTML;
+  [...dList.children].forEach(li=>li.style.opacity=0)};
+/* the page stays put while the card is open: nothing (focus, smooth scrolling) may move it */
+let lockY=0;const hold=()=>{if(scrollY!==lockY)scrollTo({top:lockY,behavior:'instant'})};
+const lock=on=>{if(on){lockY=scrollY;root.style.setProperty('--sb',(innerWidth-root.clientWidth)+'px');root.classList.add('svc-lock');addEventListener('scroll',hold)}else{removeEventListener('scroll',hold);root.classList.remove('svc-lock');root.style.removeProperty('--sb')}};
+function openSvc(it){
+  if(curIt===it&&S.t===1)return;
+  if(curIt&&curIt!==it){finish(true)}
+  if(!curIt){curIt=it;lastFocus=it.querySelector('.acc-btn');it.querySelector('.acc-btn')._press?.cancel();
+    fill(it);lock(true);dlg.autofocus=true;dlg.showModal();place(it);closeBtn.focus({preventScroll:true});hold();   /* opening must not move the page */
+    it.classList.add('is-open');it.querySelector('.acc-btn').setAttribute('aria-expanded','true');
+    if(RM){geo=null;[surface,dLead,dMeta,stage].forEach(e=>{e.style.transform='';e.style.opacity=''});closeBtn.firstElementChild.style.transform='rotate(45deg)';
+      scrim.style.opacity=1;[...dList.children].forEach(li=>li.style.opacity='');
+      stroke();const sv=stage.querySelector('svg');if(sv)settleCaret(sv);
+      inAnims=[card.animate([{opacity:0},{opacity:1}],{duration:150,easing:ACC_EASE}),scrim.animate([{opacity:0},{opacity:1}],{duration:150,easing:ACC_EASE})];S.x=S.t=1;return}
+    stroke();measure(it);S.x=0;S.v=0;apply();
+    const sv=stage.querySelector('svg'),sp=SPELL[svcData.find(x=>x.id===it.id).spell];
+    if(sv&&sp){settleCaret(sv);spellAnims=sp.play(sv);   /* the spell starts 120ms into the lift */
+      spellAnims.forEach(a=>a.effect.updateTiming({delay:(a.effect.getTiming().delay||0)+120}))}}
+  inAnims.forEach(a=>a.cancel());inAnims=[];run(1)}
+function opened(){if(!curIt)return;
+  /* content rises in once the card has settled: 8px, 50ms apart, --acc-ease 300ms */
+  inAnims=[...dList.children].map((li,i)=>li.animate([{opacity:0,transform:'translateY(8px)'},{opacity:1,transform:'none'}],{duration:300,delay:i*50,easing:ACC_EASE,fill:'both'}))}
+function closeSvc(){if(!curIt)return;
+  if(RM){inAnims.forEach(a=>a.cancel());const o=[card,scrim].map(e=>e.animate([{opacity:1},{opacity:0}],{duration:150,easing:ACC_EASE,fill:'forwards'}));
+    o[0].onfinish=()=>{o.forEach(a=>a.cancel());finish()};S.t=0;return}
+  /* the row is no longer pressed, so the way back lands on it at full scale; content leaves in 200ms, as panels used to close */
+  if(geo){Object.assign(geo,{s:1,from:rect(curIt.querySelector('.acc-btn'))},deltas(curIt));apply()}
+  inAnims.forEach(a=>a.cancel());
+  inAnims=[...dList.children].map(li=>li.animate([{opacity:getComputedStyle(li).opacity},{opacity:0}],{duration:200,easing:ACC_EASE,fill:'forwards'}));
+  run(0)}
+function finish(instant){const it=curIt;if(!it)return;
+  if(raf){cancelAnimationFrame(raf);raf=0}
+  spellAnims.forEach(a=>a.cancel());inAnims.forEach(a=>a.cancel());spellAnims=[];inAnims=[];
+  if(dlg.open)dlg.close();lock(false);
+  it.classList.remove('is-open');it.querySelector('.acc-btn').setAttribute('aria-expanded','false');
+  curIt=null;geo=null;S.x=S.t=S.v=0;
+  if(!instant&&lastFocus)lastFocus.focus({preventScroll:true})}
+acc.addEventListener('click',e=>{const b=e.target.closest('.acc-btn');if(b){acc.classList.remove('pre-in');openSvc(b.closest('.acc-item'))}});
+closeBtn.addEventListener('click',closeSvc);
+scrim.addEventListener('click',closeSvc);
+dlg.addEventListener('cancel',e=>{e.preventDefault();closeSvc()});   /* Esc */
+dlg.addEventListener('close',()=>{if(curIt)finish(true)});              /* closed by the browser, e.g. a second Esc */
+/* focus stays inside the card: Tab and Shift+Tab wrap around */
+dlg.addEventListener('keydown',e=>{if(e.key!=='Tab')return;const f=[...dlg.querySelectorAll('a[href],button')].filter(x=>!x.closest('[hidden]'));
+  const first=f[0],lastEl=f[f.length-1];
+  if(e.shiftKey&&document.activeElement===first){e.preventDefault();lastEl.focus()}else if(!e.shiftKey&&document.activeElement===lastEl){e.preventDefault();first.focus()}});
+/* a project link inside the card closes it, then goes to that project */
+dList.addEventListener('click',e=>{const a=e.target.closest('a[href^="#"]');if(!a)return;e.preventDefault();lastFocus=null;finish(true);
+  const t=document.querySelector(a.getAttribute('href'));if(t){history.pushState(null,'',a.getAttribute('href'));t.scrollIntoView({behavior:RM?'auto':'smooth'})}});
+addEventListener('resize',()=>{if(!curIt||raf||S.t!==1)return;place(curIt);stroke();if(geo){measure(curIt);apply()}});
+
+/* deep links such as #forecasting open that service */
+const openFromHash=()=>{const id=decodeURIComponent(location.hash.slice(1)),it=id&&accItems.find(x=>x.id===id);
+  if(!it)return;acc.classList.remove('pre-in');it.scrollIntoView({block:'center',behavior:'instant'});requestAnimationFrame(()=>openSvc(it))};
+addEventListener('hashchange',openFromHash);
+/* rows fade up 8px with a 40ms stagger the first time the list scrolls into view */
+if(!RM&&'IntersectionObserver'in window&&acc.getBoundingClientRect().top>innerHeight*.9){acc.classList.add('pre-in');
+  const aio=new IntersectionObserver(([en])=>{if(en.isIntersecting){acc.classList.remove('pre-in');aio.disconnect()}},{rootMargin:'0px 0px -10% 0px'});aio.observe(acc)}
+openFromHash();
+}
+
+/* ---- spell 4: card deck ---- */
+const projects=[
+  ['Pipeline Health Command Center','BI reporting','Funnel, win rate, conversion, gap-to-target and forecast accuracy in one dashboard.','Power BI on a synthetic CRM dataset with KPI definitions',true],
+  ['Ask-the-Pipeline RAG Assistant','RAG','Plain-language questions over pipeline data, SOPs and governance rules, with sources cited.','Document retrieval plus SQL tool calls, in web chat or Teams',true],
+  ['Budget vs Actual Variance Explainer','FP&A + AI','Monthly budget vs actual with an AI-drafted commentary for each variance.','Excel or Power BI model plus an LLM summary step',true],
+  ['Sales-to-Revenue Forecast with ML','Machine learning','Booking and revenue forecast blending pipeline stage probability with history.','Python or Databricks notebook vs a weighted-pipeline baseline'],
+  ['Win-Probability Scoring','Machine learning','Scores each opportunity by likelihood to win from stage, age, value and region.','Gradient-boosted model plus a Power BI drivers page'],
+  ['Demand Forecast for 8,000 SKUs','Analytics / ML','SKU-level forecasting at retail scale, echoing the Beauty Oasis work.','Public retail dataset, seasonal and ML models, accuracy by SKU class'],
+  ['Pipeline Hygiene Bot','CRM automation','Flags stale opportunities, missing fields and stage breaches, and emails the owner.','Salesforce or HubSpot sandbox with Power Automate or n8n'],
+  ['S&OP Scenario Planner','Forecasting','Demand, supply and capacity what-if scenarios for a product line.','Excel or Power BI with parameters'],
+  ['Automated Executive Pack','Workflow automation','A monthly leadership pack generated from data in one click.','Python or Power Automate building slides from a BI dataset'],
+];
+const esc=s=>s.replace(/&/g,'&amp;');
+const spark=i=>{let s=i*31+5;const rr=()=>(s=(s*16807)%2147483647)/2147483647;const p=[];for(let k=0;k<=20;k++)p.push(`${k*15},${(48-k*1.3-rr()*18).toFixed(1)}`);
+  return `<svg class="spark" viewBox="0 0 300 64" preserveAspectRatio="none" aria-hidden="true"><polyline points="${p.join(' ')}" fill="none" stroke="#ff5a1f" stroke-width="2" vector-effect="non-scaling-stroke"/><line x1="0" y1="63" x2="300" y2="63" stroke="#e4e3df"/></svg>`};
+const deck=$('#deck');
+deck.innerHTML=projects.map((p,i)=>`<article class="pcard" aria-hidden="${i?'true':'false'}"><div class="top"><span class="area">${esc(p[1])}</span><span class="badge">${p[4]?'Start here':'Demo'}</span></div>${spark(i)}<h3>${esc(p[0])}</h3><p>${p[2]}</p><div class="build"><span>Build:</span> ${p[3]}</div></article>`).join('');
+const pcs=[...deck.children];let top=0;
+const layout=(fly)=>{pcs.forEach((c,i)=>{const d=(i-top+pcs.length)%pcs.length;
+  c.style.zIndex=pcs.length-d;c.setAttribute('aria-hidden',d?'true':'false');
+  c.style.opacity=d>3?0:1;
+  c.style.transform=d===0?'none':`translateY(${d*14}px) scale(${1-d*.05}) rotate(${(d%2?1:-1)*d*1.2}deg)`;
+  if(fly!==undefined&&i===fly){c.style.transition='none';c.style.transform=`translateX(${RM?0:-120}%) rotate(-14deg)`;c.style.opacity=0;
+    requestAnimationFrame(()=>requestAnimationFrame(()=>{c.style.transition='';c.style.opacity=d>3?0:1;c.style.transform=`translateY(${d*14}px) scale(${1-d*.05}) rotate(${(d%2?1:-1)*d*1.2}deg)`}))}
+});$('#count').textContent=String(top+1).padStart(2,'0')+' / '+String(pcs.length).padStart(2,'0')};
+const go=dir=>{const old=top;top=(top+dir+pcs.length)%pcs.length;
+  if(dir>0&&!RM){const c=pcs[old];c.style.transform='translateX(110%) rotate(12deg)';c.style.opacity=0;setTimeout(()=>layout(),280)}else layout()};
+$('#next').onclick=()=>go(1);$('#prev').onclick=()=>go(-1);
+deck.addEventListener('click',()=>go(1));
+let sx0=null;deck.addEventListener('pointerdown',e=>sx0=e.clientX);deck.addEventListener('pointerup',e=>{if(sx0!==null&&Math.abs(e.clientX-sx0)>50){e.stopPropagation();go(e.clientX<sx0?1:-1)}sx0=null});
+layout();
+
+/* ---- spell 5: confetti ---- */
+const cf=$('#confetti'),cc=cf.getContext('2d');let bits=[],cfRun=false;
+const burst=(x,y)=>{if(RM)return;const d=Math.min(devicePixelRatio,2);cf.width=innerWidth*d;cf.height=innerHeight*d;cc.setTransform(d,0,0,d,0,0);
+  const cols=['#ff5a1f','#ffb627','#121212','#f7f7f5'];for(let i=0;i<70;i++){const a=Math.random()*Math.PI*2,v=4+Math.random()*7;
+  bits.push({x,y,vx:Math.cos(a)*v,vy:Math.sin(a)*v-5,r:Math.random()*6,w:4+Math.random()*5,h:3+Math.random()*4,c:cols[i%4],life:0})}
+  if(!cfRun){cfRun=true;requestAnimationFrame(tick)}};
+const tick=()=>{cc.clearRect(0,0,innerWidth,innerHeight);bits.forEach(b=>{b.vy+=.28;b.vx*=.985;b.x+=b.vx;b.y+=b.vy;b.r+=.15;b.life++;
+  cc.save();cc.translate(b.x,b.y);cc.rotate(b.r);cc.fillStyle=b.c;cc.globalAlpha=Math.max(0,1-b.life/90);cc.fillRect(-b.w/2,-b.h/2,b.w,b.h);cc.restore()});
+  bits=bits.filter(b=>b.life<90);if(bits.length)requestAnimationFrame(tick);else{cfRun=false;cc.clearRect(0,0,innerWidth,innerHeight)}};
+$('#copy').addEventListener('click',e=>{const b=e.currentTarget,k=b.getBoundingClientRect();
+  const ok=()=>{b.textContent='Copied';burst(k.left+k.width/2,k.top+k.height/2);setTimeout(()=>b.textContent='Copy',1600)};
+  const fb=()=>{const rg=document.createRange();rg.selectNodeContents($('#email'));const s=getSelection();s.removeAllRanges();s.addRange(rg);b.textContent='Selected'};
+  try{navigator.clipboard.writeText($('#email').textContent).then(ok,fb)}catch(_){fb()}});
+
+/* ---- form ---- */
+/* ---- contact form: validation, spam traps, delivery ---- */
+const EMAIL='rigoordonio@gmail.com',loadedAt=Date.now();
+const form=$('#enquiry'),note=$('#form-note'),send=$('#send');
+const checks={'f-name':v=>v?'':'Add your name.','f-email':v=>/^[^@\s]+@[^@\s]+\.[^@\s]+$/.test(v)?'':'Add an email like you@company.com.','f-msg':v=>v.length>=10?'':'Write at least a sentence about what you need.'};
+const check=id=>{const el=document.getElementById(id),m=checks[id](el.value.trim());document.getElementById('e-'+id.slice(2)).textContent=m;el.setAttribute('aria-invalid',!!m);return!m};
+/* re-check while typing, only once a field is flagged; checking on blur moved the Send button mid-click and swallowed the click */
+Object.keys(checks).forEach(id=>document.getElementById(id).addEventListener('input',e=>{if(e.target.getAttribute('aria-invalid')==='true')check(id)}));
+const say=(cls,html)=>{note.className='form-note'+(cls?' '+cls:'');note.innerHTML=html};
+const busy=on=>{on?send.setAttribute('aria-busy','true'):send.removeAttribute('aria-busy');send.firstChild.textContent=on?'Sending… ':'Send enquiry '};
+const cheer=()=>{const k=send.getBoundingClientRect();burst(k.left+k.width/2,k.top)};
+form.addEventListener('submit',async e=>{e.preventDefault();const bad=Object.keys(checks).filter(id=>!check(id));
+  if(bad.length){say('','Check the highlighted fields.');document.getElementById(bad[0]).focus();return}
+  const d=Object.fromEntries(new FormData(form));
+  /* spam traps: a filled honeypot or a submit within 3 s of page load is a bot, so act as if sent and send nothing */
+  if(d._gotcha||Date.now()-loadedAt<3000){form.reset();say('ok','Thanks. Your message has been sent.');return}
+  const endpoint=form.dataset.endpoint; /* set by tools/build.mjs from formEndpoint in site.config.json */
+  if(!endpoint){
+    const body=`${d.message}\n\n${d.name}${d.company?', '+d.company:''}\n${d.email}`;
+    const href=`mailto:${EMAIL}?subject=${encodeURIComponent('Enquiry: '+d.service)}&body=${encodeURIComponent(body)}`;
+    cheer();say('ok',`Your message is ready. <a href="${href}">Open it in your email app</a> to send it, or write to ${EMAIL}.`);
+    window.siteAnalytics?.('contact_ready');return}
+  busy(true);
+  try{const r=await fetch(endpoint,{method:'POST',headers:{Accept:'application/json'},body:new FormData(form)});
+    if(!r.ok)throw new Error('HTTP '+r.status);
+    form.reset();cheer();say('ok','Thanks. Your message has been sent, and I will reply by email.');window.siteAnalytics?.('contact_sent')}
+  catch(_){say('bad',`Sorry, that did not go through. Please try again or email <a href="mailto:${EMAIL}">${EMAIL}</a>.`)}
+  finally{busy(false)}});
+const yr=$('#year');if(yr)yr.textContent=new Date().getFullYear();
+
+/* ---- nav: menu, active section, progress, back to top ---- */
+const menuBtn=$('.menu-btn'),navEl=$('#site-nav');
+const setMenu=o=>{document.documentElement.classList.toggle('menu-open',o);menuBtn.setAttribute('aria-expanded',o)};
+menuBtn.addEventListener('click',()=>setMenu(menuBtn.getAttribute('aria-expanded')!=='true'));
+navEl.addEventListener('click',e=>{if(e.target.closest('a'))setMenu(false)});
+document.addEventListener('click',e=>{if(menuBtn.getAttribute('aria-expanded')==='true'&&!e.target.closest('.nav'))setMenu(false)});
+addEventListener('keydown',e=>{if(e.key==='Escape'&&menuBtn.getAttribute('aria-expanded')==='true'){setMenu(false);menuBtn.focus()}});
+const links=[...navEl.querySelectorAll('a')],secs=links.map(a=>document.querySelector(a.getAttribute('href')));
+const bar=$('.progress'),tt=$('#to-top');
+tt.addEventListener('click',()=>{scrollTo({top:0,behavior:RM?'auto':'smooth'});$('#main').focus({preventScroll:true})});
+const onScroll=()=>{const st=scrollY,max=document.documentElement.scrollHeight-innerHeight;bar.style.transform=`scaleX(${max>0?st/max:0})`;tt.classList.toggle('show',st>innerHeight);
+  let a=-1;secs.forEach((s,i)=>{if(s&&s.getBoundingClientRect().top<innerHeight*.4)a=i});
+  links.forEach((l,i)=>i===a?l.setAttribute('aria-current','true'):l.removeAttribute('aria-current'));roleScroll()};
+addEventListener('scroll',onScroll,{passive:true});onScroll();
+})();
+</script>
+
+<style id="motion-css">
+/* ===== motion layer: delete this block and the script#motion-js block to remove ===== */
+:root{--m-ease:cubic-bezier(.16,1,.3,1)}
+/* 1 boot: light sweep under the nav (overlay, no layout) */
+.nav::after{content:"";position:absolute;left:0;bottom:-1px;height:1px;width:28%;pointer-events:none;background:linear-gradient(90deg,transparent,#ff5a1f,#ffb627,transparent);box-shadow:0 0 10px #ff5a1f;opacity:0;animation:m-sweep .9s var(--m-ease) .02s backwards}
+@keyframes m-sweep{0%{transform:translateX(-110%);opacity:0}12%{opacity:1}100%{transform:translateX(380%);opacity:0}}
+@keyframes m-boot{from{opacity:0;filter:blur(8px);transform:translateY(8px)}to{opacity:1;filter:none;transform:none}}
+.nav{animation:m-boot .55s var(--m-ease) .06s backwards}
+.hero .label{animation:m-boot .55s var(--m-ease) .12s backwards}
+.hero h1{animation:m-boot .55s var(--m-ease) .2s backwards}
+.hero .sub{animation:m-boot .55s var(--m-ease) .38s backwards}
+.hero .ctas{animation:m-boot .55s var(--m-ease) .46s backwards}
+.hero .stats{animation:m-boot .55s var(--m-ease) .54s backwards}
+/* 3 scan-line wipe (classes added by JS only) */
+.rv.wiping{clip-path:inset(-40px -40px -40px -40px);transition:clip-path .8s var(--m-ease) var(--d,0s)!important} /* !important: card hover rules set their own transition and would cancel the wipe */
+.pre{clip-path:inset(-40px -40px 100% -40px)}
+.pre.wipe-x{clip-path:inset(-40px 100% -40px -40px)}
+.m-edge{position:absolute;pointer-events:none;z-index:5;opacity:0}
+.m-edge.y{height:1px;background:linear-gradient(90deg,transparent,#ff5a1f,#ffb627,transparent);box-shadow:0 0 12px #ff5a1f}
+.m-edge.x{width:1px;background:linear-gradient(transparent,#ff5a1f,#ffb627,transparent);box-shadow:0 0 12px #ff5a1f}
+/* 4 holographic hover: reflection layer that follows the mouse */
+.m-holo{position:relative}
+.m-holo::after{content:"";position:absolute;inset:0;border-radius:inherit;pointer-events:none;background:radial-gradient(280px circle at var(--hx,50%) var(--hy,0%),rgba(255,182,39,.10),transparent 60%);opacity:0;transition:opacity .25s var(--m-ease)}
+.m-holo:hover::after{opacity:1}
+.btn{position:relative}
+.m-shine::after{content:"";position:absolute;inset:0;border-radius:inherit;pointer-events:none;background:radial-gradient(110px circle at var(--hx,50%) var(--hy,50%),rgba(255,182,39,.30),transparent 65%);opacity:0;transition:opacity .2s var(--m-ease)}
+.m-shine:hover::after{opacity:1}
+.step.m-holo{transition:transform .25s var(--m-ease)}
+.role.m-holo{transition:border-color .4s,box-shadow .4s,transform .25s var(--m-ease)}
+.delivered > article.m-holo{transition:transform .25s var(--m-ease),border-color .3s}
+.delivered > article.m-holo:hover{--lift:-3px}
+form.m-holo{transition:transform .25s var(--m-ease)}
+/* 5 breathing glow on primary buttons (outer shadow only, opacity animated) */
+.btn.solid::before{content:"";position:absolute;inset:0;border-radius:inherit;pointer-events:none;box-shadow:0 0 22px 3px rgba(255,90,31,.45),0 0 2px 1px rgba(255,90,31,.45);opacity:.25;animation:m-breathe 3.6s ease-in-out infinite}
+.btn.solid.m-off::before{animation-play-state:paused}
+@keyframes m-breathe{50%{opacity:.75}}
+.m-cur,.m-ring{position:fixed;left:0;top:0;pointer-events:none;z-index:120;opacity:0;transition:opacity .2s}
+.m-cur{width:6px;height:6px;margin:-3px 0 0 -3px;border-radius:50%;background:var(--ink)}
+.m-ring{width:36px;height:36px;margin:-18px 0 0 -18px}
+.m-ring::after{content:"";position:absolute;inset:0;border-radius:50%;border:1px solid var(--ink);transition:transform .25s var(--m-ease),background .2s}
+.m-ring.big::after{transform:scale(1.8);background:rgba(18,18,18,.06)}
+.m-has-cur .m-cur,.m-has-cur .m-ring{opacity:1}
+.m-has-cur.m-cur-hide .m-cur,.m-has-cur.m-cur-hide .m-ring{opacity:0}
+/* 7 ambient grid behind the hero */
+.hero{position:relative}
+.hero > .wrap{position:relative;z-index:2}
+.m-grid{position:absolute;inset:-48px;pointer-events:none;z-index:1;background:linear-gradient(rgba(18,18,18,.04) 1px,transparent 1px) 0 0/48px 48px,linear-gradient(90deg,rgba(18,18,18,.04) 1px,transparent 1px) 0 0/48px 48px;-webkit-mask:radial-gradient(70% 70% at 50% 45%,#000 30%,transparent 80%);mask:radial-gradient(70% 70% at 50% 45%,#000 30%,transparent 80%);animation:m-drift 16s linear infinite}
+.m-grid.m-off{animation-play-state:paused}
+@keyframes m-drift{to{transform:translate(48px,48px)}}
+@media (prefers-reduced-motion:reduce){.nav::after,.m-grid,.btn.solid::before,.m-edge{display:none}}
+</style>
+
+<script id="motion-js">
+/* ===== motion layer: delete this block and the style#motion-css block to remove ===== */
+(()=>{
+const C={rowsX:'.delivered > article,.skills > div,.step',holo:'.step,.role,.delivered > article,#enquiry',soft:'#enquiry',cursor:true,cursorBig:'a,button,summary,.m-holo,.pcard',cursorHide:'#chart-box',parallax:'#halo',parallaxK:.15};
+const RM=matchMedia('(prefers-reduced-motion: reduce)').matches;
+const FINE=matchMedia('(pointer: fine)').matches;
+const EASE='cubic-bezier(.16,1,.3,1)';
+const $$=s=>[...document.querySelectorAll(s)];
+
+/* 3 scan-line wipe: called by the existing reveal observer */
+$$(C.rowsX).forEach(el=>el.classList.add('wipe-x'));
+window.motionWipe=t=>{
+  t.classList.add('wiping');
+  const done=e=>{if(e.target===t&&e.propertyName==='clip-path'){t.classList.remove('wiping');t.removeEventListener('transitionend',done)}};
+  t.addEventListener('transitionend',done);
+  setTimeout(()=>{t.classList.remove('wiping');t.removeEventListener('transitionend',done)},(parseFloat(getComputedStyle(t).getPropertyValue('--d'))*1000||0)+1000); /* fallback if transitionend never fires */
+  requestAnimationFrame(()=>{t.classList.remove('pre');if(RM)return;
+    const r=t.getBoundingClientRect(),x=t.classList.contains('wipe-x'),d=document.createElement('div');
+    d.className='m-edge '+(x?'x':'y');d.setAttribute('aria-hidden','true');
+    Object.assign(d.style,{left:(r.left+scrollX)+'px',top:(r.top+scrollY)+'px',[x?'height':'width']:(x?r.height:r.width)+'px'});
+    document.body.appendChild(d);
+    const delay=parseFloat(getComputedStyle(t).getPropertyValue('--d'))*1000||0,end=x?`translateX(${r.width}px)`:`translateY(${r.height}px)`;
+    d.animate([{transform:'none',opacity:1},{opacity:1,offset:.8},{transform:end,opacity:0}],{duration:800,delay,easing:EASE,fill:'backwards'}).onfinish=()=>d.remove();
+  });
+};
+
+/* 2 decode section headings once on first view */
+if(!RM){
+  const GL={u:'ABCDEFGHIJKLMNOPQRSTUVWXYZ#%&+=/<>',l:'abcdefghijklmnopqrstuvwxyz',d:'0123456789'};
+  const pick=c=>{const s=/[A-Z]/.test(c)?GL.u:/[a-z]/.test(c)?GL.l:/\d/.test(c)?GL.d:null;return s?s[Math.random()*s.length|0]:c};
+  const decode=h=>{
+    const w=document.createTreeWalker(h,NodeFilter.SHOW_TEXT),nodes=[];while(w.nextNode())nodes.push(w.currentNode);
+    const orig=nodes.map(n=>n.nodeValue),total=orig.join('').length||1,t0=performance.now(),D=800;
+    h.setAttribute('aria-label',h.textContent.replace(/\s+/g,' ').trim());
+    const step=now=>{const p=Math.min(1,(performance.now()-t0)/D);let k=0;
+      nodes.forEach((n,j)=>{let o='';for(const c of orig[j]){o+=(p>=.25+.75*(k/total))?c:pick(c);k++}n.nodeValue=o});
+      if(p<1)requestAnimationFrame(step);else{nodes.forEach((n,j)=>n.nodeValue=orig[j]);h.removeAttribute('aria-label')}};
+    requestAnimationFrame(step);
+    setTimeout(()=>{nodes.forEach((n,j)=>n.nodeValue=orig[j]);h.removeAttribute('aria-label')},D+120); /* settle even if frames are dropped */
+  };
+  const hio=new IntersectionObserver(es=>es.forEach(e=>{if(e.isIntersecting){hio.unobserve(e.target);setTimeout(()=>decode(e.target),60)}}),{rootMargin:'0px 0px -12% 0px'});
+  $$('h2').forEach(h=>hio.observe(h));
+}
+
+/* 4 holographic tilt + reflection (desktop pointers only) */
+if(FINE&&!RM){
+  const track=(el,e)=>{const k=el.getBoundingClientRect(),x=(e.clientX-k.left)/k.width,y=(e.clientY-k.top)/k.height;
+    el.style.setProperty('--hx',(x*100).toFixed(1)+'%');el.style.setProperty('--hy',(y*100).toFixed(1)+'%');return[x,y]};
+  $$(C.holo).forEach(el=>{el.classList.add('m-holo');const max=el.matches(C.soft||'_none_')?3:6;
+    el.addEventListener('pointermove',e=>{const[x,y]=track(el,e);if(el.classList.contains('dim')){el.style.transform='';return}
+      el.style.transform=`perspective(900px) rotateX(${((.5-y)*2*max).toFixed(2)}deg) rotateY(${((x-.5)*2*max).toFixed(2)}deg) translateY(var(--lift,0px))`});
+    el.addEventListener('pointerleave',()=>el.style.transform='')});
+  $$('.btn').forEach(b=>{b.classList.add('m-shine');b.addEventListener('pointermove',e=>track(b,e))});
+}
+
+/* 6 cursor (only where the page has none yet) */
+if(C.cursor&&FINE&&!RM){
+  const dot=document.createElement('div'),ring=document.createElement('div');dot.className='m-cur';ring.className='m-ring';
+  dot.setAttribute('aria-hidden','true');ring.setAttribute('aria-hidden','true');document.body.append(dot,ring);
+  let mx=-100,my=-100,rx=-100,ry=-100,on=false;
+  addEventListener('pointermove',e=>{mx=e.clientX;my=e.clientY;if(!on){on=true;rx=mx;ry=my;document.documentElement.classList.add('m-has-cur')}},{passive:true});
+  document.addEventListener('pointerleave',()=>{on=false;document.documentElement.classList.remove('m-has-cur')});
+  document.addEventListener('pointerover',e=>{const t=e.target;ring.classList.toggle('big',!!t.closest(C.cursorBig));
+    document.documentElement.classList.toggle('m-cur-hide',!!t.closest(C.cursorHide))});
+  const tick=()=>{rx+=(mx-rx)*.2;ry+=(my-ry)*.2;dot.style.transform=`translate(${mx}px,${my}px)`;ring.style.transform=`translate(${rx}px,${ry}px)`;requestAnimationFrame(tick)};tick();
+}
+
+/* 7 ambient depth: grid + parallax, paused off screen */
+const hero=document.querySelector('.hero'),grid=document.createElement('div');grid.className='m-grid';grid.setAttribute('aria-hidden','true');
+const bg=document.querySelector(C.parallax);
+if(bg&&bg.parentNode===hero)bg.after(grid);else hero.prepend(grid);
+let heroOn=true;
+new IntersectionObserver(([e])=>{heroOn=e.isIntersecting;grid.classList.toggle('m-off',!heroOn)}).observe(hero);
+const btns=$$('.btn.solid'),bio=new IntersectionObserver(es=>es.forEach(e=>e.target.classList.toggle('m-off',!e.isIntersecting)));btns.forEach(b=>bio.observe(b));
+if(!RM&&bg){let ticking=false;addEventListener('scroll',()=>{if(ticking||!heroOn)return;ticking=true;
+  requestAnimationFrame(()=>{bg.style.transform=`translate3d(0,${(scrollY*C.parallaxK).toFixed(1)}px,0)`;ticking=false})},{passive:true})}
+})();
+</script>
+<script>
+/* photo badge grows as it reaches the middle of the screen and shrinks as it leaves */
+(()=>{const a=document.querySelector('.ava-logo');if(!a||matchMedia('(prefers-reduced-motion: reduce)').matches)return;
+let cur=0,goal=0,raf=0;
+const aim=()=>{if(document.documentElement.classList.contains('svc-lock'))return;const r=a.getBoundingClientRect(),vh=innerHeight,d=Math.abs(r.top+r.height/2-vh*.42)/(vh*.5);goal=Math.max(0,1-d);goal=goal*goal*(3-2*goal);if(!raf)raf=requestAnimationFrame(step)};
+const step=()=>{cur+=(goal-cur)*.14;a.style.setProperty('--p',cur.toFixed(4));raf=Math.abs(goal-cur)>.002?requestAnimationFrame(step):0};
+addEventListener('scroll',aim,{passive:true});addEventListener('resize',aim);aim();})();
+</script>
+<style>
+/* page colours for the poke pill and GitHub graph */
+:root{--pk-fg:var(--ink);--pk-dim:var(--ink-2);--pk-line:var(--rule);--pk-bg:var(--card);--pk-acc:var(--ember)}
+/* poke: a small floating pill that slides in once you scroll past the hero */
+.poke{position:fixed;z-index:19;right:max(16px,env(safe-area-inset-right,0px));top:calc(env(safe-area-inset-top,0px) + 84px);display:flex;align-items:center;gap:14px;padding:8px 8px 8px 16px;border-radius:999px;background:color-mix(in srgb,var(--pk-bg) 88%,transparent);-webkit-backdrop-filter:blur(14px);backdrop-filter:blur(14px);border:1px solid var(--pk-line);box-shadow:0 12px 36px -16px rgba(0,0,0,.35);transform:translateY(-14px) scale(.96);opacity:0;pointer-events:none;transition:transform .5s cubic-bezier(.34,1.56,.64,1),opacity .3s}
+.poke.on{transform:none;opacity:1;pointer-events:auto}
+.pk-meta{display:grid;line-height:1.2}
+.pk-meta small{font-size:13px;color:var(--pk-dim)}
+.pk-n{font:500 15px/1.2 var(--mono,ui-monospace,monospace);color:var(--pk-fg);font-variant-numeric:tabular-nums;display:inline-flex;overflow:hidden;height:1.2em}
+.pk-n span{display:inline-block}
+.pk-n .roll{animation:pk-roll .35s cubic-bezier(.22,1,.36,1)}
+@keyframes pk-roll{from{transform:translateY(100%);opacity:0}}
+.pk-btn{position:relative;display:inline-flex;align-items:center;gap:8px;min-height:46px;padding:0 18px;border-radius:999px;border:1px solid var(--pk-line);background:var(--pk-bg);color:var(--pk-fg);font:500 15px var(--sans,inherit);cursor:pointer;transition:transform .15s}
+.pk-btn:active{transform:scale(.93)}
+.pk-btn:focus-visible{outline:2px solid var(--pk-acc);outline-offset:3px}
+.pk-hand{display:inline-block;transform-origin:70% 60%}
+.pk-btn.jab .pk-hand{animation:pk-jab .42s cubic-bezier(.34,1.56,.64,1)}
+@keyframes pk-jab{35%{transform:translateX(7px) rotate(-8deg) scale(1.15)}}
+.pk-dot{position:absolute;left:28px;top:50%;width:6px;height:6px;border-radius:50%;pointer-events:none;background:var(--pk-acc)}
+.pk-plus{position:absolute;right:10px;top:-4px;font:600 13px var(--mono,monospace);color:var(--pk-acc);pointer-events:none;animation:pk-up .7s ease-out forwards}
+@keyframes pk-up{to{transform:translateY(-22px);opacity:0}}
+@media (max-width:480px){.poke{top:auto;bottom:calc(env(safe-area-inset-bottom,0px) + 16px);right:auto;left:max(16px,env(safe-area-inset-left,0px))}.poke.on~.to-top{}}
+@media (prefers-reduced-motion:reduce){.poke,.pk-n .roll,.pk-btn.jab .pk-hand{transition:opacity .2s;animation:none}}
+</style>
+<aside class="poke" aria-label="Say hi">
+  <div class="pk-meta"><small class="pk-lbl">Pokes this month</small><span class="pk-n" aria-live="polite">—</span></div>
+  <button class="pk-btn" type="button" aria-label="Poke Rigo"><span class="pk-hand" aria-hidden="true">👉</span>Poke</button>
+</aside>
+<script>
+/* poke counter: shared monthly total where the page can store it, else this visitor's own pokes */
+(()=>{const box=document.querySelector('.poke');if(!box)return;const n=box.querySelector('.pk-n'),lbl=box.querySelector('.pk-lbl'),btn=box.querySelector('.pk-btn');
+const RM=matchMedia('(prefers-reduced-motion: reduce)').matches;const month=new Date().toISOString().slice(0,7);
+let total=null,mine=0,ref=null,busy=false,last=0;
+try{const s=JSON.parse(localStorage.getItem('pokes')||'{}');mine=s[month]||0}catch(e){}
+const fmt=v=>v.toLocaleString('en-US');
+const show=v=>{const t=fmt(v);if(n.textContent===t)return;n.innerHTML='';[...t].forEach((c,i)=>{const s=document.createElement('span');s.textContent=c;if(!RM&&n.dataset.ready){s.className='roll';s.style.animationDelay=i*18+'ms'}n.append(s)});n.dataset.ready=1};
+const paint=()=>{if(total!=null){lbl.textContent='Pokes this month';show(total)}else{lbl.textContent=mine?'Your pokes':'Say hi';show(mine)}};
+paint();
+/* slide in after the hero, step aside at the contact section */
+const hero=document.querySelector('.hero,#top,header+main section'),contact=document.querySelector('#contact');
+const vis=()=>{const past=scrollY>(hero?hero.offsetHeight*.7:500);const r=contact&&contact.getBoundingClientRect();box.classList.toggle('on',past&&!(r&&r.top<(innerWidth<=480?innerHeight:innerHeight*.3)&&r.bottom>0))};
+addEventListener('scroll',vis,{passive:true});vis();
+const burst=()=>{if(RM)return;const p=document.createElement('span');p.className='pk-plus';p.textContent='+1';btn.append(p);setTimeout(()=>p.remove(),720);
+  for(let i=0;i<7;i++){const d=document.createElement('i');d.className='pk-dot';btn.append(d);const a=-Math.PI/2+(Math.random()-.5)*2.4,v=18+Math.random()*16;
+    d.animate([{transform:'translate(0,-50%) scale(1)',opacity:1},{transform:`translate(${Math.cos(a)*v}px,${Math.sin(a)*v-3}px) scale(.2)`,opacity:0}],{duration:520+Math.random()*200,easing:'cubic-bezier(.22,1,.36,1)'}).onfinish=()=>d.remove()}};
+btn.addEventListener('click',async()=>{const now=Date.now();if(now-last<350)return;last=now;
+  btn.classList.remove('jab');void btn.offsetWidth;btn.classList.add('jab');burst();
+  mine++;try{const s=JSON.parse(localStorage.getItem('pokes')||'{}');s[month]=mine;localStorage.setItem('pokes',JSON.stringify(s))}catch(e){}
+  if(total!=null)total++;paint();
+  if(ref&&!busy){busy=true;try{await ref.set({month,n:mine})}catch(e){}busy=false}});
+/* shared total: one document per visitor (only they write it), summed for the month */
+(async()=>{try{if(!window.claude||!claude.use)return;const db=await claude.use('db'),user=await claude.use('user');if(!db||!user)return;
+  const id=await user.id();const col=db.collection('pokes');if(id)ref=col.doc(id);
+  col.onSnapshot(s=>{let t=0;s.docs.forEach(d=>{const v=d.data();if(v&&v.month===month)t+=+v.n||0});
+    if(id){const me=s.docs.find(d=>d.id===id);const v=me&&me.data();if(v&&v.month===month&&v.n>mine)mine=v.n}
+    total=Math.max(t,mine);paint()},()=>{});
+}catch(e){}})();
+})();
+</script>
+<script>
+/* day / night switch: circular reveal from the toggle, glowing scan ring, holographic grid, then glows settle */
+(()=>{const root=document.documentElement,btn=document.querySelector('.theme-btn');if(!btn)return;
+const RM=matchMedia('(prefers-reduced-motion: reduce)');let busy=false;
+const sync=()=>{const d=root.dataset.theme==='dark';btn.setAttribute('aria-pressed',d);btn.setAttribute('aria-label',d?'Switch to day mode':'Switch to night mode');
+  document.querySelectorAll('meta[name=theme-color]').forEach(m=>m.content=d?'#0a0c11':'#f7f7f5');dispatchEvent(new Event('themechange'))};
+const set=t=>{root.dataset.theme=t;try{localStorage.setItem('theme',t)}catch(e){}sync()};
+sync();
+matchMedia('(prefers-color-scheme: dark)').addEventListener('change',e=>{let s;try{s=localStorage.getItem('theme')}catch(_){}if(!s){root.dataset.theme=e.matches?'dark':'light';sync()}});
+const fx=(x,y,R,night)=>{const w=document.createElement('div');w.className='tx-fx';
+  w.style.cssText=night?'--r1:#34d399;--r2:#a3e635;--r3:#6ee7b7':'--r1:#ff5a1f;--r2:#ffb627;--r3:#ffd9b0';
+  const g=document.createElement('div');g.className='tx-grid '+(night?'night':'day');g.style.setProperty('--x',x+'px');g.style.setProperty('--y',y+'px');
+  const ring=document.createElement('div');ring.className='tx-ring';Object.assign(ring.style,{left:x-R+'px',top:y-R+'px',width:2*R+'px',height:2*R+'px'});
+  const sc=document.createElement('div');sc.className='tx-scan';w.append(g,ring,sc);document.body.append(w);
+  const ease="cubic-bezier(.65,0,.35,1)";
+  ring.animate([{transform:'scale(0)',opacity:1},{transform:'scale(.8)',opacity:1,offset:.8},{transform:'scale(1)',opacity:0}],{duration:1100,easing:ease,fill:'forwards'});
+  g.animate([{opacity:0,clipPath:`circle(0px at ${x}px ${y}px)`},{opacity:1,offset:.35},{opacity:0,clipPath:`circle(${R}px at ${x}px ${y}px)`}],{duration:1100,easing:ease,fill:'forwards'});
+  sc.animate([{transform:`translateY(${y}px)`,opacity:0},{opacity:.9,offset:.2},{transform:`translateY(${night?innerHeight:-10}px)`,opacity:0}],{duration:900,delay:160,easing:'cubic-bezier(.4,0,.2,1)',fill:'forwards'});
+  setTimeout(()=>w.remove(),1300)};
+const settle=()=>{const els=[...document.querySelectorAll('.ava-logo,.step,.svc,.role,.card,h1,h2')].filter(e=>{const r=e.getBoundingClientRect();return r.bottom>0&&r.top<innerHeight}).slice(0,14);
+  els.forEach((e,i)=>{e.style.setProperty('--sd',i*30+'ms');e.classList.remove('tx-settle');void e.offsetWidth;e.classList.add('tx-settle');setTimeout(()=>e.classList.remove('tx-settle'),600+i*30)})};
+btn.addEventListener('click',()=>{if(busy)return;const next=root.dataset.theme==='dark'?'light':'dark';
+  if(RM.matches){set(next);return}
+  if(!document.startViewTransition){root.classList.add('no-vt');set(next);setTimeout(()=>root.classList.remove('no-vt'),320);return}
+  busy=true;const b=btn.getBoundingClientRect(),x=b.left+b.width/2,y=b.top+b.height/2,R=Math.hypot(Math.max(x,innerWidth-x),Math.max(y,innerHeight-y));
+  const vt=document.startViewTransition(()=>set(next));
+  vt.ready.then(()=>{root.animate({clipPath:[`circle(0px at ${x}px ${y}px)`,`circle(${R}px at ${x}px ${y}px)`]},{duration:1100,easing:"cubic-bezier(.65,0,.35,1)",pseudoElement:'::view-transition-new(root)'});fx(x,y,R,next==='dark')});
+  vt.finished.then(settle).finally(()=>{busy=false})});
+})();
+</script>
+
+</body></html>
