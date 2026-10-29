@@ -1,4 +1,4 @@
 User-agent: *
 Allow: /
 
-Sitemap: https://rigo-ordonio.vercel.app/sitemap.xml
+Sitemap: https://rigoordonio.vercel.app/sitemap.xml
