@@ -1,0 +1,58 @@
+<section class="sec gh" id="github" style="padding-top:0">
+  <div class="wrap">
+    <div class="gh-head rv"><h2 id="gh-h">GitHub</h2><a class="gh-total" href="https://github.com/rigoordonio" target="_blank" rel="noopener"><span>github.com/rigoordonio</span> <span aria-hidden="true">↗</span></a></div>
+    <p class="gh-count rv">Contributions this year</p>
+    <div class="gh-box rv">
+      <div class="gh-scroll" tabindex="0" aria-label="Contribution calendar, scrolls sideways"><div class="gh-cal" role="img" aria-label="GitHub contribution graph"></div></div>
+      <div class="gh-foot"><a href="https://docs.github.com/articles/why-are-my-contributions-not-showing-up-on-my-profile" target="_blank" rel="noopener">Learn how we count contributions</a><span class="gh-key" aria-hidden="true">Less <i></i><i data-l="1"></i><i data-l="2"></i><i data-l="3"></i><i data-l="4"></i> More</span></div>
+    </div>
+  </div>
+</section>
+<style>
+/* GitHub contributions, laid out like GitHub's own graph: months on top, Mon/Wed/Fri on the left, one square per day */
+.gh-head{display:flex;justify-content:space-between;align-items:baseline;gap:16px;flex-wrap:wrap;padding-bottom:18px;border-bottom:1px solid var(--pk-line)}
+.gh-head h2{font-size:clamp(20px,2.4vw,26px);margin:0}
+.gh-total{display:inline-flex;align-items:center;gap:6px;min-height:44px;color:var(--pk-dim);text-decoration:none;font-size:15px;transition:color .2s}
+.gh-total:hover{color:var(--pk-fg)}
+.gh-count{margin:24px 0 10px;font-size:16px;color:var(--pk-fg)}
+.gh-box{border:1px solid var(--pk-line);border-radius:8px;padding:16px 16px 12px}
+.gh-scroll{overflow-x:auto;scrollbar-width:none}
+.gh-scroll::-webkit-scrollbar{display:none}
+.gh-cal{--c:11px;display:grid;grid-template-columns:30px repeat(var(--w,53),minmax(0,1fr));grid-template-rows:18px repeat(7,auto);gap:3px;width:100%;min-width:calc(30px + var(--w,53) * 14px);max-width:calc(30px + var(--w,53) * 19px);align-items:center;font-size:13px;color:var(--pk-dim)}
+.gh-cal b{font-weight:400;line-height:1;white-space:nowrap}
+.gh-cal i,.gh-key i{display:block;width:var(--c,11px);height:var(--c,11px);border-radius:2px;background:color-mix(in srgb,var(--pk-fg) 8%,transparent)}
+.gh-cal i{width:100%;height:auto;aspect-ratio:1;opacity:0;transform:scale(.6);transition:opacity .5s,transform .5s cubic-bezier(.34,1.56,.64,1);transition-delay:calc(var(--k) * 12ms)}
+.gh-cal.in i{opacity:1;transform:none}
+[data-l="1"]{background:color-mix(in srgb,var(--pk-acc) 30%,transparent)!important}
+[data-l="2"]{background:color-mix(in srgb,var(--pk-acc) 55%,transparent)!important}
+[data-l="3"]{background:color-mix(in srgb,var(--pk-acc) 80%,transparent)!important}
+[data-l="4"]{background:var(--pk-acc)!important}
+@media (hover:hover){.gh-cal i:hover{outline:1px solid var(--pk-fg);outline-offset:1px}}
+.gh-foot{display:flex;justify-content:space-between;align-items:center;gap:12px;flex-wrap:wrap;margin-top:10px;font-size:13px;color:var(--pk-dim)}
+.gh-foot a{color:var(--pk-dim);text-decoration:none;min-height:44px;display:inline-flex;align-items:center}
+.gh-foot a:hover{color:var(--pk-acc)}
+.gh-key{display:inline-flex;align-items:center;gap:3px}
+.gh-key i{--c:11px;margin:0 1px}
+@media (prefers-reduced-motion:reduce){.gh-cal i{transition:none}}
+</style>
+<script>
+/* draws this year's calendar right away, then colours it from GitHub's public contribution data; if that can't load, the empty calendar stays */
+(()=>{const g=document.querySelector('.gh-cal');if(!g)return;const out=document.querySelector('.gh-count');
+const Y=new Date().getFullYear(),start=Date.UTC(Y,0,1),off=new Date(start).getUTCDay(),D=864e5;
+const n=Math.round((Date.UTC(Y+1,0,1)-start)/D),W=Math.ceil((n+off)/7);g.style.setProperty('--w',W);
+const M=['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
+const lab=(t,c,r)=>{const b=document.createElement('b');b.textContent=t;b.style.gridArea=`${r}/${c}`;g.append(b)};
+M.forEach((m,k)=>lab(m,2+Math.floor((Math.round((Date.UTC(Y,k,1)-start)/D)+off)/7),1));
+[['Mon',3],['Wed',5],['Fri',7]].forEach(([t,r])=>lab(t,1,r));
+const cells={};for(let d=0;d<n;d++){const w=Math.floor((d+off)/7),i=document.createElement('i'),iso=new Date(start+d*D).toISOString().slice(0,10);
+  i.style.gridArea=`${(d+off)%7+2}/${w+2}`;i.style.setProperty('--k',w);i.title=`No contributions on ${iso}`;cells[iso]=i;g.append(i)}
+new IntersectionObserver((es,o)=>{if(es[0].isIntersecting){g.classList.add('in');o.disconnect()}},{threshold:.2}).observe(g);
+const fill=(list,total)=>{let t=0;list.forEach(c=>{const i=cells[c.date];if(!i)return;t+=c.count;if(c.level)i.dataset.l=c.level;else delete i.dataset.l;
+    i.title=`${c.count||'No'} contribution${c.count===1?'':'s'} on ${c.date}`});if(total!=null)t=total;
+  out.textContent=`${t.toLocaleString('en-US')} contribution${t===1?'':'s'} in ${Y}`;g.setAttribute('aria-label',out.textContent)};
+/* snapshot copied from github.com/rigoordonio on 2026-10-29, shown until the live data loads (and wherever it can't, e.g. previews) */
+const snap={2026:'07-30:1,10-03:4,10-05:6,10-06:6,10-08:4,10-09:1,10-10:2,10-21:7,10-27:24,10-29:1'};
+if(snap[Y])fill(snap[Y].split(',').map(s=>{const [md,n]=s.split(':'),c=+n;return{date:`${Y}-${md}`,count:c,level:c<2?1:c<5?2:c<8?3:4}}));
+fetch(`https://github-contributions-api.jogruber.de/v4/rigoordonio?y=${Y}`).then(r=>r.ok?r.json():Promise.reject()).then(d=>fill(d.contributions||[],d.total&&d.total[Y])).catch(()=>{});
+})();
+</script>

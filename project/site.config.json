@@ -1,0 +1,21 @@
+{
+  "siteUrl": "https://rigoordonio.vercel.app/",
+  "theme": "light",
+  "title": "Rigo Ordonio · Data Analytics, Forecasting & AI · Abu Dhabi",
+  "description": "Rigo Ordonio, Global Business Analyst in Abu Dhabi, delivers data analytics, forecasting, machine learning and AI data engineering for energy, FMCG and retail.",
+  "socialImageAlt": "Rigo Ordonio, Global Business Analyst in Abu Dhabi: I turn commercial data into forecasts leaders trust.",
+  "formEndpoint": "",
+  "analytics": { "provider": "none", "id": "" },
+  "person": {
+    "name": "Rigo Karl Ordonio",
+    "alternateName": "Rigo Ordonio",
+    "jobTitle": "Global Business Analyst",
+    "worksFor": "EnerMech",
+    "city": "Abu Dhabi",
+    "countryCode": "AE",
+    "country": "United Arab Emirates",
+    "email": "rigoordonio@gmail.com",
+    "sameAs": ["https://www.linkedin.com/in/rigo-karl-o-22a229134", "https://github.com/rigoordonio"],
+    "knowsAbout": ["Data analytics", "Forecasting", "Machine learning", "AI data engineering", "Data engineering", "S&OP", "FP&A", "Power BI", "Databricks SQL", "Salesforce", "Azure"]
+  }
+}

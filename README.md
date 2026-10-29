@@ -1,21 +1,24 @@
 # Portfolio Website
 
-My personal portfolio site: experience, services, projects and a contact form. Each page is a single self-contained HTML file (no build step), designed and built with Claude.
+Rigo Ordonio's portfolio: experience, services, projects and a contact form. Live at **https://rigoordonio.vercel.app/** (day and night modes, opens in night mode). Each page is a single self-contained HTML file with inline CSS and plain JavaScript, designed and built with Claude.
 
-| Version | File | Look |
-|---|---|---|
-| **Main** | [`index.html`](index.html) | Light gallery page with an animated visor figure that reflects a live forecast line, plus a day/night toggle |
-| Dark orb | [`versions/dark-orb/index.html`](versions/dark-orb/index.html) | Cinematic dark page that opens on a live liquid orb |
-| Studio | [`versions/studio/index.html`](versions/studio/index.html) | Light visor design without night mode |
+## What is in this repo
+
+| Folder | What it is |
+|---|---|
+| [`site/`](site) | The built site that Vercel deploys (Root Directory `site/`, branch `main`). A push here redeploys it |
+| [`project/`](project) | The source: the three page files, build and test tools, the day/night snippets, the Instagram launch story and the NFC card. Start with [`project/README.md`](project/README.md) |
+| [`index.html`](index.html), [`versions/`](versions) | Earlier hand-made versions of the page (light gallery, dark orb, studio) |
 
 ## Features
 
 - Responsive from phone to desktop, with safe-area support
+- Day and night modes with a circular reveal transition
 - Animated hero, scroll-linked experience timeline and interactive service cards
-- Project showcase and skills overview
-- Contact form with validation and a spam honeypot, backed by an [n8n workflow](https://github.com/rigoordonio/n8n-workflows) that sends an AI-drafted reply
+- Contact form with validation and a spam honeypot; until a form endpoint is set, a valid message opens in the visitor's email app
+- GitHub contribution graph and a Poke button
 - Respects reduced-motion settings; keyboard and screen-reader friendly
 
 ## Run it
 
-Open any `index.html` in a browser. To host it for free, turn on **GitHub Pages** (Settings → Pages → Deploy from branch → `main`).
+Open any `index.html` in a browser, or see [`project/README.md`](project/README.md) for the build, tests and deploy steps.

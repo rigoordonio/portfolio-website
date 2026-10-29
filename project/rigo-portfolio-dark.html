@@ -1,0 +1,1451 @@
+<title>Rigo Ordonio Portfolio</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,400;12..96,600;12..96,800&family=Figtree:wght@400;500;600&family=JetBrains+Mono:wght@400;500&display=swap">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Cdefs%3E%3ClinearGradient id='g' x1='0' y1='0' x2='1' y2='1'%3E%3Cstop offset='0' stop-color='%237fe0d4'/%3E%3Cstop offset='.5' stop-color='%23c9b8ff'/%3E%3Cstop offset='1' stop-color='%23f2c58a'/%3E%3C/linearGradient%3E%3C/defs%3E%3Crect width='64' height='64' rx='14' fill='%2306070a'/%3E%3Ccircle cx='32' cy='32' r='15' fill='url(%23g)'/%3E%3C/svg%3E">
+<style>
+/* Layout: cinematic single dark world. A live liquid orb opens the page, then the story runs top to bottom:
+   thesis, career ascent, services as morphing data, case studies, contact. One look by choice, so no light theme. */
+/* Metric-matched fallbacks: text keeps its line breaks while the web fonts load, so nothing jumps (CLS) */
+@font-face{font-family:"Bricolage Fallback";src:local("Arial"),local("Helvetica"),local("Liberation Sans");size-adjust:98.8%;ascent-override:94.2%;descent-override:27.3%;line-gap-override:0%}
+@font-face{font-family:"Figtree Fallback";src:local("Arial"),local("Helvetica"),local("Liberation Sans");size-adjust:99.6%;ascent-override:95.4%;descent-override:25.1%;line-gap-override:0%}
+@font-face{font-family:"JetBrains Mono Fallback";src:local("Courier New"),local("Menlo"),local("Liberation Mono");size-adjust:100%;ascent-override:102%;descent-override:30%;line-gap-override:0%}
+:root{
+  --ink:#06070a;          /* page ground */
+  --ink-2:#0d1016;        /* raised surface */
+  --line:#1d222c;         /* hairlines */
+  --fg:#eceae4;           /* primary text */
+  --fg-dim:#9aa0ab;       /* secondary text */
+  --pearl:#c9b8ff;        /* iridescent accent, violet side */
+  --tide:#7fe0d4;         /* iridescent accent, teal side */
+  --amber:#f2c58a;        /* warm highlight */
+  --display:"Bricolage Grotesque","Bricolage Fallback",ui-sans-serif,system-ui,sans-serif;
+  --body:"Figtree","Figtree Fallback",ui-sans-serif,system-ui,sans-serif;
+  --mono:"JetBrains Mono","JetBrains Mono Fallback",ui-monospace,SFMono-Regular,Menlo,monospace;
+  --gut-l:max(16px,env(safe-area-inset-left,0px));
+  --gut-r:max(16px,env(safe-area-inset-right,0px));
+  color-scheme:dark;
+}
+*{box-sizing:border-box}
+html{scroll-behavior:smooth}
+body{background:var(--ink);color:var(--fg);font-family:var(--body);font-size:17px;line-height:1.6;overflow-x:hidden;-webkit-font-smoothing:antialiased}
+body::before{content:"";position:fixed;inset:0 0 auto;height:env(safe-area-inset-top,0px);z-index:10;background:var(--ink)}
+a{color:inherit}
+:focus-visible{outline:2px solid var(--tide);outline-offset:3px;border-radius:4px}
+.wrap{max-width:1180px;margin:0 auto;padding-left:var(--gut-l);padding-right:var(--gut-r)}
+.eyebrow{font-family:var(--mono);font-size:12px;font-weight:400;line-height:1.6;letter-spacing:.14em;text-transform:uppercase;color:var(--fg-dim);display:flex;align-items:flex-start;gap:10px}
+.eyebrow::before{content:"";flex:none;width:22px;height:1px;margin-top:calc(.8em - .5px);background:linear-gradient(90deg,var(--tide),var(--pearl))} /* stays on the first line when the label wraps */
+h1,h2,h3{font-family:var(--display);font-weight:800;letter-spacing:-.025em;line-height:1.02;text-wrap:balance;margin:0}
+h2{font-size:clamp(34px,5.4vw,64px)}
+h3{font-size:22px;font-weight:600;letter-spacing:-.01em;line-height:1.2}
+p{margin:0}
+p,li{text-wrap:pretty}
+.iri{background:linear-gradient(100deg,var(--tide),var(--pearl) 45%,var(--amber));-webkit-background-clip:text;background-clip:text;color:transparent}
+section{position:relative}
+.sec{padding-block:clamp(80px,12vw,150px)}
+
+/* ---------- nav ---------- */
+.nav{position:fixed;top:env(safe-area-inset-top,0px);left:0;right:0;z-index:20;padding-top:16px}
+/* once the page scrolls, fade it out under the bar so the name never sits on top of scrolling text */
+.nav::before{content:"";position:absolute;inset:0 0 -24px;background:linear-gradient(var(--ink) 55%,transparent);pointer-events:none;z-index:-1;opacity:0;transition:opacity .25s ease-out}
+.nav-solid .nav::before{opacity:1}
+.nav .wrap{display:flex;align-items:center;justify-content:space-between;gap:16px}
+.nav-pill{display:flex;align-items:center;gap:4px;padding:6px;border:1px solid color-mix(in srgb,var(--fg) 12%,transparent);border-radius:999px;background:color-mix(in srgb,var(--ink) 55%,transparent);backdrop-filter:blur(14px);-webkit-backdrop-filter:blur(14px)}
+.nav-pill a{font-size:14px;text-decoration:none;color:var(--fg-dim);padding:0 16px;min-height:44px;display:inline-flex;align-items:center;border-radius:999px;transition:color .2s ease-out,background .2s ease-out}
+.nav-pill a[aria-current="true"]{color:var(--fg);background:color-mix(in srgb,var(--fg) 10%,transparent)}
+.nav-pill a:hover{color:var(--fg);background:color-mix(in srgb,var(--fg) 8%,transparent)}
+.brand{font-family:var(--display);font-weight:800;font-size:18px;text-decoration:none;letter-spacing:-.02em;display:flex;align-items:center;gap:10px;min-height:44px}
+.brand i{width:10px;height:10px;border-radius:50%;background:conic-gradient(var(--tide),var(--pearl),var(--amber),var(--tide));animation:spin 4s linear infinite}
+@keyframes spin{to{transform:rotate(360deg)}}
+.menu-btn{display:none;min-width:44px;min-height:44px;border-radius:999px;border:1px solid color-mix(in srgb,var(--fg) 14%,transparent);background:color-mix(in srgb,var(--ink) 55%,transparent);backdrop-filter:blur(14px);-webkit-backdrop-filter:blur(14px);color:var(--fg);font:500 14px var(--body);padding:0 16px;cursor:pointer;align-items:center;gap:8px}
+.menu-btn i{display:grid;gap:4px}.menu-btn i::before,.menu-btn i::after{content:"";display:block;width:16px;height:1.5px;background:currentColor;transition:transform .25s ease-out}
+.menu-open .menu-btn i::before{transform:translateY(2.75px) rotate(45deg)}.menu-open .menu-btn i::after{transform:translateY(-2.75px) rotate(-45deg)}
+@media (max-width:760px){
+  .menu-btn{display:inline-flex}
+  .nav-pill{position:fixed;top:calc(env(safe-area-inset-top,0px) + 72px);left:var(--gut-l);right:var(--gut-r);flex-direction:column;align-items:stretch;border-radius:22px;padding:8px;background:color-mix(in srgb,var(--ink-2) 92%,transparent);opacity:0;visibility:hidden;transform:translateY(-8px) scale(.98);pointer-events:none;transition:opacity .22s ease-out,transform .22s ease-out,visibility 0s linear .22s}
+  .nav-pill a{font-size:17px;min-height:52px;padding:0 18px}
+  .menu-open .nav-pill{opacity:1;visibility:visible;transform:none;pointer-events:auto;transition:opacity .22s ease-out,transform .22s ease-out,visibility 0s}
+}
+.progress{position:fixed;top:env(safe-area-inset-top,0px);left:0;right:0;height:2px;z-index:30;background:linear-gradient(90deg,var(--tide),var(--pearl),var(--amber));transform-origin:0 50%;transform:scaleX(0)}
+.skip{position:fixed;left:var(--gut-l);top:calc(env(safe-area-inset-top,0px) + 12px);z-index:200;padding:12px 18px;border-radius:999px;background:var(--fg);color:var(--ink);font-weight:600;text-decoration:none;transform:translateY(-200%);transition:transform .2s ease-out}
+.skip:focus{transform:none}
+.to-top{position:fixed;right:max(16px,calc(env(safe-area-inset-right,0px) + 16px));bottom:calc(env(safe-area-inset-bottom,0px) + 16px);z-index:20;width:48px;height:48px;border-radius:50%;border:1px solid var(--line);background:color-mix(in srgb,var(--ink-2) 85%,transparent);backdrop-filter:blur(10px);-webkit-backdrop-filter:blur(10px);color:var(--fg);font-size:18px;cursor:pointer;opacity:0;transform:translateY(12px);pointer-events:none;transition:opacity .25s ease-out,transform .25s ease-out,border-color .2s}
+.to-top.show{opacity:1;transform:none;pointer-events:auto}.to-top:hover{border-color:var(--pearl)}
+
+/* ---------- hero ---------- */
+.hero{min-height:min(880px,100svh);display:flex;align-items:center;overflow:hidden;padding-block:120px 70px}
+#orb{position:absolute;inset:0;width:100%;height:100%;display:block;background:radial-gradient(60% 70% at 72% 50%,#2a2350 0%,#0d1a22 45%,var(--ink) 75%)}
+.hero::after{content:"";position:absolute;inset:auto 0 0;height:180px;background:linear-gradient(transparent,var(--ink));pointer-events:none}
+.hero .wrap{position:relative;z-index:2;width:100%}
+.hero-copy{max-width:760px;display:grid;gap:28px}
+.hero h1{font-size:clamp(44px,7.6vw,104px)}
+.hero h1 .w{display:inline-block;white-space:nowrap}
+.hero .sub{font-size:clamp(17px,1.6vw,20px);color:var(--fg-dim);max-width:58ch}
+.ctas{display:flex;flex-wrap:wrap;gap:12px}
+.btn{position:relative;display:inline-flex;align-items:center;gap:10px;padding:15px 24px;border-radius:999px;font-weight:600;font-size:15px;text-decoration:none;border:1px solid color-mix(in srgb,var(--fg) 18%,transparent);background:color-mix(in srgb,var(--ink) 40%,transparent);backdrop-filter:blur(10px);-webkit-backdrop-filter:blur(10px);transition:transform .35s cubic-bezier(.2,.8,.2,1),background .3s,border-color .3s;cursor:pointer;color:var(--fg);font-family:var(--body)}
+.btn.solid{background:var(--fg);color:var(--ink);border-color:var(--fg)}
+.btn:hover{border-color:color-mix(in srgb,var(--fg) 40%,transparent)}
+.btn .arr{transition:transform .3s}
+.btn:hover .arr{transform:translateX(4px)}
+.proof{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:1px;margin-top:20px;border:1px solid var(--line);border-radius:18px;overflow:hidden;background:var(--line);max-width:720px}
+.proof div{background:color-mix(in srgb,var(--ink) 70%,transparent);backdrop-filter:blur(12px);-webkit-backdrop-filter:blur(12px);padding:18px 20px;min-width:0}
+.proof b{display:block;font-family:var(--display);font-size:clamp(28px,3.6vw,42px);font-weight:800;letter-spacing:-.03em;font-variant-numeric:tabular-nums;line-height:1}
+.proof span{display:block;font-size:13px;color:var(--fg-dim);margin-top:8px;line-height:1.35}
+@media (max-width:560px){.proof{grid-template-columns:1fr}}
+.scroll-hint{position:absolute;right:var(--gut-r);bottom:28px;z-index:3;font-family:var(--mono);font-size:12px;letter-spacing:.16em;color:var(--fg-dim);writing-mode:vertical-rl;display:flex;gap:12px;align-items:center}
+.scroll-hint::after{content:"";width:1px;height:56px;background:linear-gradient(var(--fg-dim),transparent);animation:drip 2.2s ease-in-out infinite;transform-origin:top}
+@keyframes drip{0%{transform:scaleY(0)}50%{transform:scaleY(1)}100%{transform:scaleY(1);opacity:0}}
+@media (max-width:760px){.scroll-hint{display:none}}
+
+/* split text intro (only when JS adds .split) */
+.split .w > span{display:inline-block;animation:rise .55s cubic-bezier(.16,1,.3,1) both;animation-delay:calc(var(--i) * 40ms + 180ms)} /* motion: boot timing */
+@keyframes rise{from{transform:translateY(40%);opacity:0;filter:blur(8px)}to{transform:none;opacity:1;filter:none}}
+.fade-in{animation:fadeup .55s cubic-bezier(.16,1,.3,1) both;animation-delay:var(--d,0s)} /* motion: blur-to-sharp boot */
+@keyframes fadeup{from{opacity:0;transform:translateY(8px);filter:blur(8px)}to{opacity:1;transform:none;filter:none}}
+
+/* ---------- marquee ---------- */
+.marquee{border-block:1px solid var(--line);overflow:hidden;padding-block:22px;-webkit-mask:linear-gradient(90deg,transparent,#000 12%,#000 88%,transparent);mask:linear-gradient(90deg,transparent,#000 12%,#000 88%,transparent)}
+.track{display:flex;gap:48px;width:max-content;animation:slide 38s linear infinite}
+.marquee:hover .track{animation-play-state:paused}
+.track span{font-family:var(--display);font-size:clamp(22px,3vw,34px);font-weight:600;letter-spacing:-.02em;white-space:nowrap;display:flex;align-items:center;gap:48px;color:var(--fg-dim)}
+.track span::after{content:"";width:9px;height:9px;border-radius:50%;background:conic-gradient(var(--tide),var(--pearl),var(--amber),var(--tide))}
+@keyframes slide{to{transform:translateX(-50%)}}
+
+/* ---------- reveal on scroll (only for items below the fold at load) ---------- */
+/* motion: fade-up replaced by the scan-line wipe in style#motion */
+
+/* ---------- about ---------- */
+.about-grid{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1.5fr);gap:clamp(32px,6vw,96px);align-items:start}
+@media (max-width:860px){.about-grid{grid-template-columns:1fr}}
+.scrub{font-family:var(--display);font-size:clamp(24px,3.1vw,40px);font-weight:600;line-height:1.22;letter-spacing:-.02em}
+.scrub .sw{color:color-mix(in srgb,var(--fg) 40%,transparent);transition:color .4s} /* 40%: unlit words still pass 3:1 for large text */
+.scrub .sw.on{color:var(--fg)}
+.scrub .sw.hl.on{color:var(--amber)}
+.ways{display:grid;gap:0;margin-top:48px;border-top:1px solid var(--line)}
+.way{display:grid;grid-template-columns:56px minmax(0,1fr);gap:16px;padding-block:20px;border-bottom:1px solid var(--line);align-items:baseline}
+.way em{font-style:normal;font-family:var(--mono);font-size:13px;color:var(--tide)}
+.way p{color:var(--fg-dim)}
+.way p b{color:var(--fg);font-weight:600}
+.portrait{position:sticky;top:110px;display:grid;gap:18px}
+/* one column on phones and tablets: the card scrolls with the page so it never covers the text below */
+@media (max-width:860px){.portrait{position:static}}
+.id-card{border:1px solid var(--line);border-radius:22px;padding:26px;background:radial-gradient(120% 90% at 0% 0%,color-mix(in srgb,var(--pearl) 14%,transparent),transparent 60%),var(--ink-2);display:grid;gap:16px}
+.mono-row{display:flex;justify-content:space-between;gap:12px;font-family:var(--mono);font-size:12.5px;color:var(--fg-dim);border-top:1px dashed var(--line);padding-top:12px}
+.mono-row b{color:var(--fg);font-weight:500;text-align:right}
+.id-name{font-family:var(--display);font-size:22px;font-weight:600;letter-spacing:-.01em;line-height:1.2}
+/* small round photo badge (sized by transform only, so scrolling never shifts the layout): spinning gradient ring, photo bobs gently inside */
+.ava-logo{--p:0;position:relative;display:block;width:180px;height:180px;transform:scale(calc(.49 + .51 * var(--p)));transform-origin:0 100%;border-radius:50%;isolation:isolate}.ava-logo::before{content:"";position:absolute;inset:0;border-radius:50%;background:conic-gradient(var(--tide),var(--pearl),var(--amber),var(--tide));animation:ava-spin 6s linear infinite;z-index:-1}.ava-logo::after{content:"";position:absolute;inset:-6px;border-radius:50%;background:conic-gradient(var(--tide),var(--pearl),var(--amber),var(--tide));filter:blur(12px);opacity:.45;animation:ava-spin 6s linear infinite;z-index:-2}.ava-in{position:absolute;inset:3px;border-radius:50%;overflow:hidden;background:radial-gradient(circle at 50% 35%,color-mix(in srgb,var(--ink) 70%,#888),var(--ink))}.ava-img{position:absolute;left:50%;top:6px;width:150%;max-width:none;height:auto;transform:translateX(-46%);animation:ava-bob 4s ease-in-out infinite}@keyframes ava-spin{to{transform:rotate(360deg)}}@keyframes ava-bob{50%{transform:translateX(-46%) translateY(-3px) scale(1.03)}}@media (prefers-reduced-motion:reduce){.ava-logo::before,.ava-logo::after,.ava-img{animation:none}}
+
+.avatar{width:72px;height:72px;border-radius:50%;background:conic-gradient(from 200deg,var(--tide),var(--pearl),var(--amber),var(--tide));display:grid;place-items:center;font-family:var(--display);font-weight:800;font-size:26px;color:var(--ink)}
+
+/* ---------- experience ascent ---------- */
+.ascent{position:relative;margin-top:64px;display:grid;gap:22px}
+.rail{position:absolute;left:19px;top:0;bottom:0;width:2px;background:var(--line);border-radius:2px}
+.rail i{position:absolute;inset:0 0 auto;height:var(--p,0%);background:linear-gradient(var(--tide),var(--pearl),var(--amber));border-radius:2px;box-shadow:0 0 18px var(--pearl)}
+.role{position:relative;padding-left:64px}
+.role .node{position:absolute;left:10px;top:26px;width:20px;height:20px;border-radius:50%;border:2px solid var(--line);background:var(--ink);transition:border-color .5s,box-shadow .5s,background .5s}
+.role.lit .node{border-color:var(--pearl);background:var(--pearl);box-shadow:0 0 0 6px color-mix(in srgb,var(--pearl) 20%,transparent),0 0 24px var(--pearl)}
+.role-card{border:1px solid var(--line);border-radius:20px;padding:24px 26px;background:var(--ink-2);display:grid;gap:12px;transition:border-color .5s,transform .5s}
+.role.lit .role-card{border-color:color-mix(in srgb,var(--pearl) 35%,var(--line))}
+.role-top{display:flex;flex-wrap:wrap;justify-content:space-between;gap:8px 20px;align-items:baseline}
+.role-top time{font-family:var(--mono);font-size:12.5px;color:var(--fg-dim);font-variant-numeric:tabular-nums}
+.role .co{color:var(--tide);font-weight:600}
+@media (max-width:560px){.role .sep{display:none}.role .co{display:block;font-size:16px;margin-top:4px}}
+.role .tag{font-family:var(--mono);font-size:12px;letter-spacing:.08em;text-transform:uppercase;color:var(--fg-dim)}
+.role ul{margin:0;padding-left:18px;color:var(--fg-dim);display:grid;gap:6px;font-size:15.5px}
+.role-card > p,.role ul{max-width:68ch}
+.role details summary{cursor:pointer;font-size:14px;min-height:44px;color:var(--fg);list-style:none;display:inline-flex;gap:8px;align-items:center}
+.role details summary::-webkit-details-marker{display:none}
+.role details summary::after{content:"+";font-family:var(--mono);color:var(--tide)}
+.role details[open] summary::after{content:"–"}
+.role details ul{margin-top:12px}
+.tools{display:flex;flex-wrap:wrap;gap:6px}
+.tools span{font-family:var(--mono);font-size:12px;padding:4px 10px;border-radius:999px;border:1px solid var(--line);color:var(--fg-dim)}
+
+/* ---------- services ---------- */
+.svc-head{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:clamp(24px,5vw,64px);align-items:center}
+@media (max-width:860px){.svc-head{grid-template-columns:1fr}}
+.stage{position:relative;aspect-ratio:4/3;max-width:100%;border:1px solid var(--line);border-radius:24px;overflow:hidden;background:radial-gradient(90% 80% at 50% 60%,#121726,var(--ink))}
+#particles{width:100%;height:100%;display:block}
+.stage-label{position:absolute;left:18px;bottom:16px;right:18px;display:flex;justify-content:space-between;gap:12px;font-family:var(--mono);font-size:12px;color:var(--fg-dim)}
+.stage-label b{color:var(--fg);font-weight:500}
+.dots{display:flex;gap:0;align-items:center;margin:-14px -17px -14px 0}
+.dots button{width:44px;height:44px;border:0;background:none;padding:0;cursor:pointer;display:grid;place-items:center}
+.dots button::before{content:"";width:6px;height:6px;border-radius:3px;background:var(--fg-dim);opacity:.4;transition:transform .3s ease-out,background .3s,opacity .3s}
+.dots button[aria-pressed="true"]::before{background:var(--tide);opacity:1;transform:scaleX(2.6)}
+/* services accordion: rows split by 1px rules, no boxes; accent only on the + and on links */
+.acc{margin-top:56px;border-top:1px solid var(--line)}
+.acc-item{border-bottom:1px solid var(--line);scroll-margin-top:100px;transition:opacity .4s var(--acc-ease) calc(var(--i,0) * 40ms),transform .4s var(--acc-ease) calc(var(--i,0) * 40ms)}
+.js .acc.pre-in .acc-item{opacity:0;transform:translateY(8px)}
+.acc-h{font:inherit;letter-spacing:normal;line-height:inherit}
+.acc-btn{width:100%;min-height:44px;display:flex;align-items:center;justify-content:space-between;gap:16px;padding:26px 0;border:0;background:none;color:color-mix(in srgb,var(--fg) 78%,var(--ink));font:600 clamp(22px,2.6vw,30px)/1.2 var(--display);letter-spacing:-.015em;text-align:left;cursor:pointer;transition:color .2s ease-out}
+@media (hover:hover){.acc-btn:hover{color:var(--fg)}}
+.acc-meta{display:flex;align-items:center;gap:18px;flex:none}
+.acc-count{font:400 13px/1 var(--mono);letter-spacing:.04em;color:var(--fg-dim)}
+.acc-icon{position:relative;width:16px;height:16px;color:var(--tide);transition:transform .3s var(--acc-ease)}
+.acc-icon::before,.acc-icon::after{content:"";position:absolute;left:0;top:50%;width:100%;height:1.5px;margin-top:-.75px;background:currentColor}
+.acc-icon::after{transform:rotate(90deg)}
+/* without scripts every service is listed open, so the rows show no toggle */
+html:not(.js) .acc-icon{display:none}
+html:not(.js) .acc-btn{cursor:default;color:var(--fg)}
+.acc-panel{display:grid;grid-template-rows:1fr}
+.js .acc-panel{display:none}
+.acc-inner{min-height:0;overflow:hidden;margin-inline:-6px;padding-inline:6px} /* side padding keeps focus rings inside the clip */
+.acc-list{list-style:none;margin:0;padding:4px 0 32px;display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,250px),1fr));gap:26px 40px}
+.acc-list li{display:grid;gap:6px;align-content:start}
+.acc-org{font:400 12px/1.5 var(--mono);letter-spacing:.08em;text-transform:uppercase;color:var(--fg-dim)}
+.acc-title{font-weight:600;color:var(--fg)}
+.acc-title a{display:inline-block;padding-block:12px;margin-block:-12px;color:inherit;text-decoration:underline;text-decoration-color:color-mix(in srgb,var(--tide) 70%,transparent);text-decoration-thickness:1px;text-underline-offset:4px;transition:color .2s ease-out}
+.acc-title a:hover{color:var(--tide)}
+.acc-out{color:var(--fg-dim);font-size:15.5px}
+/* services: rows lift into a detail card (svc-detail) that plays the service's spell */
+.acc-lead{display:flex;align-items:center;gap:16px;min-width:0}
+.svc-ico{flex:none;width:32px;height:24px;overflow:visible;fill:none;stroke:currentColor;stroke-width:1.5;stroke-linecap:square;--sp-bg:var(--ink)}
+.svc-ico .a{stroke:var(--tide)}.svc-ico .dot{fill:currentColor;stroke:none}.svc-ico .a.dot,.svc-ico .caret{fill:var(--tide);stroke:none}
+.svc-ico .band{fill:color-mix(in srgb,var(--tide) 14%,transparent);stroke:none}.svc-ico .dash{stroke-dasharray:2 2}.svc-ico .node{fill:var(--sp-bg)}.svc-ico .link{stroke-width:1}
+.svc-ico .hv{transform-box:fill-box;transform-origin:50% 100%}
+@media (hover:hover){
+  .acc-btn:hover .svc-ico[data-spell=bars] .hv{animation:sp-twitch .55s var(--m-ease)}
+  .acc-btn:hover .svc-ico[data-spell=line] .dash{animation:sp-flow .55s var(--m-ease)}
+  .acc-btn:hover .svc-ico[data-spell=line] .band{animation:sp-glow .55s var(--m-ease)}
+  .acc-btn:hover .svc-ico[data-spell=pipeline] .dot{animation:sp-nudge .55s var(--m-ease)}
+  .acc-btn:hover .svc-ico[data-spell=pipeline] .node.hv{transform-origin:50% 50%;animation:sp-pulse .55s var(--m-ease)}
+  .acc-btn:hover .svc-ico[data-spell=cluster] .hv{animation:sp-drift .55s var(--m-ease)}
+  .acc-btn:hover .svc-ico[data-spell=prompt] .caret{animation:sp-blink .55s steps(1,end)}
+}
+/* each hover is about a fifth of the full spell */
+@keyframes sp-twitch{40%{transform:scaleY(.8)}}
+@keyframes sp-flow{from{stroke-dashoffset:4}}
+@keyframes sp-glow{40%{opacity:.4}}
+@keyframes sp-nudge{40%{transform:translate(2px,2px)}}
+@keyframes sp-pulse{40%{transform:scale(1.25)}}
+@keyframes sp-drift{40%{transform:translate(-1.5px,1px)}}
+@keyframes sp-blink{50%{opacity:0}}
+@media (prefers-reduced-motion:reduce){.svc-ico *{animation:none!important}}
+.acc-item.is-open .acc-lead,.acc-item.is-open .acc-meta{opacity:0}
+#services,.svc-detail{--acc-ease:cubic-bezier(.22,1,.36,1)}
+.svc-detail{position:fixed;inset:0;width:100%;height:100%;max-width:none;max-height:none;margin:0;padding:0;border:0;background:none;color:inherit;overflow:hidden;--acc-ease:cubic-bezier(.22,1,.36,1)}
+.svc-detail::backdrop{background:transparent}
+.svc-scrim{position:absolute;inset:0;background:color-mix(in srgb,var(--ink) 60%,transparent);opacity:0}
+.svc-card{position:absolute;display:flex;flex-direction:column;max-height:calc(100dvh - 32px);--pad:24px}
+.svc-surface{position:absolute;inset:0;transform-origin:0 0;background:var(--ink-2);border-radius:22px;border:1px solid color-mix(in srgb,var(--pearl) 35%,var(--line))}
+.svc-head{position:relative;display:flex;align-items:center;justify-content:space-between;gap:16px;padding:26px var(--pad)}
+.svc-lead{display:flex;align-items:center;gap:16px;min-width:0;transform-origin:0 0}
+.svc-dico{display:contents}.svc-dico .svc-ico{--sp-bg:var(--ink-2)}
+.svc-meta{display:flex;align-items:center;gap:18px;flex:none;transform-origin:0 0}
+.svc-title{margin:0;font:600 clamp(22px,2.6vw,30px)/1.2 var(--display);letter-spacing:-.015em;color:var(--fg)}
+.svc-close{display:grid;place-items:center;width:44px;height:44px;margin:-14px;padding:0;border:0;background:none;color:inherit;cursor:pointer;border-radius:50%}
+.svc-close .acc-icon{transition:none}
+.svc-body{position:relative;overflow:auto;overscroll-behavior:contain;padding:0 var(--pad) 4px;margin-inline:-0px}
+.svc-stage{height:clamp(96px,20vw,150px);margin-bottom:28px}
+.svc-stage[hidden]{display:none}
+.svc-stage svg{display:block;width:100%;height:100%;overflow:visible}
+.svc-list{padding-top:0}
+/* the spells: ink and accent from the page's tokens */
+.spell{--u:1;--sp-bg:var(--ink-2);fill:none;stroke-linecap:square}
+.spell .rule{stroke:var(--line);stroke-width:calc(1px*var(--u))}
+.spell .bar{fill:color-mix(in srgb,var(--fg) 22%,var(--ink-2));transform-box:fill-box;transform-origin:50% 100%}.spell .bar.top{fill:var(--fg)}
+.spell .hi{fill:var(--tide);opacity:0;pointer-events:none}
+.spell .band{fill:color-mix(in srgb,var(--tide) 14%,transparent)}.spell .fc{stroke:var(--tide);stroke-width:calc(2px*var(--u));stroke-dasharray:calc(5px*var(--u)) calc(4px*var(--u))}
+.spell .veil{fill:var(--sp-bg);transform-box:fill-box;transform-origin:100% 50%;transform:scaleX(0)}
+.spell .hist,.spell .pipe{stroke:var(--fg);stroke-width:calc(2px*var(--u));stroke-dasharray:1;stroke-linejoin:round}
+.spell .join,.spell .core,.spell .packet{fill:var(--tide);transform-box:fill-box;transform-origin:50% 50%}
+.spell .node{fill:var(--sp-bg);stroke:var(--fg);stroke-width:calc(1.5px*var(--u))}
+.spell .ring{stroke:var(--tide);stroke-width:calc(1.5px*var(--u));opacity:0;transform-box:fill-box;transform-origin:50% 50%}
+.spell .link{stroke:var(--fg-dim);stroke-width:calc(1px*var(--u));stroke-dasharray:1;opacity:.6}
+.spell .pt{fill:var(--fg)}.spell .pt.acc{fill:var(--tide)}
+.spell .box{stroke:var(--fg);stroke-width:calc(1.5px*var(--u))}
+.spell text{stroke:none;font:500 16px var(--mono)}.spell .q,.spell .chev{fill:var(--fg)}.spell .chev{fill:var(--tide)}
+.spell .mask{fill:var(--sp-bg)}.spell .caret{fill:var(--tide)}
+.spell .ans{fill:var(--fg-dim);font:400 17px inherit}
+html.svc-lock{overflow:hidden;scroll-behavior:auto}
+html.svc-lock body,html.svc-lock .nav{padding-right:var(--sb,0px)}
+html.svc-lock :is(.m-cur,.m-ring,.cur,.cur-ring){display:none}
+.acc-tags{color:var(--fg-dim);font-size:13.5px}
+
+/* ---------- projects ---------- */
+.delivered{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:1px;background:var(--line);border:1px solid var(--line);border-radius:20px;overflow:hidden;margin-top:48px}
+@media (max-width:860px){.delivered{grid-template-columns:repeat(2,minmax(0,1fr))}}
+@media (max-width:560px){.delivered{grid-template-columns:1fr}}
+.delivered > article{background:var(--ink);padding:22px 24px;display:grid;gap:6px;align-content:start;transition:background .35s;min-width:0;scroll-margin-top:100px}
+.delivered > article:hover{background:var(--ink-2)}
+.delivered h3{font-size:18px;font-weight:600;letter-spacing:-.01em;line-height:1.3}
+.delivered p{font-size:14.5px;color:var(--fg-dim)}
+.delivered small{font-family:var(--mono);font-size:12px;letter-spacing:.1em;text-transform:uppercase;color:var(--tide)}
+.carousel-head{scroll-margin-top:100px;display:flex;justify-content:space-between;align-items:end;gap:16px;margin-top:88px;flex-wrap:wrap}
+.arrows{display:flex;gap:8px}
+.arrows button{width:46px;height:46px;border-radius:50%;border:1px solid var(--line);background:var(--ink-2);color:var(--fg);font-size:18px;cursor:pointer;transition:border-color .3s,background .3s}
+.arrows button:hover{border-color:var(--pearl)}
+.rail-x{display:flex;gap:18px;overflow-x:auto;scroll-snap-type:x mandatory;padding-block:28px 16px;scrollbar-width:none;margin-left:calc(-1 * var(--gut-l));margin-right:calc(-1 * var(--gut-r));padding-left:var(--gut-l);padding-right:var(--gut-r);scroll-padding-left:var(--gut-l)}
+.rail-x::-webkit-scrollbar{display:none}
+.proj{flex:0 0 min(360px,82vw);scroll-snap-align:start;border:1px solid var(--line);border-radius:22px;overflow:hidden;background:var(--ink-2);display:flex;flex-direction:column;transition:transform .6s cubic-bezier(.2,.8,.2,1),opacity .6s,border-color .4s}
+/* the peeking card dims its picture but keeps its text at 4.5:1 or better */
+.proj .viz,.proj .body{transition:opacity .6s}
+.proj.dim{transform:scale(.95)}
+.proj.dim .viz{opacity:.45}
+.proj.dim .body{opacity:.8}
+.proj:hover{border-color:color-mix(in srgb,var(--pearl) 40%,var(--line))}
+.proj .viz{height:150px;position:relative;overflow:hidden;background:var(--ink)}
+.proj .viz canvas{width:100%;height:100%;display:block}
+.proj .body{padding:22px 24px 24px;display:grid;gap:10px;flex:1;align-content:start}
+.proj .meta{display:flex;justify-content:space-between;gap:8px;font-family:var(--mono);font-size:12px;letter-spacing:.08em;text-transform:uppercase}
+.proj .meta .area{color:var(--tide)}
+.proj .meta .badge{color:var(--amber)}
+.proj p{font-size:15px;color:var(--fg-dim)}
+.proj .build{font-size:13.5px;color:var(--fg);border-top:1px dashed var(--line);padding-top:12px;margin-top:auto}
+.proj .build span{color:var(--fg-dim)}
+.proj.star .meta .badge::before{content:"★ ";}
+
+/* ---------- skills ---------- */
+.skills{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:28px 32px;margin-top:48px}
+@media (max-width:860px){.skills{grid-template-columns:repeat(2,minmax(0,1fr))}}
+@media (max-width:560px){.skills{grid-template-columns:1fr}}
+.skills h3{font-size:13px;font-family:var(--mono);font-weight:500;letter-spacing:.08em;text-transform:uppercase;color:var(--tide);margin-bottom:12px}
+.chips{display:flex;flex-wrap:wrap;gap:8px}
+.chips span{font-size:14px;padding:6px 12px;border-radius:999px;border:1px solid var(--line);background:var(--ink-2);transition:border-color .3s,transform .3s}
+.chips span:hover{border-color:var(--pearl);transform:translateY(-2px)}
+
+/* ---------- contact ---------- */
+.contact{overflow:hidden}
+.contact .glow{position:absolute;width:900px;height:900px;max-width:none;left:50%;top:40%;transform:translate(-50%,-50%);background:radial-gradient(closest-side,color-mix(in srgb,var(--pearl) 22%,transparent),color-mix(in srgb,var(--tide) 8%,transparent) 55%,transparent);filter:blur(30px);pointer-events:none;animation:breathe 9s ease-in-out infinite}
+@keyframes breathe{50%{transform:translate(-50%,-50%) scale(1.15)}}
+.contact-grid{position:relative;display:grid;grid-template-columns:minmax(0,1.1fr) minmax(0,1fr);gap:clamp(32px,6vw,80px)}
+@media (max-width:860px){.contact-grid{grid-template-columns:1fr}}
+.contact h2{font-size:clamp(40px,6.4vw,84px)}
+.reach{display:grid;gap:0;margin-top:36px;border-top:1px solid var(--line)}
+.reach div{display:flex;justify-content:space-between;align-items:center;gap:12px;padding-block:16px;border-bottom:1px solid var(--line);flex-wrap:wrap}
+.reach small{font-family:var(--mono);font-size:12px;letter-spacing:.1em;text-transform:uppercase;color:var(--fg-dim)}
+.reach span{font-size:16px;user-select:all;overflow-wrap:anywhere}
+.reach a{display:inline-flex;align-items:center;min-height:44px}
+.reach div > span,.reach div > a{margin-left:auto;text-align:right}
+.copy{font-family:var(--mono);font-size:12px;min-height:44px;padding:0 16px;border-radius:999px;border:1px solid var(--line);background:transparent;color:var(--fg);cursor:pointer}
+.copy:hover{border-color:var(--tide)}
+form{position:relative;display:grid;gap:14px;border:1px solid var(--line);border-radius:24px;padding:26px;background:color-mix(in srgb,var(--ink-2) 80%,transparent);backdrop-filter:blur(12px);-webkit-backdrop-filter:blur(12px)}
+.row2{display:grid;grid-template-columns:1fr 1fr;gap:14px}
+@media (max-width:520px){.row2{grid-template-columns:1fr}}
+label{display:grid;gap:6px;font-size:13px;color:var(--fg-dim);min-width:0}
+.lbl{display:flex;flex-wrap:wrap;align-items:baseline;gap:4px 6px}
+input,select,textarea{font:inherit;font-size:15px;color:var(--fg);background:var(--ink);border:1px solid var(--line);border-radius:12px;padding:12px 14px;width:100%;transition:border-color .3s}
+input:focus,select:focus,textarea:focus{outline:none;border-color:var(--pearl);box-shadow:0 0 0 1px var(--pearl)}
+textarea{min-height:110px;resize:vertical}
+.form-note{font-size:14px;min-height:1.4em;color:var(--fg-dim)}
+.form-note.ok{color:var(--tide)}
+.form-note.bad{color:var(--amber)}
+.form-note a{color:var(--fg);text-decoration-color:var(--tide);text-underline-offset:3px}
+.hp{position:absolute;left:-10000px;top:auto;width:1px;height:1px;overflow:hidden} /* honeypot: hidden from people, filled in by bots */
+.err{font-size:13px;color:var(--amber);min-height:0}
+.err:empty{display:none}
+input[aria-invalid="true"],textarea[aria-invalid="true"]{border-color:var(--amber)}
+.req{color:var(--amber)}
+.hint{font-size:12.5px;color:var(--fg-dim)}
+.btn[aria-busy="true"]{opacity:.7;pointer-events:none}
+footer{border-top:1px solid var(--line);padding-block:56px 28px;color:var(--fg-dim);font-size:14px}
+.foot{display:grid;grid-template-columns:minmax(0,1.4fr) repeat(2,minmax(0,1fr));gap:32px 48px}
+@media (max-width:760px){.foot{grid-template-columns:1fr 1fr}.foot-brand{grid-column:1 / -1}}
+.foot-brand{display:grid;gap:8px;align-content:start}
+.foot-brand .brand{color:var(--fg);justify-self:start}
+.foot-h{font-family:var(--mono);font-size:12px;letter-spacing:.14em;text-transform:uppercase;margin-bottom:6px}
+.foot ul{list-style:none;margin:0;padding:0;display:grid}
+.foot ul a{display:inline-flex;align-items:center;min-height:44px;min-width:44px;color:var(--fg);text-decoration:none;transition:color .2s ease-out}
+.foot ul a:hover{color:var(--tide)}
+@media (max-width:480px){.foot{grid-template-columns:1fr}}
+.foot ul a,.foot-brand p{overflow-wrap:anywhere}
+.foot-base{display:flex;justify-content:space-between;align-items:center;gap:12px;flex-wrap:wrap;margin-top:40px;padding-top:20px;border-top:1px solid var(--line);font-size:13px}
+.foot-base a{color:var(--fg-dim);text-decoration:none;display:inline-flex;align-items:center;min-height:44px}
+.foot-base a:hover{color:var(--fg)}
+
+/* ---------- custom cursor ---------- */
+.cur,.cur-ring{position:fixed;left:0;top:0;pointer-events:none;z-index:100;border-radius:50%;mix-blend-mode:difference;opacity:0;transition:opacity .3s}
+.cur{width:8px;height:8px;margin:-4px 0 0 -4px;background:#fff}
+.cur-ring{width:40px;height:40px;margin:-20px 0 0 -20px;transition:opacity .3s}
+.cur-ring::after{content:"";position:absolute;inset:0;border-radius:50%;border:1px solid #fff;transition:transform .25s cubic-bezier(.16,1,.3,1),background .2s} /* motion: sharper ease */
+.cur-ring.big::after{transform:scale(1.9);background:#fff}
+.has-cursor .cur,.has-cursor .cur-ring{opacity:1}
+
+@media (prefers-reduced-motion:reduce){
+  *,*::before,*::after{animation:none!important;transition:none!important}
+  .pre{clip-path:none} /* motion */
+  html{scroll-behavior:auto}
+}
+
+/* phones: small labels and secondary text one step larger, so everything reads comfortably at arm's length */
+@media (max-width:560px){
+  .eyebrow,.acc-org,.tools span,.role .tag,.role-top time,.proj .meta,.mono-row,.way em,.stage-label,.foot-h,.copy,.hint,.acc-count,.skills h3,.reach small{font-size:13px}
+  .acc-tags,.proj .build,.chips span,label,.foot-base,.role details summary,.menu-btn,.foot ul a,.foot-brand p,.proj p{font-size:15px}
+  .acc-out,.role ul,.way p{font-size:16px}
+  .spell .q,.spell .chev{font-size:20px}
+}
+
+@media (max-width:860px),(pointer:coarse){.cur,.cur-ring{display:none!important}}
+</style>
+
+<a class="skip" href="#main">Skip to content</a><div class="progress" aria-hidden="true"></div>
+<div class="cur" aria-hidden="true"></div><div class="cur-ring" aria-hidden="true"></div>
+
+<header class="nav">
+  <div class="wrap">
+    <a class="brand" href="#main" aria-label="Rigo Ordonio, back to top"><i></i>Rigo Ordonio</a>
+    <button class="menu-btn" type="button" aria-expanded="false" aria-controls="site-nav"><i aria-hidden="true"></i>Menu</button>
+    <nav class="nav-pill" id="site-nav" aria-label="Sections">
+      <a href="#about">About</a><a href="#experience">Experience</a><a href="#services">Services</a><a href="#projects">Projects</a><a href="#contact">Contact</a>
+    </nav>
+  </div>
+</header>
+
+<main id="main" tabindex="-1">
+<section class="hero">
+  <canvas id="orb" aria-hidden="true"></canvas>
+  <div class="wrap">
+    <div class="hero-copy">
+      <div class="eyebrow fade-in" style="--d:.12s">Global Business Analyst · Forecasting &amp; FP&amp;A support · Abu Dhabi</div>
+      <h1 id="headline">I turn commercial and supply chain data into forecasts leaders can <span class="iri">trust.</span></h1>
+      <script>/* split the headline into words before first paint, so the intro animation causes no layout shift */
+(()=>{if(matchMedia('(prefers-reduced-motion: reduce)').matches)return;
+  const h=document.getElementById('headline');let i=0;
+  const walk=(node)=>{
+    [...node.childNodes].forEach(n=>{
+      if(n.nodeType===3){
+        const frag=document.createDocumentFragment();
+        n.textContent.split(/(\s+)/).forEach(t=>{
+          if(!t) return;
+          if(/^\s+$/.test(t)){frag.append(t);return}
+          const w=document.createElement('span');w.className='w';
+          const s=document.createElement('span');s.textContent=t;s.style.setProperty('--i',i++);if(node.classList&&node.classList.contains('iri')){s.className='iri';node.classList.remove('iri')}
+          w.append(s);frag.append(w);
+        });
+        n.replaceWith(frag);
+      } else if(n.nodeType===1) walk(n);
+    });
+  };
+  walk(h);h.classList.add('split');
+})();
+</script>
+      <p class="sub fade-in" style="--d:.42s">8+ years across oil and gas, oilfield services, electronics manufacturing, FMCG and retail. I build BI, automation and AI tools that connect pipeline, S&amp;OP and FP&amp;A.</p>
+      <div class="ctas fade-in" style="--d:.5s">
+        <a class="btn solid mag" href="#projects">View my work <span class="arr" aria-hidden="true">→</span></a>
+        <a class="btn mag" href="#contact">Let's talk</a>
+      </div>
+      <div class="proof fade-in" style="--d:.58s">
+        <div><b data-count="8" data-suffix="+">8+</b><span>years in analytics, planning and forecasting</span></div>
+        <div><b data-count="4">4</b><span>global regions in one executive view</span></div>
+        <div><b data-count="8000" data-suffix="+">8,000+</b><span>SKUs forecast at Beauty Oasis</span></div>
+      </div>
+    </div>
+  </div>
+  <div class="scroll-hint" aria-hidden="true">SCROLL</div>
+</section>
+
+<div class="marquee" role="group" aria-label="Industries">
+  <div class="track">
+    <span>Oil &amp; Gas</span><span>Oilfield Services</span><span>Electronics Manufacturing</span><span>FMCG</span><span>Retail &amp; E-commerce</span><span>S&amp;OP</span><span>FP&amp;A</span>
+    <span aria-hidden="true">Oil &amp; Gas</span><span aria-hidden="true">Oilfield Services</span><span aria-hidden="true">Electronics Manufacturing</span><span aria-hidden="true">FMCG</span><span aria-hidden="true">Retail &amp; E-commerce</span><span aria-hidden="true">S&amp;OP</span><span aria-hidden="true">FP&amp;A</span>
+  </div>
+</div>
+
+<section class="sec" id="about">
+  <div class="wrap about-grid">
+    <aside class="portrait rv" aria-label="Profile">
+      <div class="id-card">
+        <span class="ava-logo" role="img" aria-label="Rigo Ordonio"><span class="ava-in"><img class="ava-img" src="data:image/webp;base64,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" alt="" width="407" height="640" decoding="async"></span></span>
+        <div><p class="id-name">Rigo Karl Ordonio</p><p style="color:var(--fg-dim);font-size:15px">Global Business Analyst, EnerMech</p></div>
+        <div class="mono-row"><span>Base</span><b>Abu Dhabi, UAE</b></div>
+        <div class="mono-row"><span>Focus</span><b>BD analytics · Forecasting</b></div>
+        <div class="mono-row"><span>Stack</span><b>Databricks · Power BI · Salesforce</b></div>
+        <div class="mono-row"><span>Education</span><b>BSc Industrial Engineering</b></div>
+      </div>
+    </aside>
+    <div>
+      <h2 class="eyebrow rv">About</h2>
+      <p class="scrub" id="scrub" style="margin-top:22px">My career has followed the data from the warehouse to the boardroom. Retail inventory, SAP operations, S&amp;OP, global pipeline governance: the job has stayed the same. Connect what sales expects, what operations can supply and what finance plans, then make the data clean enough that leaders trust it.</p>
+      <div class="ways">
+        <div class="way rv"><em>Step 1</em><p><b>Start from the decision</b> a leader needs to make, not the dataset.</p></div>
+        <div class="way rv"><em>Step 2</em><p><b>Fix data quality and governance first,</b> so every report after it holds up.</p></div>
+        <div class="way rv"><em>Step 3</em><p><b>Automate the repeatable parts,</b> then add AI where it saves real time.</p></div>
+        <div class="way rv"><em>Step 4</em><p><b>Close the loop</b> by tracking actions and forecast accuracy over time.</p></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="sec" id="experience" style="padding-top:0">
+  <div class="wrap">
+    <div class="eyebrow rv">Experience · newest first</div>
+    <h2 class="rv" style="margin-top:20px;max-width:15ch">From the warehouse to the <span class="iri">boardroom.</span></h2>
+    <div class="ascent" id="ascent">
+      <div class="rail"><i></i></div>
+      <article class="role rv"><span class="node"></span><div class="role-card">
+        <div class="role-top"><h3>Global Business Analyst<span class="sep"> · </span><span class="co">EnerMech</span></h3><time>Dec 2024 – present</time></div>
+        <div class="tag">Oil &amp; gas, energy services · Abu Dhabi</div>
+        <p>Global owner of the Business Forecasting Tool for BD across the Americas, APAC, Europe and AMEC.</p>
+        <details open><summary>Highlights</summary><ul>
+          <li><b>Global P&amp;L and KPI restructure:</b> led the analytics side of the move from regional to Global Business Line management, redesigning P&amp;L reporting, KPIs and performance views with BD, Ops, Finance and FP&amp;A across Americas, APAC, AMEC and Europe.</li>
+          <li>Govern the global database of commercial opportunities and enforce stage compliance, qualification reviews and pipeline hygiene.</li>
+          <li>Validate booking and revenue forecasts against pipeline evidence and track accuracy for Finance and FP&amp;A.</li>
+          <li>Report pipeline health, conversion, win rate and gap-to-target; produce executive packs for the SVP and Board.</li>
+          <li>Delivered the Unified Forecast Model, KPI Transformation and BD Reporting Automation.</li>
+          <li>Building an AI assistant on the Data Lake and Microsoft Teams.</li>
+        </ul></details>
+        <div class="tools"><span>Databricks SQL</span><span>Power BI</span><span>Salesforce</span><span>Azure</span><span>Excel</span></div>
+      </div></article>
+      <article class="role rv"><span class="node"></span><div class="role-card">
+        <div class="role-top"><h3>Supply Chain Analyst, BI &amp; Planning<span class="sep"> · </span><span class="co">Henkel</span></h3><time>Sep 2022 – Nov 2024</time></div>
+        <div class="tag">FMCG · Dubai</div>
+        <p>Subject-matter expert for Azure analytics in supply chain planning.</p>
+        <details><summary>Highlights</summary><ul>
+          <li>Developed Azure-based analytics and Excel VBA reporting automation for the Azure BI rollout.</li>
+          <li>Led data-quality improvement to strengthen confidence in planning data.</li>
+        </ul></details>
+        <div class="tools"><span>Azure</span><span>Excel VBA</span></div>
+      </div></article>
+      <article class="role rv"><span class="node"></span><div class="role-card">
+        <div class="role-top"><h3>Supply Chain Analyst 2, S&amp;OP<span class="sep"> · </span><span class="co">Emerson</span></h3><time>Sep 2020 – May 2022</time></div>
+        <div class="tag">Electronics manufacturing · USA</div>
+        <p>Linked the sales pipeline to supply decisions for the data logger product line.</p>
+        <details><summary>Highlights</summary><ul>
+          <li>Built demand and supply plans from Salesforce pursuit data for the S&amp;OP demand planning meeting.</li>
+          <li>Led S&amp;OP analytics, forecasting models and scenario analysis in Excel and ERP.</li>
+          <li>Delivered the EU SCIP Compliance Project, Global Demand Workbook and S&amp;OP Tool Enhancements.</li>
+        </ul></details>
+        <div class="tools"><span>Salesforce</span><span>Excel</span><span>ERP</span></div>
+      </div></article>
+      <article class="role rv"><span class="node"></span><div class="role-card">
+        <div class="role-top"><h3>Supply Chain Analyst<span class="sep"> · </span><span class="co">Schlumberger</span></h3><time>Nov 2019 – Aug 2020</time></div>
+        <div class="tag">Oilfield services · UAE</div>
+        <p>SAP operations and the dashboards that tracked them.</p>
+        <details><summary>Highlights</summary><ul>
+          <li>Managed SAP-based supply chain operations.</li>
+          <li>Built Power BI dashboards for order tracking, inventory planning and KPI monitoring.</li>
+        </ul></details>
+        <div class="tools"><span>SAP</span><span>Power BI</span></div>
+      </div></article>
+      <article class="role rv"><span class="node"></span><div class="role-card">
+        <div class="role-top"><h3>Inventory Controller / Data Specialist<span class="sep"> · </span><span class="co">Beauty Oasis</span></h3><time>May 2018 – Oct 2019</time></div>
+        <div class="tag">Retail &amp; e-commerce · UAE</div>
+        <p>Forecasting at SKU scale.</p>
+        <details><summary>Highlights</summary><ul>
+          <li>Managed forecasting for 8,000+ SKUs in Excel and ERP.</li>
+          <li>Led an ERP data migration and inventory process optimisation.</li>
+        </ul></details>
+        <div class="tools"><span>Excel</span><span>ERP</span></div>
+      </div></article>
+    </div>
+  </div>
+</section>
+
+<section class="sec" id="services" style="padding-top:0">
+  <div class="wrap">
+    <div class="svc-head">
+      <div style="display:grid;gap:20px">
+        <div class="eyebrow rv">Services</div>
+        <h2 class="rv">Data in, <span class="iri">decisions</span> out.</h2>
+        <p class="rv" style="color:var(--fg-dim);max-width:46ch">Data analytics, forecasting, machine learning, data engineering and AI for employers and clients. Open a service to see the projects behind it.</p>
+      </div>
+      <div class="stage rv">
+        <canvas id="particles" aria-label="Animated particles forming a bar chart, a forecast line and an AI network" role="img"></canvas>
+        <div class="stage-label"><span><b id="stage-name">BI reporting</b> · <span id="stage-desc">KPIs by region</span></span><span class="dots" id="dots" role="group" aria-label="Choose animation"><button type="button" aria-pressed="true" aria-label="BI reporting"></button><button type="button" aria-pressed="false" aria-label="Forecasting"></button><button type="button" aria-pressed="false" aria-label="AI assistants and RAG"></button></span></div>
+      </div>
+    </div>
+    <script type="application/json" id="services-data">
+    [
+    {"id": "data-analytics", "name": "Data Analytics", "spell": "bars", "projects": [
+      {"title": "KPI Transformation", "org": "EnerMech", "outcome": "One KPI set and executive view across 4 regions: the Americas, APAC, Europe and AMEC.", "tags": ["Power BI", "Databricks SQL", "Salesforce"]},
+      {"title": "Large Account Management dashboard", "org": "EnerMech", "outcome": "Power BI dashboard for the Large Account Management Programme: the top 20 accounts, with booking plan and revenue forecast over a 3-year outlook.", "tags": ["Power BI"]}
+    ]},
+    {"id": "forecasting", "name": "Forecasting", "spell": "line", "projects": [
+      {"title": "Unified Forecast Model", "org": "EnerMech", "outcome": "Pipeline and revenue forecasts in one model across 4 regions.", "tags": ["Databricks SQL", "Power BI", "Excel"]},
+      {"title": "S&OP Tools & Global Demand Workbook", "org": "Emerson", "outcome": "Demand and supply plans built from Salesforce pursuit data for S&OP decisions.", "tags": ["Salesforce", "Excel", "ERP"]},
+      {"title": "SKU demand forecasting", "org": "Beauty Oasis", "outcome": "Forecasts for 8,000+ SKUs across a retail and e-commerce range.", "tags": ["Excel", "ERP"]},
+      {"title": "Forecast Analytics", "org": "Personal · live app", "outcome": "Forecast dashboard on synthetic prospects and jobs data: a Python pipeline loads and checks PostgreSQL, and a React app shows pipeline, revenue against targets, and an AI chat.", "tags": ["React", "PostgreSQL", "Python", "Gemini"], "href": "https://business-forecasting-project.onrender.com/"}
+    ]},
+    {"id": "machine-learning", "name": "Machine Learning", "spell": "cluster", "projects": [
+      {"title": "Sales-to-Revenue Forecast with ML", "org": "Demo · in progress", "outcome": "Blends pipeline stage probability with history, benchmarked against a weighted-pipeline baseline.", "tags": ["Python", "Databricks"], "href": "#ai-portfolio"},
+      {"title": "Win-Probability Scoring", "org": "Demo · in progress", "outcome": "Scores each opportunity by its likelihood to win from stage, age, value and region.", "tags": ["Gradient boosting", "Power BI"], "href": "#ai-portfolio"}
+    ]},
+    {"id": "data-engineering", "name": "Data Engineering & Pipelines", "spell": "pipeline", "projects": [
+      {"title": "BD Reporting Automation", "org": "EnerMech", "outcome": "Automated BD pipeline reporting, cutting manual effort.", "tags": ["Databricks SQL", "Salesforce", "Power BI"]},
+      {"title": "Supply Chain Reporting Automation", "org": "Henkel", "outcome": "VBA and Azure automation for more accurate planning reports.", "tags": ["Azure", "Excel VBA"]},
+      {"title": "ERP data migration", "org": "Beauty Oasis", "outcome": "Led the ERP data migration and a cleaner inventory process.", "tags": ["ERP", "Excel"]},
+      {"title": "EU SCIP Compliance", "org": "Emerson", "outcome": "Product data compliance for the EU SCIP database.", "tags": ["ERP", "Excel"]}
+    ]},
+    {"id": "ai-llm", "name": "AI / LLM Solutions", "spell": "prompt", "projects": [
+      {"title": "AI data assistant in Forecast Analytics", "org": "Personal · live app", "outcome": "Ask-the-data chat built into my forecasting dashboard: answers plain-language questions from the live data, draws charts, runs Monte Carlo and anomaly checks, and traces every figure it quotes back to the data.", "tags": ["Gemini", "Tool calling", "TypeScript"], "href": "https://business-forecasting-project.onrender.com/"},
+      {"title": "AI assistant on Data Lake & Teams", "org": "EnerMech · in progress", "outcome": "Retrieves and analyses company data from inside Microsoft Teams.", "tags": ["RAG", "Data Lake", "Microsoft Teams"]},
+      {"title": "Ask-the-Pipeline RAG Assistant", "org": "Demo · in progress", "outcome": "Plain-language questions over pipeline data and SOPs, with sources cited.", "tags": ["RAG", "SQL", "Teams"], "href": "#ai-portfolio"},
+      {"title": "Budget vs Actual Variance Explainer", "org": "Demo · in progress", "outcome": "AI-drafted commentary for each monthly budget-vs-actual variance.", "tags": ["Power BI", "LLM"], "href": "#ai-portfolio"},
+      {"title": "AI Opportunity Intelligence Agent", "org": "Personal · GitHub", "outcome": "Daily briefing on five energy accounts: collects public news, scores each opportunity with a local Qwen model and emails a summary.", "tags": ["Python", "Ollama", "Qwen3"], "href": "https://github.com/rigoordonio/ai-opportunity-intelligence-agent"},
+      {"title": "LinkedIn Job Match", "org": "Personal · GitHub", "outcome": "Claude Code skill that ranks fresh remote LinkedIn jobs against a CV and emails the best matches each morning.", "tags": ["Claude Code", "Python", "Gmail"], "href": "https://github.com/rigoordonio/linkedin-job-match"},
+      {"title": "Weekly Oil & Gas AI Post", "org": "Personal · GitHub", "outcome": "Claude Code skill that drafts a weekly LinkedIn post on oil and gas AI news and publishes only after email approval.", "tags": ["Claude Code", "Composio", "LinkedIn"], "href": "https://github.com/rigoordonio/weekly-oilgas-ai-post"}
+    ]}
+  ]
+    </script>
+    <div class="acc" id="svc-acc"></div>
+    <dialog class="svc-detail" id="svc-detail" aria-labelledby="svc-detail-title"><div class="svc-scrim"></div><div class="svc-card"><div class="svc-surface"></div><div class="svc-head"><div class="svc-lead"><span class="svc-dico"></span><h3 class="svc-title" id="svc-detail-title">Service</h3></div><div class="svc-meta"><span class="acc-count svc-count"></span><button class="svc-close" type="button" aria-label="Close"><span class="acc-icon" aria-hidden="true"></span></button></div></div><div class="svc-body"><div class="svc-stage" aria-hidden="true"></div><ul class="acc-list svc-list"></ul></div></div></dialog>
+  </div>
+</section>
+
+<section class="sec" id="projects" style="padding-top:0">
+  <div class="wrap">
+    <div class="eyebrow rv">Projects</div>
+    <h2 class="rv" style="margin-top:20px;max-width:16ch">What I'm <span class="iri">building next.</span></h2>
+
+    <div class="carousel-head" id="ai-portfolio">
+      <div style="display:grid;gap:10px"><div class="eyebrow">AI portfolio · demos in progress</div><h3 style="font-size:clamp(24px,3vw,34px);font-weight:800;letter-spacing:-.02em">Eight AI builds on public or synthetic data</h3></div>
+      <div class="arrows"><button type="button" id="prev" aria-label="Previous project">←</button><button type="button" id="next" aria-label="Next project">→</button></div>
+    </div>
+    <div class="rail-x" id="rail"></div>
+  </div>
+</section>
+
+<section class="sec" id="skills" style="padding-top:0">
+  <div class="wrap">
+    <h2 class="eyebrow rv">Skills &amp; tools</h2>
+    <div class="skills">
+      <div class="rv"><h3>BI &amp; data</h3><div class="chips"><span>Power BI</span><span>Databricks SQL</span><span>Azure</span><span>Excel VBA</span><span>Salesforce</span><span>SAP Scripting</span></div></div>
+      <div class="rv" style="--d:.06s"><h3>Commercial analytics</h3><div class="chips"><span>Pipeline health</span><span>Win rate</span><span>Conversion</span><span>Forecast accuracy</span><span>Gap-to-target</span></div></div>
+      <div class="rv" style="--d:.12s"><h3>Pipeline governance</h3><div class="chips"><span>Opportunity lifecycle</span><span>Stage compliance</span><span>Qualification reviews</span><span>Data governance</span></div></div>
+      <div class="rv"><h3>Planning &amp; forecasting</h3><div class="chips"><span>S&amp;OP</span><span>Demand planning</span><span>Supply planning</span><span>Scenario analysis</span><span>FP&amp;A alignment</span></div></div>
+      <div class="rv" style="--d:.06s"><h3>AI &amp; automation</h3><div class="chips"><span>AI assistants</span><span>RAG</span><span>Reporting automation</span><span>Process improvement</span></div></div>
+      <div class="rv" style="--d:.12s"><h3>Stakeholders</h3><div class="chips"><span>Board packs</span><span>4-region collaboration</span><span>BD</span><span>Operations</span><span>Finance</span></div></div>
+    </div>
+  </div>
+</section>
+
+<section class="sec gh" id="github" style="padding-top:0">
+  <div class="wrap">
+    <div class="gh-head rv"><h2 id="gh-h">GitHub</h2><a class="gh-total" href="https://github.com/rigoordonio" target="_blank" rel="noopener"><span>github.com/rigoordonio</span> <span aria-hidden="true">↗</span></a></div>
+    <p class="gh-count rv">Contributions this year</p>
+    <div class="gh-box rv">
+      <div class="gh-scroll" tabindex="0" aria-label="Contribution calendar, scrolls sideways"><div class="gh-cal" role="img" aria-label="GitHub contribution graph"></div></div>
+      <div class="gh-foot"><a href="https://docs.github.com/articles/why-are-my-contributions-not-showing-up-on-my-profile" target="_blank" rel="noopener">Learn how we count contributions</a><span class="gh-key" aria-hidden="true">Less <i></i><i data-l="1"></i><i data-l="2"></i><i data-l="3"></i><i data-l="4"></i> More</span></div>
+    </div>
+  </div>
+</section>
+<style>
+/* GitHub contributions, laid out like GitHub's own graph: months on top, Mon/Wed/Fri on the left, one square per day */
+.gh-head{display:flex;justify-content:space-between;align-items:baseline;gap:16px;flex-wrap:wrap;padding-bottom:18px;border-bottom:1px solid var(--pk-line)}
+.gh-head h2{font-size:clamp(20px,2.4vw,26px);margin:0}
+.gh-total{display:inline-flex;align-items:center;gap:6px;min-height:44px;color:var(--pk-dim);text-decoration:none;font-size:15px;transition:color .2s}
+.gh-total:hover{color:var(--pk-fg)}
+.gh-count{margin:24px 0 10px;font-size:16px;color:var(--pk-fg)}
+.gh-box{border:1px solid var(--pk-line);border-radius:8px;padding:16px 16px 12px}
+.gh-scroll{overflow-x:auto;scrollbar-width:none}
+.gh-scroll::-webkit-scrollbar{display:none}
+.gh-cal{--c:11px;display:grid;grid-template-columns:30px repeat(var(--w,53),minmax(0,1fr));grid-template-rows:18px repeat(7,auto);gap:3px;width:100%;min-width:calc(30px + var(--w,53) * 14px);max-width:calc(30px + var(--w,53) * 19px);align-items:center;font-size:13px;color:var(--pk-dim)}
+.gh-cal b{font-weight:400;line-height:1;white-space:nowrap}
+.gh-cal i,.gh-key i{display:block;width:var(--c,11px);height:var(--c,11px);border-radius:2px;background:color-mix(in srgb,var(--pk-fg) 8%,transparent)}
+.gh-cal i{width:100%;height:auto;aspect-ratio:1;opacity:0;transform:scale(.6);transition:opacity .5s,transform .5s cubic-bezier(.34,1.56,.64,1);transition-delay:calc(var(--k) * 12ms)}
+.gh-cal.in i{opacity:1;transform:none}
+[data-l="1"]{background:color-mix(in srgb,var(--pk-acc) 30%,transparent)!important}
+[data-l="2"]{background:color-mix(in srgb,var(--pk-acc) 55%,transparent)!important}
+[data-l="3"]{background:color-mix(in srgb,var(--pk-acc) 80%,transparent)!important}
+[data-l="4"]{background:var(--pk-acc)!important}
+@media (hover:hover){.gh-cal i:hover{outline:1px solid var(--pk-fg);outline-offset:1px}}
+.gh-foot{display:flex;justify-content:space-between;align-items:center;gap:12px;flex-wrap:wrap;margin-top:10px;font-size:13px;color:var(--pk-dim)}
+.gh-foot a{color:var(--pk-dim);text-decoration:none;min-height:44px;display:inline-flex;align-items:center}
+.gh-foot a:hover{color:var(--pk-acc)}
+.gh-key{display:inline-flex;align-items:center;gap:3px}
+.gh-key i{--c:11px;margin:0 1px}
+@media (prefers-reduced-motion:reduce){.gh-cal i{transition:none}}
+</style>
+<script>
+/* draws this year's calendar right away, then colours it from GitHub's public contribution data; if that can't load, the empty calendar stays */
+(()=>{const g=document.querySelector('.gh-cal');if(!g)return;const out=document.querySelector('.gh-count');
+const Y=new Date().getFullYear(),start=Date.UTC(Y,0,1),off=new Date(start).getUTCDay(),D=864e5;
+const n=Math.round((Date.UTC(Y+1,0,1)-start)/D),W=Math.ceil((n+off)/7);g.style.setProperty('--w',W);
+const M=['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
+const lab=(t,c,r)=>{const b=document.createElement('b');b.textContent=t;b.style.gridArea=`${r}/${c}`;g.append(b)};
+M.forEach((m,k)=>lab(m,2+Math.floor((Math.round((Date.UTC(Y,k,1)-start)/D)+off)/7),1));
+[['Mon',3],['Wed',5],['Fri',7]].forEach(([t,r])=>lab(t,1,r));
+const cells={};for(let d=0;d<n;d++){const w=Math.floor((d+off)/7),i=document.createElement('i'),iso=new Date(start+d*D).toISOString().slice(0,10);
+  i.style.gridArea=`${(d+off)%7+2}/${w+2}`;i.style.setProperty('--k',w);i.title=`No contributions on ${iso}`;cells[iso]=i;g.append(i)}
+new IntersectionObserver((es,o)=>{if(es[0].isIntersecting){g.classList.add('in');o.disconnect()}},{threshold:.2}).observe(g);
+const fill=(list,total)=>{let t=0;list.forEach(c=>{const i=cells[c.date];if(!i)return;t+=c.count;if(c.level)i.dataset.l=c.level;else delete i.dataset.l;
+    i.title=`${c.count||'No'} contribution${c.count===1?'':'s'} on ${c.date}`});if(total!=null)t=total;
+  out.textContent=`${t.toLocaleString('en-US')} contribution${t===1?'':'s'} in ${Y}`;g.setAttribute('aria-label',out.textContent)};
+/* snapshot copied from github.com/rigoordonio on 2026-10-29, shown until the live data loads (and wherever it can't, e.g. previews) */
+const snap={2026:'07-30:1,10-03:4,10-05:6,10-06:6,10-08:4,10-09:1,10-10:2,10-21:7,10-27:24,10-29:1'};
+if(snap[Y])fill(snap[Y].split(',').map(s=>{const [md,n]=s.split(':'),c=+n;return{date:`${Y}-${md}`,count:c,level:c<2?1:c<5?2:c<8?3:4}}));
+fetch(`https://github-contributions-api.jogruber.de/v4/rigoordonio?y=${Y}`).then(r=>r.ok?r.json():Promise.reject()).then(d=>fill(d.contributions||[],d.total&&d.total[Y])).catch(()=>{});
+})();
+</script>
+
+<section class="sec contact" id="contact">
+  <div class="glow" aria-hidden="true"></div>
+  <div class="wrap contact-grid">
+    <div>
+      <div class="eyebrow rv">Contact</div>
+      <h2 class="rv" style="margin-top:20px">Let's turn your data into <span class="iri">decisions.</span></h2>
+      <p class="rv" style="color:var(--fg-dim);margin-top:22px;max-width:46ch">Open to Business Analyst, FP&amp;A, commercial analytics and AI data engineer roles, and to project work in data analytics, forecasting, machine learning and AI.</p>
+      <div class="reach rv">
+        <div><small>Email</small><span id="email">rigoordonio@gmail.com</span><button class="copy" type="button" data-copy="email">Copy</button></div>
+        <div><small>LinkedIn</small><a href="https://www.linkedin.com/in/rigo-karl-o-22a229134" target="_blank" rel="noopener" style="text-decoration:none">rigo-karl-o-22a229134 ↗</a></div>
+        <div><small>GitHub</small><a href="https://github.com/rigoordonio" target="_blank" rel="noopener" style="text-decoration:none">rigoordonio ↗</a></div>
+        <div><small>Location</small><span>Abu Dhabi, UAE</span></div>
+        <div><small>CV</small><span>Available on request</span></div>
+      </div>
+    </div>
+    <form id="enquiry" class="rv" novalidate>
+      <div class="row2"><label><span class="lbl">Name <span class="req" aria-hidden="true">*</span></span><input id="f-name" name="name" type="text" required autocomplete="name" aria-describedby="e-name" placeholder="Your name"><span class="err" id="e-name"></span></label><label><span class="lbl">Email <span class="req" aria-hidden="true">*</span></span><input id="f-email" name="email" type="email" required autocomplete="email" inputmode="email" aria-describedby="e-email" placeholder="you@company.com"><span class="err" id="e-email"></span></label></div>
+      <label><span class="lbl">Company <span class="hint">(optional)</span></span><input id="f-co" name="company" type="text" autocomplete="organization" placeholder="Company"></label>
+      <label><span class="lbl">What do you need?</span><select id="f-svc" name="service"><option>Data analytics</option><option>Forecasting</option><option>Machine learning</option><option>Data engineering &amp; pipelines</option><option>AI / LLM solutions</option><option>A full-time role</option></select></label>
+      <label><span class="lbl">Message <span class="req" aria-hidden="true">*</span></span><textarea id="f-msg" name="message" required aria-describedby="h-msg e-msg" placeholder="A few lines about the problem or role"></textarea><span class="hint" id="h-msg">What decision or report are you trying to improve?</span><span class="err" id="e-msg"></span></label>
+      <div class="hp" aria-hidden="true"><label>Leave this field empty <input id="f-hp" name="_gotcha" type="text" tabindex="-1" autocomplete="off"></label></div>
+      <button class="btn solid mag" type="submit" id="send" style="justify-self:start;min-height:48px">Send enquiry <span class="arr" aria-hidden="true">→</span></button>
+      <p class="form-note" id="form-note" role="status" aria-live="polite"></p>
+    </form>
+  </div>
+</section>
+</main>
+<footer>
+  <div class="wrap">
+    <div class="foot">
+      <div class="foot-brand">
+        <p class="brand"><i aria-hidden="true"></i>Rigo Ordonio</p>
+        <p>Global Business Analyst in Abu Dhabi, UAE. Data analytics, forecasting, machine learning and AI.</p>
+      </div>
+      <nav aria-label="Footer">
+        <p class="foot-h">Sections</p>
+        <ul><li><a href="#about">About</a></li><li><a href="#experience">Experience</a></li><li><a href="#services">Services</a></li><li><a href="#projects">Projects</a></li><li><a href="#contact">Contact</a></li></ul>
+      </nav>
+      <div>
+        <p class="foot-h">Contact</p>
+        <ul><li><a href="mailto:rigoordonio@gmail.com">rigoordonio@gmail.com</a></li><li><a href="https://www.linkedin.com/in/rigo-karl-o-22a229134" target="_blank" rel="noopener">LinkedIn ↗</a></li><li><a href="https://github.com/rigoordonio" target="_blank" rel="noopener">GitHub ↗</a></li></ul>
+      </div>
+    </div>
+    <div class="foot-base"><span>© <span id="year">2026</span> Rigo Karl Ordonio. All rights reserved.</span><a href="#main">Back to top ↑</a></div>
+  </div>
+</footer>
+<button class="to-top" type="button" id="to-top" aria-label="Back to top">↑</button>
+
+<script>
+(()=>{
+document.documentElement.classList.add('js');
+const RM = matchMedia('(prefers-reduced-motion: reduce)').matches;
+const fine = matchMedia('(pointer: fine)').matches;
+const mouse = {x:innerWidth*.7,y:innerHeight*.5,nx:.7,ny:.5};
+addEventListener('pointermove',e=>{mouse.x=e.clientX;mouse.y=e.clientY;mouse.nx=e.clientX/innerWidth;mouse.ny=e.clientY/innerHeight},{passive:true});
+
+/* ---------- counters ---------- */
+document.querySelectorAll('[data-count]').forEach(el=>{
+  if(RM) return;
+  const end=+el.dataset.count, suf=el.dataset.suffix||'';
+  /* motion: count up when in view, ~1s, after the boot sequence */
+  const dur=1000;let t0=0;
+  const step=now=>{const p=Math.min(1,Math.max(0,(now-t0)/dur));const e=1-Math.pow(1-p,4);
+    el.textContent=Math.round(end*e).toLocaleString('en-US')+(p===1?suf:'');if(p<1)requestAnimationFrame(step)};
+  el.textContent='0';
+  const cio=new IntersectionObserver(([en])=>{if(en.isIntersecting){t0=Math.max(performance.now(),650);requestAnimationFrame(step);cio.disconnect()}});cio.observe(el);
+});
+
+/* ---------- WebGL liquid orb ---------- */
+const cv=document.getElementById('orb');
+const gl=cv.getContext('webgl',{premultipliedAlpha:false,antialias:true});
+if(gl){
+  const vs=`attribute vec2 p;void main(){gl_Position=vec4(p,0.,1.);}`;
+  const fs=`precision highp float;
+  uniform vec2 R;uniform float T;uniform vec2 M;uniform vec2 C;uniform float S;
+  float h(vec2 p){return fract(sin(dot(p,vec2(41.3,289.1)))*43758.55);}
+  float n(vec2 p){vec2 i=floor(p),f=fract(p);f=f*f*(3.-2.*f);
+    return mix(mix(h(i),h(i+vec2(1,0)),f.x),mix(h(i+vec2(0,1)),h(i+vec2(1,1)),f.x),f.y);}
+  float fb(vec2 p){float v=0.,a=.5;mat2 r=mat2(.8,.6,-.6,.8);for(int i=0;i<5;i++){v+=a*n(p);p=r*p*2.02;a*=.5;}return v;}
+  vec3 film(float t){vec3 c=.6+.4*cos(6.2831*(t+vec3(.0,.12,.3)));return mix(vec3(.62,.6,.72),c,.55);}
+  void main(){
+    vec2 uv=(gl_FragCoord.xy-.5*R)/R.y;
+    vec2 m=(M-.5)*vec2(R.x/R.y,-1.);
+    vec2 c=C+m*.04;
+    vec2 q=uv-c;float r=length(q);float rad=.27*S;
+    float t=T*.08;
+    vec3 col=vec3(.024,.027,.04);
+    // ambient haze
+    float hz=fb(uv*1.6+vec2(t*1.5,-t));
+    col+=vec3(.08,.06,.16)*hz*smoothstep(1.4,.0,r)*.9;
+    col+=vec3(.02,.09,.09)*fb(uv*2.4-vec2(t,t*1.7))*smoothstep(1.2,.1,length(uv-c+vec2(.3,.2)));
+    // glow
+    col+=vec3(.35,.28,.7)*.10/(1.+pow(max(r-rad,0.)*6.,2.));
+    if(r<rad){
+      float z=sqrt(rad*rad-r*r);vec3 N=normalize(vec3(q,z));
+      vec2 w=N.xy*1.6+m*.3;
+      vec2 o=vec2(fb(w*2.+t),fb(w*2.-t+3.1));
+      float f=fb(w*2.5+o*2.2+vec2(t*.8,0.));
+      vec3 iri=film(f*1.4+N.z*.35+t*.4);
+      float fres=pow(1.-N.z,2.6);
+      vec3 base=mix(vec3(.03,.03,.06),iri*.8,.18+.5*smoothstep(.3,.8,f));
+      base=mix(base,iri*1.05,fres*.9);
+      vec3 L=normalize(vec3(-.5,.6,.8));
+      float spec=pow(max(dot(reflect(-L,N),vec3(0,0,1)),0.),40.);
+      base+=spec*.45;
+      base*=.75+.35*N.z;
+      float edge=smoothstep(rad,rad-.006,r);
+      col=mix(col,base,edge);
+    }
+    // vignette + grain
+    col*=1.-.35*smoothstep(.4,1.3,length(uv));
+    col+=(h(gl_FragCoord.xy+T)-.5)*.025;
+    gl_FragColor=vec4(col,1.);
+  }`;
+  const sh=(t,s)=>{const o=gl.createShader(t);gl.shaderSource(o,s);gl.compileShader(o);return o};
+  const pr=gl.createProgram();gl.attachShader(pr,sh(gl.VERTEX_SHADER,vs));gl.attachShader(pr,sh(gl.FRAGMENT_SHADER,fs));gl.linkProgram(pr);
+  if(gl.getProgramParameter(pr,gl.LINK_STATUS)){
+    gl.useProgram(pr);
+    const b=gl.createBuffer();gl.bindBuffer(gl.ARRAY_BUFFER,b);gl.bufferData(gl.ARRAY_BUFFER,new Float32Array([-1,-1,3,-1,-1,3]),gl.STATIC_DRAW);
+    const loc=gl.getAttribLocation(pr,'p');gl.enableVertexAttribArray(loc);gl.vertexAttribPointer(loc,2,gl.FLOAT,false,0,0);
+    const U=k=>gl.getUniformLocation(pr,k);const uR=U('R'),uT=U('T'),uM=U('M'),uC=U('C'),uS=U('S');
+    let sm={x:.7,y:.5},vis=true;
+    new IntersectionObserver(([e])=>vis=e.isIntersecting).observe(cv);
+    const size=()=>{const d=Math.min(devicePixelRatio,1.5);cv.width=cv.clientWidth*d;cv.height=cv.clientHeight*d;gl.viewport(0,0,cv.width,cv.height)};
+    size();new ResizeObserver(size).observe(cv);
+    const draw=now=>{
+      sm.x+=(mouse.nx-sm.x)*.05;sm.y+=(mouse.ny-sm.y)*.05;
+      const a=cv.width/cv.height, narrow=a<1.1;
+      gl.uniform2f(uR,cv.width,cv.height);gl.uniform1f(uT,RM?20:now/1000);gl.uniform2f(uM,sm.x,sm.y);
+      gl.uniform2f(uC,narrow?a*.22:a*.24,narrow?.3:0.);gl.uniform1f(uS,narrow?.62:1.);
+      gl.drawArrays(gl.TRIANGLES,0,3);
+    };
+    if(RM) draw(0); else {const loop=now=>{if(vis)draw(now);requestAnimationFrame(loop)};requestAnimationFrame(loop)}
+  }
+}
+
+/* ---------- custom cursor ---------- */
+if(fine && !RM){
+  document.documentElement.classList.add('has-cursor');
+  const d=document.querySelector('.cur'),r=document.querySelector('.cur-ring');let rx=mouse.x,ry=mouse.y;
+  const tick=()=>{rx+=(mouse.x-rx)*.2;ry+=(mouse.y-ry)*.2;/* motion: tighter trail */
+    d.style.transform=`translate(${mouse.x}px,${mouse.y}px)`;r.style.transform=`translate(${rx}px,${ry}px)`;requestAnimationFrame(tick)};tick();
+  document.addEventListener('pointerover',e=>{r.classList.toggle('big',!!e.target.closest('a,button,summary,.proj'))});
+  document.addEventListener('pointerleave',()=>document.documentElement.classList.remove('has-cursor'));
+  document.addEventListener('pointerenter',()=>document.documentElement.classList.add('has-cursor'));
+}
+
+/* ---------- magnetic buttons ---------- */
+if(fine && !RM) document.querySelectorAll('.mag').forEach(b=>{
+  b.addEventListener('pointermove',e=>{const k=b.getBoundingClientRect();b.style.transform=`translate(${(e.clientX-k.left-k.width/2)*.25}px,${(e.clientY-k.top-k.height/2)*.35}px)`});
+  b.addEventListener('pointerleave',()=>b.style.transform='');
+});
+
+/* ---------- reveal on scroll: only items below the fold at load start hidden ---------- */
+const rvs=[...document.querySelectorAll('.rv')];
+if(!RM && 'IntersectionObserver' in window){
+  const io=new IntersectionObserver(es=>es.forEach(e=>{if(e.isIntersecting){/* motion: scan-line wipe */const t=e.target;window.motionWipe?window.motionWipe(t):t.classList.remove('pre');io.unobserve(t)}}),{rootMargin:'0px 0px -8% 0px'});
+  rvs.forEach(el=>{if(el.getBoundingClientRect().top>innerHeight){el.classList.add('pre');io.observe(el)}});
+}
+
+/* ---------- about: scrubbed words ---------- */
+const scrub=document.getElementById('scrub');
+const hl=new Set(['warehouse','boardroom','sales','operations','finance','trust']);
+scrub.innerHTML=scrub.textContent.split(' ').map(w=>`<span class="sw${hl.has(w.replace(/[,.:]/g,''))?' hl':''}">${w}</span>`).join(' ');
+const sws=[...scrub.children];
+/* ---------- experience rail ---------- */
+const asc=document.getElementById('ascent'),rail=asc.querySelector('.rail i'),roles=[...asc.querySelectorAll('.role')];
+const onScroll=()=>{
+  const vh=innerHeight;
+  let k=scrub.getBoundingClientRect();let p=RM?1:Math.min(1,Math.max(0,(vh*.85-k.top)/(k.height+vh*.35)));
+  const lit=Math.round(p*sws.length);sws.forEach((s,i)=>s.classList.toggle('on',i<lit));
+  k=asc.getBoundingClientRect();p=Math.min(1,Math.max(0,(vh*.6-k.top)/k.height));
+  rail.style.setProperty('--p',(RM?100:p*100)+'%');
+  roles.forEach(r=>{const t=r.getBoundingClientRect().top+26;r.classList.toggle('lit',RM||t<vh*.6)});
+};
+addEventListener('scroll',onScroll,{passive:true});addEventListener('resize',onScroll);onScroll();
+
+/* ---------- particle forms ---------- */
+const pc=document.getElementById('particles'),px=pc.getContext('2d');
+const N=window.innerWidth<600?520:900;
+const shapes=[
+  {name:'BI reporting',desc:'KPIs by region',gen:i=>{const bars=[.35,.55,.48,.72,.9],b=i%5,w=.11;const x=.14+b*.16+(Math.random()-.5)*w;const y=.82-Math.random()*bars[b]*.62;return[x,y]}},
+  {name:'Forecasting',desc:'Actuals, forecast and range',gen:i=>{const x=.08+Math.random()*.84;const base=.62-.28*x+.07*Math.sin(x*14);
+    if(x<.6) return[x,base+(Math.random()-.5)*.012];const spread=(x-.6)*.42;const r=Math.random();
+    return[x,r<.45?base+(Math.random()-.5)*.012:base+(Math.random()-.5)*spread*2]}},
+  {name:'AI assistants & RAG',desc:'Questions linked to sources',gen:(i,nodes)=>{const r=Math.random();
+    if(r<.42){const n=nodes[i%nodes.length],a=Math.random()*6.283,d=Math.sqrt(Math.random())*n[2];return[n[0]+Math.cos(a)*d,n[1]+Math.sin(a)*d*1.33]}
+    const e=edges[i%edges.length],A=nodes[e[0]],B=nodes[e[1]],t=Math.random();return[A[0]+(B[0]-A[0])*t,A[1]+(B[1]-A[1])*t]}},
+];
+const nodes=[[.5,.45,.07],[.22,.25,.035],[.8,.22,.035],[.18,.7,.035],[.82,.72,.035],[.5,.85,.03],[.36,.14,.025],[.66,.6,.025]];
+const edges=[[0,1],[0,2],[0,3],[0,4],[0,5],[1,6],[6,2],[4,7],[7,0],[3,5]];
+const targets=shapes.map(s=>Array.from({length:N},(_,i)=>s.gen(i,nodes)));
+const P=Array.from({length:N},(_,i)=>({x:Math.random(),y:Math.random(),vx:0,vy:0,hue:Math.random(),s:Math.random()*.8+.5}));
+let cur=0,lastSwap=0,W=0,H=0,pvis=false;
+const psize=()=>{const d=Math.min(devicePixelRatio,2);W=pc.clientWidth;H=pc.clientHeight;pc.width=W*d;pc.height=H*d;px.setTransform(d,0,0,d,0,0)};psize();addEventListener('resize',psize);
+new IntersectionObserver(([e])=>pvis=e.isIntersecting).observe(pc);
+const nameEl=document.getElementById('stage-name'),descEl=document.getElementById('stage-desc'),dotEls=[...document.querySelectorAll('#dots button')];
+const setShape=k=>{cur=k;nameEl.textContent=shapes[k].name;descEl.textContent=shapes[k].desc;dotEls.forEach((d,i)=>d.setAttribute('aria-pressed',i===k))};
+dotEls.forEach((d,i)=>d.addEventListener('click',()=>{setShape(i);lastSwap=performance.now()+6000}));
+let pm={x:-9,y:-9};
+pc.addEventListener('pointermove',e=>{const k=pc.getBoundingClientRect();pm.x=(e.clientX-k.left)/k.width;pm.y=(e.clientY-k.top)/k.height});
+pc.addEventListener('pointerleave',()=>{pm.x=-9;pm.y=-9});
+pc.addEventListener('click',()=>{setShape((cur+1)%shapes.length);lastSwap=performance.now()});
+const cols=['127,224,212','201,184,255','242,197,138'];
+const pdraw=now=>{
+  if(!RM && now-lastSwap>4200){setShape((cur+1)%shapes.length);lastSwap=now}
+  px.clearRect(0,0,W,H);const T=targets[cur];
+  for(let i=0;i<N;i++){const p=P[i],t=T[i];
+    if(RM){p.x=t[0];p.y=t[1]} else {
+      let ax=(t[0]-p.x)*.012,ay=(t[1]-p.y)*.012;
+      const dx=p.x-pm.x,dy=(p.y-pm.y)*H/W,d2=dx*dx+dy*dy;if(d2<.012){const f=(.012-d2)*.9;ax+=dx*f*8;ay+=dy*f*8}
+      ax+=Math.sin(now*.0007+i)*.00004;ay+=Math.cos(now*.0009+i*1.3)*.00004;
+      p.vx=(p.vx+ax)*.86;p.vy=(p.vy+ay)*.86;p.x+=p.vx;p.y+=p.vy}
+    const c=cols[(i+cur)%3];px.fillStyle=`rgba(${c},${.55+.4*Math.sin(now*.002+i)})`;
+    px.fillRect(p.x*W,p.y*H,1.6*p.s,1.6*p.s)}
+};
+if(RM) pdraw(0); else {const ploop=now=>{if(pvis)pdraw(now);requestAnimationFrame(ploop)};requestAnimationFrame(ploop)}
+
+/* ---------- services accordion: data lives in script#services-data ---------- */
+/* services:render:start (tools/build.mjs runs this same code to pre-render the section for search engines and no-JS visitors) */
+const svcEsc=s=>String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
+/* row icons: each service's spell in miniature, drawn like the + (1.5px square-ended strokes, accent on one part); .hv parts move on hover */
+const svcIco={
+  bars:'<path class="base" d="M2 22.25H30"/><rect x="4.75" y="14.75" width="4.5" height="7.5"/><rect x="11.75" y="9.75" width="4.5" height="12.5"/><rect class="a hv" x="18.75" y="3.75" width="4.5" height="18.5"/><rect x="25.75" y="11.75" width="4.5" height="10.5"/>',
+  line:'<path class="hv band" d="M18 11L24 6.5L30 2V9.5L24 12.5Z"/><path d="M2 19L7 16L11 17.5L18 11"/><path class="a hv dash" d="M18 11L24 9.5L30 5.75"/>',
+  pipeline:'<path d="M4 18C10 18 10 6 16 6S22 18 28 18"/><circle class="node" cx="4" cy="18" r="2.75"/><circle class="node hv" cx="16" cy="6" r="2.75"/><circle class="node" cx="28" cy="18" r="2.75"/><circle class="a dot hv" cx="10" cy="12" r="1.75"/>',
+  cluster:'<path class="link" d="M8 7.5L24 6.5L16 18Z"/><circle class="dot" cx="6" cy="7" r="1.6"/><circle class="dot hv" cx="9.5" cy="5" r="1.6"/><circle class="dot" cx="8.5" cy="10" r="1.6"/><circle class="dot" cx="22.5" cy="5" r="1.6"/><circle class="dot hv" cx="26" cy="7.5" r="1.6"/><circle class="a dot" cx="14" cy="18.5" r="1.6"/><circle class="a dot hv" cx="18" cy="17" r="1.6"/>',
+  prompt:'<rect x="1.75" y="5.75" width="28.5" height="12.5" rx="6.25"/><path d="M6.5 9.5L9 12L6.5 14.5M12 12H18.5"/><rect class="a caret hv" x="21" y="9" width="1.5" height="6"/>',
+};
+const renderServices=list=>list.map((s,i)=>{const n=s.projects.length,id=svcEsc(s.id),ico=svcIco[s.spell];
+  return `<div class="acc-item" id="${id}" style="--i:${i}"><h3 class="acc-h"><button class="acc-btn" type="button" id="${id}-btn" aria-expanded="false" aria-haspopup="dialog" aria-controls="svc-detail"><span class="acc-lead">${ico?`<svg class="svc-ico" data-spell="${svcEsc(s.spell)}" viewBox="0 0 32 24" aria-hidden="true" focusable="false">${ico}</svg>`:''}<span class="acc-name">${svcEsc(s.name)}</span></span><span class="acc-meta"><span class="acc-count">${n} project${n===1?'':'s'}</span><span class="acc-icon" aria-hidden="true"></span></span></button></h3>`
+    +`<section class="acc-panel" id="${id}-panel" aria-labelledby="${id}-btn"><div class="acc-inner"><ul class="acc-list">`
+    +s.projects.map(p=>`<li><span class="acc-org">${svcEsc(p.org)}</span><p class="acc-title">${p.href?`<a href="${svcEsc(p.href)}"${/^https?:/.test(p.href)?' target="_blank" rel="noopener"':''}>${svcEsc(p.title)}</a>`:svcEsc(p.title)}</p><p class="acc-out">${svcEsc(p.outcome)}</p><p class="acc-tags">${p.tags.map(svcEsc).join(' · ')}</p></li>`).join('')
+    +`</ul></div></section></div>`}).join('');
+/* services:render:end */
+const acc=document.getElementById('svc-acc');
+const svcData=JSON.parse(document.getElementById('services-data').textContent);
+if(!acc.children.length)acc.innerHTML=renderServices(svcData);
+const accItems=[...acc.querySelectorAll('.acc-item')];
+
+/* ---- services: tap a row and it lifts into a detail card that plays the service's "spell" ----
+   Motion values, all from the page's tokens or the brief:
+   press 0.97 / 100ms ease-out, release and card travel on one spring (stiffness 400, damping 30);
+   fades and stagger use --acc-ease cubic-bezier(.22,1,.36,1): 300ms in, 200ms out, 50ms steps, 8px rise;
+   reduced motion swaps all of it for a 150ms opacity crossfade and the spells' end states. */
+{ /* block scope keeps these names away from the page's other scripts */
+const ACC_EASE='cubic-bezier(.22,1,.36,1)',M_EASE='cubic-bezier(.16,1,.3,1)';
+const SPRING_K=400,SPRING_C=30;
+/* the spring as a CSS linear() curve, for the Web Animations API (falls back to --m-ease where linear() is missing) */
+const SPRING=(()=>{let x=0,v=0,T=0;const pts=[0],h=1/600;
+  while(T<2){for(let i=0;i<10;i++){v+=(-SPRING_K*(x-1)-SPRING_C*v)*h;x+=v*h}T+=10*h;pts.push(+x.toFixed(4));if(Math.abs(x-1)<1e-3&&Math.abs(v)<1e-2)break}
+  pts[pts.length-1]=1;
+  return CSS.supports('animation-timing-function','linear(0, 1)')?{easing:`linear(${pts.join(',')})`,duration:Math.round(T*1000)}:{easing:M_EASE,duration:550}})();
+const dlg=document.getElementById('svc-detail'),card=dlg.querySelector('.svc-card'),surface=dlg.querySelector('.svc-surface'),scrim=dlg.querySelector('.svc-scrim');
+const dLead=dlg.querySelector('.svc-lead'),dMeta=dlg.querySelector('.svc-meta'),dIco=dlg.querySelector('.svc-dico'),dTitle=dlg.querySelector('.svc-title'),dCount=dlg.querySelector('.svc-count');
+const stage=dlg.querySelector('.svc-stage'),dList=dlg.querySelector('.svc-list'),closeBtn=dlg.querySelector('.svc-close'),root=document.documentElement;
+
+/* 1. press feedback */
+let pressed=null;
+const press=(b,down)=>{const from=getComputedStyle(b).transform;b._press?.cancel();
+  b._press=b.animate([{transform:from==='none'?'scale(1)':from},{transform:down?'scale(.97)':'scale(1)'}],down?{duration:100,easing:'ease-out',fill:'forwards'}:{...SPRING,fill:'forwards'});
+  if(!down){const an=b._press;an.onfinish=()=>an.cancel()}};
+acc.addEventListener('pointerdown',e=>{const b=e.target.closest('.acc-btn');if(!b||RM||e.button>0)return;pressed=b;press(b,true)});
+const release=()=>{if(pressed){press(pressed,false);pressed=null}};
+['pointerup','pointercancel'].forEach(t=>addEventListener(t,release));
+acc.addEventListener('pointerout',e=>{if(pressed&&!pressed.contains(e.relatedTarget))release()});
+
+/* 2. the spells: one inline SVG per service, ink + accent from CSS, aria-hidden */
+const ns=(t,a)=>`<${t} ${Object.entries(a).map(([k,v])=>`${k}="${v}"`).join(' ')}/>`;
+const svgWrap=(kind,inner)=>`<svg class="spell" data-spell="${kind}" viewBox="0 0 480 140" preserveAspectRatio="xMinYMid meet" aria-hidden="true" focusable="false">${inner}</svg>`;
+const seeded=s=>()=>(s=(s*16807)%2147483647)/2147483647;
+const SPELL={
+  bars:{ /* Data Analytics: bars grow on a staggered spring, the tallest flashes the accent */
+    h:[46,70,58,96,84,112,74],
+    art(){return svgWrap('bars',ns('path',{class:'rule',d:'M20 128.5H460'})+this.h.map((h,i)=>ns('rect',{class:'bar'+(h===112?' top':''),x:43+i*60,y:128-h,width:34,height:h})).join('')
+      +ns('rect',{class:'hi',x:43+5*60,y:16,width:34,height:112}))},
+    play(svg){const bars=[...svg.querySelectorAll('.bar')];
+      return [...bars.map((b,i)=>b.animate([{transform:'scaleY(0)'},{transform:'scaleY(1)'}],{...SPRING,delay:i*60,fill:'backwards'})),
+        svg.querySelector('.hi').animate([{opacity:0},{opacity:.9,offset:.4},{opacity:0}],{duration:450,delay:450,easing:ACC_EASE,fill:'both'})]},
+  },
+  line:{ /* Forecasting: history draws left to right, the dashed forecast follows, its range fades in around it */
+    hist:[92,84,88,76,80,70,74,62,66,56,58,48],fc:[48,44,46,38,36,30],
+    art(){const hx=i=>20+i*(280/11),fx=i=>300+i*32;
+      const hp='M'+this.hist.map((y,i)=>`${hx(i).toFixed(1)} ${y}`).join(' L'),fp='M'+this.fc.map((y,i)=>`${fx(i)} ${y}`).join(' L');
+      const up=this.fc.map((y,i)=>`${fx(i)} ${y-i*5}`),dn=this.fc.map((y,i)=>`${fx(i)} ${y+i*5}`).reverse();
+      return svgWrap('line',ns('path',{class:'band',d:`M${up.join(' L')} L${dn.join(' L')}Z`})+ns('path',{class:'fc',d:fp})
+        +ns('rect',{class:'veil',x:296,y:0,width:184,height:140})
+        +[40,80,120].map(y=>ns('path',{class:'rule',d:`M20 ${y}.5H460`})).join('')
+        +ns('path',{class:'hist',d:hp,pathLength:1})+ns('circle',{class:'join',cx:300,cy:48,r:3.5}))},
+    play(svg){return [
+      svg.querySelector('.hist').animate([{strokeDashoffset:1},{strokeDashoffset:0}],{duration:450,easing:ACC_EASE,fill:'backwards'}),
+      svg.querySelector('.join').animate([{transform:'scale(0)'},{transform:'scale(1)'}],{...SPRING,delay:400,fill:'backwards'}),
+      svg.querySelector('.veil').animate([{transform:'scaleX(1)'},{transform:'scaleX(0)'}],{duration:350,delay:420,easing:ACC_EASE,fill:'backwards'}),
+      svg.querySelector('.band').animate([{opacity:0},{opacity:1}],{duration:300,delay:600,easing:ACC_EASE,fill:'backwards'})]},
+  },
+  pipeline:{ /* Data Engineering: a packet draws the pipe through three nodes, each node pulses as it passes */
+    d:'M60 100C150 100 150 40 240 40S330 100 420 100',nodes:[[60,100],[240,40],[420,100]],
+    art(){return svgWrap('pipeline',ns('path',{class:'pipe',d:this.d,pathLength:1})
+      +this.nodes.map(([x,y])=>ns('circle',{class:'ring',cx:x,cy:y,r:13})+ns('circle',{class:'node',cx:x,cy:y,r:13})+ns('circle',{class:'core',cx:x,cy:y,r:3.5})).join('')
+      +ns('circle',{class:'packet',cx:0,cy:0,r:5,style:'transform:translate(420px,100px)'}))},
+    play(svg){const p=svg.querySelector('.pipe'),L=p.getTotalLength(),D=600,frames=[];
+      for(let i=0;i<=30;i++){const pt=p.getPointAtLength(L*i/30);frames.push({transform:`translate(${pt.x.toFixed(1)}px,${pt.y.toFixed(1)}px)`})}
+      return [p.animate([{strokeDashoffset:1},{strokeDashoffset:0}],{duration:D,easing:'linear',fill:'backwards'}),
+        svg.querySelector('.packet').animate(frames,{duration:D,easing:'linear',fill:'both'}),
+        ...[...svg.querySelectorAll('.ring')].map((r,i)=>r.animate([{opacity:.9,transform:'scale(1)'},{opacity:0,transform:'scale(1.9)'}],{duration:300,delay:i*D/2,easing:ACC_EASE}))]},
+  },
+  cluster:{ /* Machine Learning: scattered points drift into three clusters, then thin links join them into a network */
+    centres:[[110,52],[360,48],[240,104]],
+    pts(){if(this._p)return this._p;const r=seeded(11),p=[];
+      this.centres.forEach(([cx,cy],c)=>{for(let k=0;k<6;k++){const a=k/6*6.283+r(),d=k?10+r()*14:0;
+        p.push({c,x:+(cx+Math.cos(a)*d).toFixed(1),y:+(cy+Math.sin(a)*d*.8).toFixed(1),sx:+(24+r()*432).toFixed(1),sy:+(14+r()*112).toFixed(1)})}});
+      return this._p=p},
+    art(){const p=this.pts(),hub=c=>p[c*6];
+      const links=p.filter((q,i)=>i%6).map(q=>`M${hub(q.c).x} ${hub(q.c).y}L${q.x} ${q.y}`).concat([[0,1],[1,2],[2,0]].map(([a,b])=>`M${hub(a).x} ${hub(a).y}L${hub(b).x} ${hub(b).y}`));
+      return svgWrap('cluster',links.map(d=>ns('path',{class:'link',d,pathLength:1})).join('')+p.map(q=>ns('circle',{class:'pt'+(q.c===2?' acc':''),cx:q.x,cy:q.y,r:4})).join(''))},
+    play(svg){const p=this.pts();
+      return [...[...svg.querySelectorAll('.pt')].map((el,i)=>el.animate([{transform:`translate(${(p[i].sx-p[i].x).toFixed(1)}px,${(p[i].sy-p[i].y).toFixed(1)}px)`},{transform:'translate(0,0)'}],{duration:550,delay:i*10,easing:M_EASE,fill:'backwards'})),
+        ...[...svg.querySelectorAll('.link')].map((el,i)=>el.animate([{strokeDashoffset:1},{strokeDashoffset:0}],{duration:280,delay:560+i*8,easing:ACC_EASE,fill:'backwards'}))]},
+  },
+  prompt:{ /* AI / LLM: a question types out behind a caret, then the answer streams in word by word */
+    q:'Why is the forecast down?',a:['Two late-stage deals slipped to next quarter.','Sources: CRM pipeline, S&OP notes.'],
+    art(){let w=0;const words=l=>l.split(' ').map(t=>`<tspan class="tok">${svcEsc(t)} </tspan>`).join('');
+      return svgWrap('prompt',`<text class="q" x="68" y="44">${svcEsc(this.q)}</text><text class="chev" x="42" y="44">&gt;</text>`
+        +ns('rect',{class:'mask',x:66,y:24,width:380,height:28})+ns('rect',{class:'box',x:20,y:14,width:440,height:48,rx:24})
+        +ns('rect',{class:'caret',x:68,y:28,width:2,height:20})
+        +'<g class="dots" style="opacity:0">'+[0,1,2].map(k=>ns('circle',{class:'dot',cx:48+k*14,cy:92,r:4,style:`animation-delay:${k*.15}s`})).join('')+'</g>'
+        +this.a.map((l,i)=>`<text class="ans" x="42" y="${98+i*26}">${words(l)}</text>`).join(''))},
+    play(svg){const n=this.q.length,w=svg.querySelector('.q').getComputedTextLength(),T=n*14,toks=[...svg.querySelectorAll('.tok')];
+      /* mask and caret rest after the last letter (settleCaret); typing slides them there one letter at a time */
+      const type=[{transform:`translateX(${(-w).toFixed(1)}px)`},{transform:'translateX(0)'}];
+      return [svg.querySelector('.mask').animate(type,{duration:T,easing:`steps(${n},end)`,fill:'backwards'}),
+        svg.querySelector('.caret').animate(type,{duration:T,easing:`steps(${n},end)`,fill:'backwards'}),
+        svg.querySelector('.caret').animate([{opacity:1},{opacity:0,offset:.25},{opacity:1,offset:.5},{opacity:0,offset:.75},{opacity:1}],{duration:toks.length*38+700,delay:T,easing:'steps(1,end)'}),
+        /* typing dots (NullMotion chat-sim): the assistant 'thinks' for a beat before the answer streams in */
+        svg.querySelector('.dots').animate([{opacity:0},{opacity:1,offset:.15},{opacity:1,offset:.85},{opacity:0}],{duration:700,delay:T,easing:'linear'}),
+        ...toks.map((t,i)=>t.animate([{fillOpacity:0},{fillOpacity:1}],{duration:150,delay:T+700+i*38,easing:ACC_EASE,fill:'backwards'}))]},   /* tspans take fill-opacity, not opacity */
+  },
+};
+/* the caret's end position depends on the font, so it is placed after layout (also the reduced-motion end state) */
+const settleCaret=svg=>{const q=svg.querySelector('.q');if(!q)return;const w=q.getComputedTextLength();
+  svg.querySelector('.mask').setAttribute('x',68+w);svg.querySelector('.caret').setAttribute('x',68+w)};
+
+/* 3. lift into a card and back: one spring drives every shared element, so reversing mid-way keeps position and speed */
+const S={x:0,v:0,t:0},clamp=v=>Math.max(0,Math.min(1,v)),lerp=(a,b,p)=>a+(b-a)*p;
+let curIt=null,raf=0,last=0,geo=null,spellAnims=[],inAnims=[],lastFocus=null;
+const rect=el=>el.getBoundingClientRect();
+const apply=()=>{const p=S.x,q=1-p,g=geo;if(!g)return;
+  scrim.style.opacity=clamp(p).toFixed(3);
+  const x=lerp(g.from.left,g.to.left,p),y=lerp(g.from.top,g.to.top,p),w=lerp(g.from.width,g.to.width,p),h=lerp(g.from.height,g.to.height,p);
+  surface.style.transform=`translate(${(x-g.to.left).toFixed(2)}px,${(y-g.to.top).toFixed(2)}px) scale(${(w/g.to.width).toFixed(4)},${(h/g.to.height).toFixed(4)})`;
+  surface.style.opacity=clamp(p*2.5).toFixed(3);
+  for(const [el,d] of [[dLead,g.lead],[dMeta,g.meta]])el.style.transform=`translate(${(d.x*q).toFixed(2)}px,${(d.y*q).toFixed(2)}px) scale(${lerp(g.s,1,p).toFixed(4)})`;
+  closeBtn.firstElementChild.style.transform=`rotate(${(45*p).toFixed(2)}deg)`;
+  stage.style.opacity=clamp((p-.35)/.45).toFixed(3)};
+const tick=now=>{const dt=Math.min((now-last)/1000,1/30);last=now;
+  for(let i=0,n=Math.max(1,Math.ceil(dt*240)),h=dt/n;i<n;i++){S.v+=(-SPRING_K*(S.x-S.t)-SPRING_C*S.v)*h;S.x+=S.v*h}
+  if(Math.abs(S.x-S.t)<1e-3&&Math.abs(S.v)<1e-2){S.x=S.t;S.v=0;apply();raf=0;S.t?opened():finish();return}
+  apply();raf=requestAnimationFrame(tick)};
+const run=t=>{S.t=t;if(!raf){last=performance.now();raf=requestAnimationFrame(tick)}};
+/* where the row's pieces sit relative to the card's (the card's own transforms cleared for the reading) */
+const deltas=it=>{dLead.style.transform=dMeta.style.transform='none';
+  const rl=rect(it.querySelector('.acc-lead')),rm=rect(it.querySelector('.acc-meta')),dl=rect(dLead),dm=rect(dMeta);
+  return {lead:{x:rl.left-dl.left,y:rl.top-dl.top},meta:{x:rm.left-dm.left,y:rm.top-dm.top}}};
+const stroke=()=>{const sv=stage.querySelector('svg');if(sv){const r=rect(stage);sv.style.setProperty('--u',(1/Math.max(.2,Math.min(r.width/480,r.height/140))).toFixed(3))}};
+const measure=it=>{const b=it.querySelector('.acc-btn'),t=getComputedStyle(b).transform,c=rect(card);
+  geo={s:t==='none'?1:new DOMMatrixReadOnly(t).a,from:rect(b),to:{left:c.left,top:c.top,width:c.width,height:c.height},...deltas(it)}};
+const place=it=>{const r=rect(it.querySelector('.acc-btn')),vw=root.clientWidth,left=Math.max(8,r.left-24),pad=Math.max(16,r.left-left);
+  card.style.left=left+'px';card.style.width=(vw-2*left)+'px';card.style.setProperty('--pad',pad+'px');
+  card.style.top='0px';card.style.top=Math.max(16,(innerHeight-card.offsetHeight)/2)+'px'};
+const fill=it=>{const s=svcData.find(x=>x.id===it.id),sp=SPELL[s.spell];
+  dTitle.textContent=s.name;closeBtn.setAttribute('aria-label','Close '+s.name);dCount.textContent=it.querySelector('.acc-count').textContent;
+  const ico=it.querySelector('.svc-ico');dIco.innerHTML=ico?ico.outerHTML:'';
+  stage.innerHTML=sp?sp.art():'';stage.hidden=!sp;dList.innerHTML=it.querySelector('.acc-list').innerHTML;
+  [...dList.children].forEach(li=>li.style.opacity=0)};
+/* the page stays put while the card is open: nothing (focus, smooth scrolling) may move it */
+let lockY=0;const hold=()=>{if(scrollY!==lockY)scrollTo({top:lockY,behavior:'instant'})};
+const lock=on=>{if(on){lockY=scrollY;root.style.setProperty('--sb',(innerWidth-root.clientWidth)+'px');root.classList.add('svc-lock');addEventListener('scroll',hold)}else{removeEventListener('scroll',hold);root.classList.remove('svc-lock');root.style.removeProperty('--sb')}};
+function openSvc(it){
+  if(curIt===it&&S.t===1)return;
+  if(curIt&&curIt!==it){finish(true)}
+  if(!curIt){curIt=it;lastFocus=it.querySelector('.acc-btn');it.querySelector('.acc-btn')._press?.cancel();
+    fill(it);lock(true);dlg.autofocus=true;dlg.showModal();place(it);closeBtn.focus({preventScroll:true});hold();   /* opening must not move the page */
+    it.classList.add('is-open');it.querySelector('.acc-btn').setAttribute('aria-expanded','true');
+    if(RM){geo=null;[surface,dLead,dMeta,stage].forEach(e=>{e.style.transform='';e.style.opacity=''});closeBtn.firstElementChild.style.transform='rotate(45deg)';
+      scrim.style.opacity=1;[...dList.children].forEach(li=>li.style.opacity='');
+      stroke();const sv=stage.querySelector('svg');if(sv)settleCaret(sv);
+      inAnims=[card.animate([{opacity:0},{opacity:1}],{duration:150,easing:ACC_EASE}),scrim.animate([{opacity:0},{opacity:1}],{duration:150,easing:ACC_EASE})];S.x=S.t=1;return}
+    stroke();measure(it);S.x=0;S.v=0;apply();
+    const sv=stage.querySelector('svg'),sp=SPELL[svcData.find(x=>x.id===it.id).spell];
+    if(sv&&sp){settleCaret(sv);spellAnims=sp.play(sv);   /* the spell starts 120ms into the lift */
+      spellAnims.forEach(a=>a.effect.updateTiming({delay:(a.effect.getTiming().delay||0)+120}))}}
+  inAnims.forEach(a=>a.cancel());inAnims=[];run(1)}
+function opened(){if(!curIt)return;
+  /* content rises in once the card has settled: 8px, 50ms apart, --acc-ease 300ms */
+  inAnims=[...dList.children].map((li,i)=>li.animate([{opacity:0,transform:'translateY(8px)'},{opacity:1,transform:'none'}],{duration:300,delay:i*50,easing:ACC_EASE,fill:'both'}))}
+function closeSvc(){if(!curIt)return;
+  if(RM){inAnims.forEach(a=>a.cancel());const o=[card,scrim].map(e=>e.animate([{opacity:1},{opacity:0}],{duration:150,easing:ACC_EASE,fill:'forwards'}));
+    o[0].onfinish=()=>{o.forEach(a=>a.cancel());finish()};S.t=0;return}
+  /* the row is no longer pressed, so the way back lands on it at full scale; content leaves in 200ms, as panels used to close */
+  if(geo){Object.assign(geo,{s:1,from:rect(curIt.querySelector('.acc-btn'))},deltas(curIt));apply()}
+  inAnims.forEach(a=>a.cancel());
+  inAnims=[...dList.children].map(li=>li.animate([{opacity:getComputedStyle(li).opacity},{opacity:0}],{duration:200,easing:ACC_EASE,fill:'forwards'}));
+  run(0)}
+function finish(instant){const it=curIt;if(!it)return;
+  if(raf){cancelAnimationFrame(raf);raf=0}
+  spellAnims.forEach(a=>a.cancel());inAnims.forEach(a=>a.cancel());spellAnims=[];inAnims=[];
+  if(dlg.open)dlg.close();lock(false);
+  it.classList.remove('is-open');it.querySelector('.acc-btn').setAttribute('aria-expanded','false');
+  curIt=null;geo=null;S.x=S.t=S.v=0;
+  if(!instant&&lastFocus)lastFocus.focus({preventScroll:true})}
+acc.addEventListener('click',e=>{const b=e.target.closest('.acc-btn');if(b){acc.classList.remove('pre-in');openSvc(b.closest('.acc-item'))}});
+closeBtn.addEventListener('click',closeSvc);
+scrim.addEventListener('click',closeSvc);
+dlg.addEventListener('cancel',e=>{e.preventDefault();closeSvc()});   /* Esc */
+dlg.addEventListener('close',()=>{if(curIt)finish(true)});              /* closed by the browser, e.g. a second Esc */
+/* focus stays inside the card: Tab and Shift+Tab wrap around */
+dlg.addEventListener('keydown',e=>{if(e.key!=='Tab')return;const f=[...dlg.querySelectorAll('a[href],button')].filter(x=>!x.closest('[hidden]'));
+  const first=f[0],lastEl=f[f.length-1];
+  if(e.shiftKey&&document.activeElement===first){e.preventDefault();lastEl.focus()}else if(!e.shiftKey&&document.activeElement===lastEl){e.preventDefault();first.focus()}});
+/* a project link inside the card closes it, then goes to that project */
+dList.addEventListener('click',e=>{const a=e.target.closest('a[href^="#"]');if(!a)return;e.preventDefault();lastFocus=null;finish(true);
+  const t=document.querySelector(a.getAttribute('href'));if(t){history.pushState(null,'',a.getAttribute('href'));t.scrollIntoView({behavior:RM?'auto':'smooth'})}});
+addEventListener('resize',()=>{if(!curIt||raf||S.t!==1)return;place(curIt);stroke();if(geo){measure(curIt);apply()}});
+
+/* deep links such as #forecasting open that service */
+const openFromHash=()=>{const id=decodeURIComponent(location.hash.slice(1)),it=id&&accItems.find(x=>x.id===id);
+  if(!it)return;acc.classList.remove('pre-in');it.scrollIntoView({block:'center',behavior:'instant'});requestAnimationFrame(()=>openSvc(it))};
+addEventListener('hashchange',openFromHash);
+/* rows fade up 8px with a 40ms stagger the first time the list scrolls into view */
+if(!RM&&'IntersectionObserver'in window&&acc.getBoundingClientRect().top>innerHeight*.9){acc.classList.add('pre-in');
+  const aio=new IntersectionObserver(([en])=>{if(en.isIntersecting){acc.classList.remove('pre-in');aio.disconnect()}},{rootMargin:'0px 0px -10% 0px'});aio.observe(acc)}
+openFromHash();
+}
+
+/* ---------- proposed AI projects carousel ---------- */
+const projects=[
+  ['Pipeline Health Command Center','BI reporting','Funnel, win rate, conversion, gap-to-target and forecast accuracy in one dashboard.','Power BI on a synthetic CRM dataset with KPI definitions','bars',true],
+  ['Ask-the-Pipeline RAG Assistant','RAG','Plain-language questions over pipeline data, SOPs and governance rules, with sources cited.','Document retrieval plus SQL tool calls, in web chat or Teams','net',true],
+  ['Budget vs Actual Variance Explainer','FP&A + AI','Monthly budget vs actual with an AI-drafted commentary for each variance.','Excel or Power BI model plus an LLM summary step','var',true],
+  ['Sales-to-Revenue Forecast with ML','Machine learning','Booking and revenue forecast blending pipeline stage probability with history.','Python or Databricks notebook vs a weighted-pipeline baseline','line'],
+  ['Win-Probability Scoring','Machine learning','Scores each opportunity by likelihood to win from stage, age, value and region.','Gradient-boosted model plus a Power BI drivers page','scatter'],
+  ['Pipeline Hygiene Bot','CRM automation','Flags stale opportunities, missing fields and stage breaches, and emails the owner.','Salesforce or HubSpot sandbox with Power Automate or n8n','flow'],
+  ['S&OP Scenario Planner','Forecasting','Demand, supply and capacity what-if scenarios for a product line.','Excel or Power BI with parameters','var'],
+  ['Automated Executive Pack','Workflow automation','A monthly leadership pack generated from data in one click.','Python or Power Automate building slides from a BI dataset','bars'],
+];
+const railEl=document.getElementById('rail');
+railEl.innerHTML=projects.map((p,i)=>`<article class="proj${p[5]?' star':''}" tabindex="0"><div class="viz"><canvas data-kind="${p[4]}" data-seed="${i}" aria-hidden="true"></canvas></div><div class="body"><div class="meta"><span class="area">${p[1]}</span><span class="badge">${p[5]?'Start here':'Demo'}</span></div><h3>${p[0].replace('&','&amp;')}</h3><p>${p[2]}</p><div class="build"><span>Build:</span> ${p[3]}</div></div></article>`).join('');
+const cards=[...railEl.children];
+const spot=()=>{const k=railEl.getBoundingClientRect();cards.forEach(c=>{const b=c.getBoundingClientRect();c.classList.toggle('dim',!RM&&(b.right>k.right+40||b.left<k.left-40))})};
+railEl.addEventListener('scroll',spot,{passive:true});addEventListener('resize',spot);
+const stepW=()=>cards[0].getBoundingClientRect().width+18;
+document.getElementById('next').onclick=()=>railEl.scrollBy({left:stepW(),behavior:RM?'auto':'smooth'});
+document.getElementById('prev').onclick=()=>railEl.scrollBy({left:-stepW(),behavior:RM?'auto':'smooth'});
+// drag to scroll on desktop
+let drag=null;railEl.addEventListener('pointerdown',e=>{if(e.pointerType!=='mouse')return;drag={x:e.clientX,s:railEl.scrollLeft};railEl.style.scrollSnapType='none'});
+addEventListener('pointermove',e=>{if(drag)railEl.scrollLeft=drag.s-(e.clientX-drag.x)});
+addEventListener('pointerup',()=>{if(drag){drag=null;railEl.style.scrollSnapType=''}});
+
+// mini vizzes
+const rnd=s=>()=>(s=(s*16807)%2147483647)/2147483647;
+const minis=[...railEl.querySelectorAll('canvas')].map(c=>({c,x:c.getContext('2d'),k:c.dataset.kind,r:rnd(+c.dataset.seed*977+13)}));
+const msize=()=>minis.forEach(m=>{const d=Math.min(devicePixelRatio,2);m.w=m.c.clientWidth;m.h=m.c.clientHeight;m.c.width=m.w*d;m.c.height=m.h*d;m.x.setTransform(d,0,0,d,0,0);
+  const r=m.r;m.data=Array.from({length:24},()=>r());});
+msize();addEventListener('resize',msize);
+const grad=(x,w)=>{const g=x.createLinearGradient(0,0,w,0);g.addColorStop(0,'#7fe0d4');g.addColorStop(.5,'#c9b8ff');g.addColorStop(1,'#f2c58a');return g};
+const mdraw=now=>{const t=RM?0:now/1000;minis.forEach(m=>{const{x,w,h,k,data}=m;x.clearRect(0,0,w,h);
+  x.strokeStyle='rgba(236,234,228,.06)';x.lineWidth=1;for(let i=1;i<4;i++){x.beginPath();x.moveTo(0,h*i/4);x.lineTo(w,h*i/4);x.stroke()}
+  const g=grad(x,w);x.fillStyle=g;x.strokeStyle=g;
+  if(k==='bars'){const n=12;for(let i=0;i<n;i++){const v=.25+.6*data[i]*(.75+.25*Math.sin(t*1.4+i*.6));const bw=w/n*.55;x.globalAlpha=.85;x.fillRect(i*w/n+bw*.4,h-v*h*.85,bw,v*h*.85)}x.globalAlpha=1}
+  else if(k==='line'){x.lineWidth=2;x.beginPath();for(let i=0;i<=60;i++){const X=i/60,Y=.7-.35*X+.08*Math.sin(X*10+t*.8)+.04*Math.sin(X*27);i?x.lineTo(X*w,Y*h):x.moveTo(X*w,Y*h)}x.stroke();
+    x.globalAlpha=.18;x.beginPath();for(let i=36;i<=60;i++){const X=i/60,Y=.7-.35*X+.08*Math.sin(X*10+t*.8)-(X-.6)*.5;i>36?x.lineTo(X*w,Y*h):x.moveTo(X*w,Y*h)}for(let i=60;i>=36;i--){const X=i/60,Y=.7-.35*X+.08*Math.sin(X*10+t*.8)+(X-.6)*.5;x.lineTo(X*w,Y*h)}x.fill();x.globalAlpha=1;
+    const sx=(t*.12%1)*w;x.fillStyle='rgba(236,234,228,.9)';x.fillRect(sx,0,1,h)}
+  else if(k==='scatter'){for(let i=0;i<24;i++){const X=.06+.88*((i*.618+data[i]*.2)%1),Y=.15+.7*data[(i+5)%24];const p=1-Y;x.globalAlpha=.35+.6*p;x.beginPath();x.arc(X*w,Y*h,3+4*p+Math.sin(t*2+i)*1,0,6.283);x.fill()}x.globalAlpha=1}
+  else if(k==='net'){const pts=[[.5,.5],[.2,.3],[.8,.28],[.25,.75],[.75,.75],[.5,.15]];x.lineWidth=1;x.globalAlpha=.5;pts.slice(1).forEach(p=>{x.beginPath();x.moveTo(pts[0][0]*w,pts[0][1]*h);x.lineTo(p[0]*w,p[1]*h);x.stroke()});
+    x.globalAlpha=1;pts.forEach((p,i)=>{x.beginPath();x.arc(p[0]*w,p[1]*h,i?4:8,0,6.283);x.fill()});
+    const j=1+Math.floor(t*.7)%5,f=(t*.7)%1,P0=pts[j];x.fillStyle='#fff';x.beginPath();x.arc((P0[0]+(pts[0][0]-P0[0])*f)*w,(P0[1]+(pts[0][1]-P0[1])*f)*h,2.5,0,6.283);x.fill()}
+  else if(k==='var'){const n=10;for(let i=0;i<n;i++){const v=(data[i]-.5)*(.8+.2*Math.sin(t+i));const bw=w/n*.5,X=i*w/n+bw*.5;x.globalAlpha=.85;x.fillStyle=v>0?'#7fe0d4':'#f2c58a';x.fillRect(X,h/2,bw,-v*h*.8)}x.globalAlpha=1;x.fillStyle='rgba(236,234,228,.4)';x.fillRect(0,h/2,w,1)}
+  else if(k==='flow'){const st=[.12,.37,.62,.87];x.lineWidth=1;x.globalAlpha=.4;x.beginPath();x.moveTo(st[0]*w,h/2);x.lineTo(st[3]*w,h/2);x.stroke();x.globalAlpha=1;
+    st.forEach((s,i)=>{x.beginPath();x.arc(s*w,h/2,9,0,6.283);x.fill()});
+    for(let i=0;i<5;i++){const f=((t*.25+i/5)%1);const X=(st[0]+(st[3]-st[0])*f)*w;const flag=data[i]>.6&&f>.4;x.fillStyle=flag?'#f2c58a':'#fff';x.beginPath();x.arc(X,h/2+(flag?-(f-.4)*h*.6:0),3,0,6.283);x.fill()}x.fillStyle=g}
+});};
+let mvis=false;new IntersectionObserver(([e])=>mvis=e.isIntersecting).observe(railEl);
+if(RM) mdraw(0); else {const mloop=now=>{if(mvis)mdraw(now);requestAnimationFrame(mloop)};requestAnimationFrame(mloop)}
+spot();
+
+/* ---------- contact ---------- */
+document.querySelector('[data-copy]').addEventListener('click',e=>{
+  const b=e.currentTarget,txt=document.getElementById('email').textContent;
+  const done=()=>{b.textContent='Copied';setTimeout(()=>b.textContent='Copy',1600)};
+  const fallback=()=>{const r=document.createRange();r.selectNodeContents(document.getElementById('email'));const s=getSelection();s.removeAllRanges();s.addRange(r);b.textContent='Selected'};
+  try{navigator.clipboard.writeText(txt).then(done,fallback)}catch(_){fallback()}
+});
+/* ---------- contact form: validation, spam traps, delivery ---------- */
+const EMAIL='rigoordonio@gmail.com',loadedAt=Date.now();
+const form=document.getElementById('enquiry'),note=document.getElementById('form-note'),send=document.getElementById('send');
+const checks={'f-name':v=>v?'':'Add your name.','f-email':v=>/^[^@\s]+@[^@\s]+\.[^@\s]+$/.test(v)?'':'Add an email like you@company.com.','f-msg':v=>v.length>=10?'':'Write at least a sentence about what you need.'};
+const check=id=>{const el=document.getElementById(id),msg=checks[id](el.value.trim()),err=document.getElementById('e-'+id.slice(2));err.textContent=msg;el.setAttribute('aria-invalid',!!msg);return !msg};
+/* re-check while typing, only once a field is flagged; checking on blur moved the Send button mid-click and swallowed the click */
+Object.keys(checks).forEach(id=>document.getElementById(id).addEventListener('input',e=>{if(e.target.getAttribute('aria-invalid')==='true')check(id)}));
+const say=(cls,html)=>{note.className='form-note'+(cls?' '+cls:'');note.innerHTML=html};
+const busy=on=>{on?send.setAttribute('aria-busy','true'):send.removeAttribute('aria-busy');send.firstChild.textContent=on?'Sending… ':'Send enquiry '};
+form.addEventListener('submit',async e=>{
+  e.preventDefault();const bad=Object.keys(checks).filter(id=>!check(id));
+  if(bad.length){say('','Check the highlighted fields.');document.getElementById(bad[0]).focus();return}
+  const d=Object.fromEntries(new FormData(form));
+  /* spam traps: a filled honeypot or a submit within 3 s of page load is a bot, so act as if sent and send nothing */
+  if(d._gotcha||Date.now()-loadedAt<3000){form.reset();say('ok','Thanks. Your message has been sent.');return}
+  const endpoint=form.dataset.endpoint; /* set by tools/build.mjs from formEndpoint in site.config.json */
+  if(!endpoint){
+    const body=`${d.message}\n\n${d.name}${d.company?', '+d.company:''}\n${d.email}`;
+    const href=`mailto:${EMAIL}?subject=${encodeURIComponent('Enquiry: '+d.service)}&body=${encodeURIComponent(body)}`;
+    say('ok',`Your message is ready. <a href="${href}">Open it in your email app</a> to send it, or write to ${EMAIL}.`);
+    window.siteAnalytics?.('contact_ready');return}
+  busy(true);
+  try{const r=await fetch(endpoint,{method:'POST',headers:{Accept:'application/json'},body:new FormData(form)});
+    if(!r.ok)throw new Error('HTTP '+r.status);
+    form.reset();say('ok','Thanks. Your message has been sent, and I will reply by email.');window.siteAnalytics?.('contact_sent')}
+  catch(_){say('bad',`Sorry, that did not go through. Please try again or email <a href="mailto:${EMAIL}">${EMAIL}</a>.`)}
+  finally{busy(false)}
+});
+const yr=document.getElementById('year');if(yr)yr.textContent=new Date().getFullYear();
+/* ---------- nav: mobile menu, active section, progress, back to top ---------- */
+const menuBtn=document.querySelector('.menu-btn'),navEl=document.getElementById('site-nav');
+const setMenu=o=>{document.documentElement.classList.toggle('menu-open',o);menuBtn.setAttribute('aria-expanded',o)};
+menuBtn.addEventListener('click',()=>setMenu(menuBtn.getAttribute('aria-expanded')!=='true'));
+navEl.addEventListener('click',e=>{if(e.target.closest('a'))setMenu(false)});
+document.addEventListener('click',e=>{if(menuBtn.getAttribute('aria-expanded')==='true'&&!e.target.closest('.nav'))setMenu(false)});
+addEventListener('keydown',e=>{if(e.key==='Escape'&&menuBtn.getAttribute('aria-expanded')==='true'){setMenu(false);menuBtn.focus()}});
+const links=[...navEl.querySelectorAll('a')],secs=links.map(a=>document.querySelector(a.getAttribute('href')));
+const bar=document.querySelector('.progress'),top=document.getElementById('to-top');
+top.addEventListener('click',()=>{scrollTo({top:0,behavior:RM?'auto':'smooth'});document.getElementById('main').focus({preventScroll:true})});
+const navScroll=()=>{const st=scrollY,max=document.documentElement.scrollHeight-innerHeight;bar.style.transform=`scaleX(${max>0?st/max:0})`;
+  top.classList.toggle('show',st>innerHeight);document.documentElement.classList.toggle('nav-solid',st>8);
+  let a=-1;secs.forEach((sec,i)=>{if(sec&&sec.getBoundingClientRect().top<innerHeight*.4)a=i});
+  links.forEach((l,i)=>i===a?l.setAttribute('aria-current','true'):l.removeAttribute('aria-current'))};
+addEventListener('scroll',navScroll,{passive:true});navScroll();
+})();
+</script>
+
+<style id="motion-css">
+/* ===== motion layer: delete this block and the script#motion-js block to remove ===== */
+:root{--m-ease:cubic-bezier(.16,1,.3,1)}
+/* 1 boot: light sweep under the nav (overlay, no layout) */
+.nav::after{content:"";position:absolute;left:0;bottom:-1px;height:1px;width:28%;pointer-events:none;background:linear-gradient(90deg,transparent,#7fe0d4,#c9b8ff,transparent);box-shadow:0 0 10px #7fe0d4;opacity:0;animation:m-sweep .9s var(--m-ease) .02s backwards}
+@keyframes m-sweep{0%{transform:translateX(-110%);opacity:0}12%{opacity:1}100%{transform:translateX(380%);opacity:0}}
+@keyframes m-boot{from{opacity:0;filter:blur(8px);transform:translateY(8px)}to{opacity:1;filter:none;transform:none}}
+.nav{animation:m-boot .55s var(--m-ease) .06s backwards}
+
+/* 3 scan-line wipe (classes added by JS only) */
+.rv.wiping{clip-path:inset(-40px -40px -40px -40px);transition:clip-path .8s var(--m-ease) var(--d,0s)!important} /* !important: card hover rules set their own transition and would cancel the wipe */
+.pre{clip-path:inset(-40px -40px 100% -40px)}
+.pre.wipe-x{clip-path:inset(-40px 100% -40px -40px)}
+.m-edge{position:absolute;pointer-events:none;z-index:5;opacity:0}
+.m-edge.y{height:1px;background:linear-gradient(90deg,transparent,#7fe0d4,#c9b8ff,transparent);box-shadow:0 0 12px #7fe0d4}
+.m-edge.x{width:1px;background:linear-gradient(transparent,#7fe0d4,#c9b8ff,transparent);box-shadow:0 0 12px #7fe0d4}
+/* 4 holographic hover: reflection layer that follows the mouse */
+.m-holo{position:relative}
+.m-holo::after{content:"";position:absolute;inset:0;border-radius:inherit;pointer-events:none;background:radial-gradient(280px circle at var(--hx,50%) var(--hy,0%),rgba(201,184,255,.14),transparent 60%);opacity:0;transition:opacity .25s var(--m-ease)}
+.m-holo:hover::after{opacity:1}
+.btn{position:relative}
+.m-shine::after{content:"";position:absolute;inset:0;border-radius:inherit;pointer-events:none;background:radial-gradient(110px circle at var(--hx,50%) var(--hy,50%),rgba(127,224,212,.35),transparent 65%);opacity:0;transition:opacity .2s var(--m-ease)}
+.m-shine:hover::after{opacity:1}
+.role-card.m-holo{transition:border-color .5s,transform .25s var(--m-ease)}
+.delivered > article.m-holo{transition:background .35s,transform .25s var(--m-ease)}
+.proj.m-holo{transition:transform .25s var(--m-ease),opacity .6s,border-color .4s}
+/* 5 breathing glow on primary buttons (outer shadow only, opacity animated) */
+.btn.solid::before{content:"";position:absolute;inset:0;border-radius:inherit;pointer-events:none;box-shadow:0 0 22px 3px rgba(201,184,255,.55),0 0 2px 1px rgba(201,184,255,.55);opacity:.25;animation:m-breathe 3.6s ease-in-out infinite}
+.btn.solid.m-off::before{animation-play-state:paused}
+@keyframes m-breathe{50%{opacity:.75}}
+
+/* 7 ambient grid behind the hero */
+.hero{position:relative}
+.hero > .wrap{position:relative;z-index:2}
+.m-grid{position:absolute;inset:-48px;pointer-events:none;z-index:1;background:linear-gradient(rgba(127,224,212,.06) 1px,transparent 1px) 0 0/48px 48px,linear-gradient(90deg,rgba(127,224,212,.06) 1px,transparent 1px) 0 0/48px 48px;-webkit-mask:radial-gradient(70% 70% at 50% 45%,#000 30%,transparent 80%);mask:radial-gradient(70% 70% at 50% 45%,#000 30%,transparent 80%);animation:m-drift 16s linear infinite}
+.m-grid.m-off{animation-play-state:paused}
+@keyframes m-drift{to{transform:translate(48px,48px)}}
+@media (prefers-reduced-motion:reduce){.nav::after,.m-grid,.btn.solid::before,.m-edge{display:none}}
+</style>
+
+<script id="motion-js">
+/* ===== motion layer: delete this block and the style#motion-css block to remove ===== */
+(()=>{
+const C={rowsX:'.way,.delivered > article,.skills > div',holo:'.role-card,.delivered > article,.proj',soft:'',cursor:false,parallax:'#orb',parallaxK:.3};
+const RM=matchMedia('(prefers-reduced-motion: reduce)').matches;
+const FINE=matchMedia('(pointer: fine)').matches;
+const EASE='cubic-bezier(.16,1,.3,1)';
+const $$=s=>[...document.querySelectorAll(s)];
+
+/* 3 scan-line wipe: called by the existing reveal observer */
+$$(C.rowsX).forEach(el=>el.classList.add('wipe-x'));
+window.motionWipe=t=>{
+  t.classList.add('wiping');
+  const done=e=>{if(e.target===t&&e.propertyName==='clip-path'){t.classList.remove('wiping');t.removeEventListener('transitionend',done)}};
+  t.addEventListener('transitionend',done);
+  setTimeout(()=>{t.classList.remove('wiping');t.removeEventListener('transitionend',done)},(parseFloat(getComputedStyle(t).getPropertyValue('--d'))*1000||0)+1000); /* fallback if transitionend never fires */
+  requestAnimationFrame(()=>{t.classList.remove('pre');if(RM)return;
+    const r=t.getBoundingClientRect(),x=t.classList.contains('wipe-x'),d=document.createElement('div');
+    d.className='m-edge '+(x?'x':'y');d.setAttribute('aria-hidden','true');
+    Object.assign(d.style,{left:(r.left+scrollX)+'px',top:(r.top+scrollY)+'px',[x?'height':'width']:(x?r.height:r.width)+'px'});
+    document.body.appendChild(d);
+    const delay=parseFloat(getComputedStyle(t).getPropertyValue('--d'))*1000||0,end=x?`translateX(${r.width}px)`:`translateY(${r.height}px)`;
+    d.animate([{transform:'none',opacity:1},{opacity:1,offset:.8},{transform:end,opacity:0}],{duration:800,delay,easing:EASE,fill:'backwards'}).onfinish=()=>d.remove();
+  });
+};
+
+/* 2 decode section headings once on first view */
+if(!RM){
+  const GL={u:'ABCDEFGHIJKLMNOPQRSTUVWXYZ#%&+=/<>',l:'abcdefghijklmnopqrstuvwxyz',d:'0123456789'};
+  const pick=c=>{const s=/[A-Z]/.test(c)?GL.u:/[a-z]/.test(c)?GL.l:/\d/.test(c)?GL.d:null;return s?s[Math.random()*s.length|0]:c};
+  const decode=h=>{
+    const w=document.createTreeWalker(h,NodeFilter.SHOW_TEXT),nodes=[];while(w.nextNode())nodes.push(w.currentNode);
+    const orig=nodes.map(n=>n.nodeValue),total=orig.join('').length||1,t0=performance.now(),D=800;
+    h.setAttribute('aria-label',h.textContent.replace(/\s+/g,' ').trim());
+    const step=now=>{const p=Math.min(1,(performance.now()-t0)/D);let k=0;
+      nodes.forEach((n,j)=>{let o='';for(const c of orig[j]){o+=(p>=.25+.75*(k/total))?c:pick(c);k++}n.nodeValue=o});
+      if(p<1)requestAnimationFrame(step);else{nodes.forEach((n,j)=>n.nodeValue=orig[j]);h.removeAttribute('aria-label')}};
+    requestAnimationFrame(step);
+    setTimeout(()=>{nodes.forEach((n,j)=>n.nodeValue=orig[j]);h.removeAttribute('aria-label')},D+120); /* settle even if frames are dropped */
+  };
+  const hio=new IntersectionObserver(es=>es.forEach(e=>{if(e.isIntersecting){hio.unobserve(e.target);setTimeout(()=>decode(e.target),60)}}),{rootMargin:'0px 0px -12% 0px'});
+  $$('h2').forEach(h=>hio.observe(h));
+}
+
+/* 4 holographic tilt + reflection (desktop pointers only) */
+if(FINE&&!RM){
+  const track=(el,e)=>{const k=el.getBoundingClientRect(),x=(e.clientX-k.left)/k.width,y=(e.clientY-k.top)/k.height;
+    el.style.setProperty('--hx',(x*100).toFixed(1)+'%');el.style.setProperty('--hy',(y*100).toFixed(1)+'%');return[x,y]};
+  $$(C.holo).forEach(el=>{el.classList.add('m-holo');const max=el.matches(C.soft||'_none_')?3:6;
+    el.addEventListener('pointermove',e=>{const[x,y]=track(el,e);if(el.classList.contains('dim')){el.style.transform='';return}
+      el.style.transform=`perspective(900px) rotateX(${((.5-y)*2*max).toFixed(2)}deg) rotateY(${((x-.5)*2*max).toFixed(2)}deg) translateY(var(--lift,0px))`});
+    el.addEventListener('pointerleave',()=>el.style.transform='')});
+  $$('.btn').forEach(b=>{b.classList.add('m-shine');b.addEventListener('pointermove',e=>track(b,e))});
+}
+
+/* 6 cursor (only where the page has none yet) */
+if(C.cursor&&FINE&&!RM){
+  const dot=document.createElement('div'),ring=document.createElement('div');dot.className='m-cur';ring.className='m-ring';
+  dot.setAttribute('aria-hidden','true');ring.setAttribute('aria-hidden','true');document.body.append(dot,ring);
+  let mx=-100,my=-100,rx=-100,ry=-100,on=false;
+  addEventListener('pointermove',e=>{mx=e.clientX;my=e.clientY;if(!on){on=true;rx=mx;ry=my;document.documentElement.classList.add('m-has-cur')}},{passive:true});
+  document.addEventListener('pointerleave',()=>{on=false;document.documentElement.classList.remove('m-has-cur')});
+  document.addEventListener('pointerover',e=>{const t=e.target;ring.classList.toggle('big',!!t.closest(C.cursorBig));
+    document.documentElement.classList.toggle('m-cur-hide',!!t.closest(C.cursorHide))});
+  const tick=()=>{rx+=(mx-rx)*.2;ry+=(my-ry)*.2;dot.style.transform=`translate(${mx}px,${my}px)`;ring.style.transform=`translate(${rx}px,${ry}px)`;requestAnimationFrame(tick)};tick();
+}
+
+/* 7 ambient depth: grid + parallax, paused off screen */
+const hero=document.querySelector('.hero'),grid=document.createElement('div');grid.className='m-grid';grid.setAttribute('aria-hidden','true');
+const bg=document.querySelector(C.parallax);
+if(bg&&bg.parentNode===hero)bg.after(grid);else hero.prepend(grid);
+let heroOn=true;
+new IntersectionObserver(([e])=>{heroOn=e.isIntersecting;grid.classList.toggle('m-off',!heroOn)}).observe(hero);
+const btns=$$('.btn.solid'),bio=new IntersectionObserver(es=>es.forEach(e=>e.target.classList.toggle('m-off',!e.isIntersecting)));btns.forEach(b=>bio.observe(b));
+if(!RM&&bg){let ticking=false;addEventListener('scroll',()=>{if(ticking||!heroOn)return;ticking=true;
+  requestAnimationFrame(()=>{bg.style.transform=`translate3d(0,${(scrollY*C.parallaxK).toFixed(1)}px,0)`;ticking=false})},{passive:true})}
+})();
+</script>
+<script>
+/* photo badge grows as it reaches the middle of the screen and shrinks as it leaves */
+(()=>{const a=document.querySelector('.ava-logo');if(!a||matchMedia('(prefers-reduced-motion: reduce)').matches)return;
+let cur=0,goal=0,raf=0;
+const aim=()=>{if(document.documentElement.classList.contains('svc-lock'))return;const r=a.getBoundingClientRect(),vh=innerHeight,d=Math.abs(r.top+r.height/2-vh*.42)/(vh*.5);goal=Math.max(0,1-d);goal=goal*goal*(3-2*goal);if(!raf)raf=requestAnimationFrame(step)};
+const step=()=>{cur+=(goal-cur)*.14;a.style.setProperty('--p',cur.toFixed(4));raf=Math.abs(goal-cur)>.002?requestAnimationFrame(step):0};
+addEventListener('scroll',aim,{passive:true});addEventListener('resize',aim);aim();})();
+</script>
+<style>
+/* page colours for the poke pill and GitHub graph */
+:root{--pk-fg:var(--fg);--pk-dim:var(--fg-dim);--pk-line:var(--line);--pk-bg:var(--ink-2);--pk-acc:var(--tide)}
+/* poke: a small floating pill that slides in once you scroll past the hero */
+.poke{position:fixed;z-index:19;right:max(16px,env(safe-area-inset-right,0px));top:calc(env(safe-area-inset-top,0px) + 84px);display:flex;align-items:center;gap:14px;padding:8px 8px 8px 16px;border-radius:999px;background:color-mix(in srgb,var(--pk-bg) 88%,transparent);-webkit-backdrop-filter:blur(14px);backdrop-filter:blur(14px);border:1px solid var(--pk-line);box-shadow:0 12px 36px -16px rgba(0,0,0,.35);transform:translateY(-14px) scale(.96);opacity:0;pointer-events:none;transition:transform .5s cubic-bezier(.34,1.56,.64,1),opacity .3s}
+.poke.on{transform:none;opacity:1;pointer-events:auto}
+.pk-meta{display:grid;line-height:1.2}
+.pk-meta small{font-size:13px;color:var(--pk-dim)}
+.pk-n{font:500 15px/1.2 var(--mono,ui-monospace,monospace);color:var(--pk-fg);font-variant-numeric:tabular-nums;display:inline-flex;overflow:hidden;height:1.2em}
+.pk-n span{display:inline-block}
+.pk-n .roll{animation:pk-roll .35s cubic-bezier(.22,1,.36,1)}
+@keyframes pk-roll{from{transform:translateY(100%);opacity:0}}
+.pk-btn{position:relative;overflow:visible;display:inline-flex;align-items:center;gap:8px;min-height:46px;padding:0 18px;border-radius:999px;border:1px solid var(--pk-line);background:var(--pk-bg);color:var(--pk-fg);font:500 15px var(--sans,inherit);cursor:pointer;transition:transform .15s}
+.pk-btn:active{transform:scale(.93)}
+.pk-btn:focus-visible{outline:2px solid var(--pk-acc);outline-offset:3px}
+.pk-hand{display:inline-block;transform-origin:70% 60%}
+.pk-btn.jab .pk-hand{animation:pk-jab .42s cubic-bezier(.34,1.56,.64,1)}
+.pk-critter{width:36px;height:27px;margin:-4px 0;overflow:visible}
+.pk-all{transform-box:fill-box;transform-origin:50% 60%;animation:pk-play 1.8s ease-in-out infinite}
+@keyframes pk-play{0%,100%{transform:translateY(0) rotate(0)}25%{transform:translateY(-1px) rotate(-4deg)}50%{transform:translateY(0)}75%{transform:translateY(-1px) rotate(4deg)}}
+.pk-legs-a{animation:pk-step .36s steps(1) infinite}
+.pk-legs-b{animation:pk-step .36s steps(1) -.18s infinite}
+@keyframes pk-step{50%{transform:translateY(-1px)}}
+.pk-arm-l,.pk-arm-r{animation:pk-flap .72s steps(1) infinite}
+.pk-arm-r{animation-delay:-.36s}
+@keyframes pk-flap{50%{transform:translateY(-1.5px)}}
+.pk-eye{transform-box:fill-box;transform-origin:center;animation:pk-blink 3.6s infinite}
+@keyframes pk-blink{0%,90%,100%{transform:scaleY(1)}94%{transform:scaleY(.15)}}
+.pk-btn.jab .pk-all{animation:pk-flip .7s cubic-bezier(.34,1.3,.64,1)}
+@keyframes pk-flip{0%{transform:translateY(0) rotate(0) scale(1,1)}15%{transform:translateY(1px) scale(1.15,.8)}55%{transform:translateY(-14px) rotate(200deg) scale(1)}85%{transform:translateY(0) rotate(360deg) scale(1.1,.9)}100%{transform:translateY(0) rotate(360deg) scale(1)}}
+@media (prefers-reduced-motion:reduce){.pk-critter *{animation:none!important}}
+@keyframes pk-jab{35%{transform:translateX(7px) rotate(-8deg) scale(1.15)}}
+.pk-dot{position:absolute;left:28px;top:50%;width:6px;height:6px;border-radius:50%;pointer-events:none;background:var(--pk-acc)}
+.pk-plus{position:absolute;right:10px;top:-4px;font:600 13px var(--mono,monospace);color:var(--pk-acc);pointer-events:none;animation:pk-up .7s ease-out forwards}
+@keyframes pk-up{to{transform:translateY(-22px);opacity:0}}
+@media (max-width:480px){.poke{top:auto;bottom:calc(env(safe-area-inset-bottom,0px) + 16px);right:auto;left:max(16px,env(safe-area-inset-left,0px))}.poke.on~.to-top{}}
+@media (prefers-reduced-motion:reduce){.poke,.pk-n .roll,.pk-btn.jab .pk-hand{transition:opacity .2s;animation:none}}
+</style>
+<aside class="poke" aria-label="Say hi">
+  <div class="pk-meta"><small class="pk-lbl">Pokes this month</small><span class="pk-n" aria-live="polite">—</span></div>
+  <button class="pk-btn" type="button" aria-label="Poke Rigo"><svg class="pk-critter" viewBox="0 0 24 18" shape-rendering="crispEdges" aria-hidden="true"><g class="pk-all"><g class="pk-legs-a" fill="#cd7559"><rect x="4.5" y="13" width="2" height="4"/><rect x="13" y="13" width="2" height="4"/></g><g class="pk-legs-b" fill="#cd7559"><rect x="8" y="13" width="2" height="4"/><rect x="16.5" y="13" width="2" height="4"/></g><g class="pk-body"><rect x="4" y="5" width="15" height="9" fill="#cd7559"/><rect class="pk-arm-l" x="1" y="8" width="3" height="3" fill="#cd7559"/><rect class="pk-arm-r" x="19" y="8" width="3" height="3" fill="#cd7559"/><rect class="pk-eye" x="6" y="7" width="2" height="2" fill="#0d0d0d"/><rect class="pk-eye" x="15" y="7" width="2" height="2" fill="#0d0d0d"/></g></g></svg>Poke</button>
+</aside>
+<script>
+/* poke counter: shared monthly total where the page can store it, else this visitor's own pokes */
+(()=>{const box=document.querySelector('.poke');if(!box)return;const n=box.querySelector('.pk-n'),lbl=box.querySelector('.pk-lbl'),btn=box.querySelector('.pk-btn');
+const RM=matchMedia('(prefers-reduced-motion: reduce)').matches;const month=new Date().toISOString().slice(0,7);
+let total=null,mine=0,ref=null,busy=false,last=0;
+try{const s=JSON.parse(localStorage.getItem('pokes')||'{}');mine=s[month]||0}catch(e){}
+const fmt=v=>v.toLocaleString('en-US');
+const show=v=>{const t=fmt(v);if(n.textContent===t)return;n.innerHTML='';[...t].forEach((c,i)=>{const s=document.createElement('span');s.textContent=c;if(!RM&&n.dataset.ready){s.className='roll';s.style.animationDelay=i*18+'ms'}n.append(s)});n.dataset.ready=1};
+const paint=()=>{if(total!=null){lbl.textContent='Pokes this month';show(total)}else{lbl.textContent=mine?'Your pokes':'Say hi';show(mine)}};
+paint();
+/* slide in after the hero, step aside at the contact section */
+const hero=document.querySelector('.hero,#top,header+main section'),contact=document.querySelector('#contact');
+const vis=()=>{const past=scrollY>(hero?hero.offsetHeight*.7:500);const r=contact&&contact.getBoundingClientRect();box.classList.toggle('on',past&&!(r&&r.top<(innerWidth<=480?innerHeight:innerHeight*.3)&&r.bottom>0))};
+addEventListener('scroll',vis,{passive:true});vis();
+const burst=()=>{if(RM)return;const p=document.createElement('span');p.className='pk-plus';p.textContent='+1';btn.append(p);setTimeout(()=>p.remove(),720);
+  for(let i=0;i<7;i++){const d=document.createElement('i');d.className='pk-dot';btn.append(d);const a=-Math.PI/2+(Math.random()-.5)*2.4,v=18+Math.random()*16;
+    d.animate([{transform:'translate(0,-50%) scale(1)',opacity:1},{transform:`translate(${Math.cos(a)*v}px,${Math.sin(a)*v-3}px) scale(.2)`,opacity:0}],{duration:520+Math.random()*200,easing:'cubic-bezier(.22,1,.36,1)'}).onfinish=()=>d.remove()}};
+btn.addEventListener('click',async()=>{const now=Date.now();if(now-last<350)return;last=now;
+  btn.classList.remove('jab');void btn.offsetWidth;btn.classList.add('jab');burst();
+  mine++;try{const s=JSON.parse(localStorage.getItem('pokes')||'{}');s[month]=mine;localStorage.setItem('pokes',JSON.stringify(s))}catch(e){}
+  if(total!=null)total++;paint();
+  if(ref&&!busy){busy=true;try{await ref.set({month,n:mine})}catch(e){}busy=false}});
+/* shared total: one document per visitor (only they write it), summed for the month */
+(async()=>{try{if(!window.claude||!claude.use)return;const db=await claude.use('db'),user=await claude.use('user');if(!db||!user)return;
+  const id=await user.id();const col=db.collection('pokes');if(id)ref=col.doc(id);
+  col.onSnapshot(s=>{let t=0;s.docs.forEach(d=>{const v=d.data();if(v&&v.month===month)t+=+v.n||0});
+    if(id){const me=s.docs.find(d=>d.id===id);const v=me&&me.data();if(v&&v.month===month&&v.n>mine)mine=v.n}
+    total=Math.max(t,mine);paint()},()=>{});
+}catch(e){}})();
+})();
+</script>
+<style>
+/* motion pass rebuilt from NullMotion's templates (MIT): blur-reveal headings, line growth, compare bars, leaderboard rise, icon-stack rise, typing dots */
+.nm-w{display:inline-block;white-space:pre;filter:blur(10px);opacity:0;transform:translateY(.35em);transition:filter .7s var(--nm-ease),opacity .7s var(--nm-ease),transform .7s var(--nm-ease);transition-delay:calc(var(--i) * 22ms)}
+.nm-in .nm-w{filter:none;opacity:1;transform:none}
+:root{--nm-ease:cubic-bezier(.22,1,.36,1)}
+.nm-sr{position:absolute;width:1px;height:1px;overflow:hidden;clip-path:inset(50%);white-space:nowrap}
+.nm-wipe{clip-path:inset(0 100% 0 0);transition:clip-path 1.4s cubic-bezier(.65,0,.35,1)}
+.nm-wipe.nm-in{clip-path:inset(0 0 0 0)}
+.nm-bar{position:absolute;left:0;bottom:-1px;height:2px;width:calc(var(--v) * 100%);background:var(--pk-acc);transform:scaleX(0);transform-origin:0 50%;transition:transform 1s var(--nm-ease);transition-delay:calc(var(--i) * 90ms);pointer-events:none;opacity:.8}
+.nm-in .nm-bar{transform:scaleX(1)}
+.nm-rank{opacity:0;transform:translateY(16px);transition:opacity .6s var(--nm-ease),transform .8s cubic-bezier(.34,1.4,.64,1);transition-delay:calc(var(--i) * 110ms)}
+.nm-in>.nm-rank{opacity:1;transform:none}
+.nm-chip{opacity:0;transform:translateY(18px) rotate(var(--r));transition:opacity .45s var(--nm-ease),transform .7s cubic-bezier(.34,1.56,.64,1);transition-delay:calc(var(--i) * 35ms)}
+.nm-in .nm-chip{opacity:1;transform:none}
+.spell .dots .dot{fill:var(--pk-acc);transform-box:fill-box;animation:nm-dot 1s ease-in-out infinite}
+@keyframes nm-dot{0%,60%,100%{transform:translateY(0);opacity:.35}30%{transform:translateY(-4px);opacity:1}}
+@media (prefers-reduced-motion:reduce){.nm-w,.nm-wipe,.nm-bar,.nm-rank,.nm-chip{transition:none!important;filter:none!important;opacity:1!important;transform:none!important;clip-path:none!important}}
+</style>
+<script>
+(()=>{if(matchMedia('(prefers-reduced-motion: reduce)').matches)return;
+const once=(els,fn,opt)=>{const io=new IntersectionObserver(es=>es.forEach(e=>{if(e.isIntersecting){io.unobserve(e.target);fn(e.target)}}),opt||{rootMargin:'0px 0px -12% 0px'});els.forEach(el=>io.observe(el))};
+/* 1 blur-reveal: section intro lines sharpen and rise word by word (headings already have their own decode effect) */
+{const hs=[...document.querySelectorAll('main section h2 + p, main section h2 + div > p:first-child, #services .wrap > div > p')].filter((p,i,arr)=>arr.indexOf(p)===i&&!p.querySelector('span')&&!p.closest('.contact,.role')&&p.textContent.trim().split(/\s+/).length>4);
+  hs.forEach(h=>{const walk=n=>{[...n.childNodes].forEach(c=>{if(c.nodeType===3){const f=document.createDocumentFragment();c.textContent.split(/(\s+)/).forEach(t=>{if(!t)return;if(/^\s+$/.test(t)){f.append(t);return}const s=document.createElement('span');s.className='nm-w';s.textContent=t;f.append(s)});c.replaceWith(f)}else if(c.nodeType===1&&!c.classList.contains('nm-w'))walk(c)})};
+    const full=h.textContent;walk(h);const sr=document.createElement('span');sr.className='nm-sr';sr.textContent=full;h.prepend(sr);[...h.querySelectorAll('.nm-w')].forEach((w,i)=>{w.style.setProperty('--i',i);w.setAttribute('aria-hidden','true')})});
+  once(hs,h=>h.classList.add('nm-in'))}
+/* 2 line growth: the services chart draws itself left to right the first time it is seen */
+const cb=document.querySelector('#chart-box canvas,#chart');if(cb){cb.classList.add('nm-wipe');once([cb],c=>c.classList.add('nm-in'))}
+/* 3 compare bars: each service row grows a bar sized by its project count */
+const rowsReady=()=>{const btns=[...document.querySelectorAll('.acc-btn')];if(!btns.length)return false;
+  const n=btns.map(b=>parseInt((b.querySelector('.svc-count,.acc-count')||{}).textContent)||0),mx=Math.max(1,...n);
+  btns.forEach((b,i)=>{if(getComputedStyle(b).position==='static')b.style.position='relative';const bar=document.createElement('i');bar.className='nm-bar';bar.setAttribute('aria-hidden','true');bar.style.setProperty('--v',(n[i]/mx).toFixed(3));bar.style.setProperty('--i',i);b.append(bar)});
+  const host=btns[0].closest('section')||document.body;once([host],h=>h.classList.add('nm-in'),{rootMargin:'0px 0px -25% 0px'});return true};
+if(!rowsReady()){let t=0;const iv=setInterval(()=>{if(rowsReady()||++t>40)clearInterval(iv)},150)}
+/* 4 leaderboard rise: inside each experience card, the lines climb in one after another */
+const roles=[...document.querySelectorAll('.role')];roles.forEach(r=>[...r.children].forEach((c,i)=>{c.classList.add('nm-rank');c.style.setProperty('--i',i)}));once(roles,r=>r.classList.add('nm-in'));
+/* 5 icon-stack rise: skill chips pop up on small arcs, group by group */
+const groups=[...document.querySelectorAll('#skills .chips')];groups.forEach(g=>{[...g.children].forEach((c,i)=>{c.classList.add('nm-chip');c.style.setProperty('--i',i);c.style.setProperty('--r',(i%2?4:-4)+'deg')});g.parentElement.classList.add('nm-host')});
+once(groups.map(g=>g.parentElement),h=>h.classList.add('nm-in'));
+})();
+</script>

@@ -1,0 +1,57 @@
+<style>
+/* poke: a small floating pill that slides in once you scroll past the hero */
+.poke{--pk-bg:var(--card,var(--ink-2));--pk-fg:var(--ink,var(--fg));--pk-dim:var(--ink-2,var(--fg-dim));--pk-line:var(--rule,var(--line));position:fixed;z-index:19;right:max(16px,env(safe-area-inset-right,0px));top:calc(env(safe-area-inset-top,0px) + 84px);display:flex;align-items:center;gap:14px;padding:8px 8px 8px 16px;border-radius:999px;background:color-mix(in srgb,var(--pk-bg) 88%,transparent);-webkit-backdrop-filter:blur(14px);backdrop-filter:blur(14px);border:1px solid var(--pk-line);box-shadow:0 12px 36px -16px rgba(0,0,0,.35);transform:translateY(-14px) scale(.96);opacity:0;pointer-events:none;transition:transform .5s cubic-bezier(.34,1.56,.64,1),opacity .3s}
+.poke.on{transform:none;opacity:1;pointer-events:auto}
+.pk-meta{display:grid;line-height:1.2}
+.pk-meta small{font-size:13px;color:var(--pk-dim)}
+.pk-n{font:500 15px/1.2 var(--mono,ui-monospace,monospace);color:var(--pk-fg);font-variant-numeric:tabular-nums;display:inline-flex;overflow:hidden;height:1.2em}
+.pk-n span{display:inline-block}
+.pk-n .roll{animation:pk-roll .35s cubic-bezier(.22,1,.36,1)}
+@keyframes pk-roll{from{transform:translateY(100%);opacity:0}}
+.pk-btn{position:relative;display:inline-flex;align-items:center;gap:8px;min-height:44px;padding:0 18px;border-radius:999px;border:1px solid var(--pk-line);background:var(--pk-bg);color:var(--pk-fg);font:500 15px var(--sans,inherit);cursor:pointer;transition:transform .15s}
+.pk-btn:active{transform:scale(.93)}
+.pk-btn:focus-visible{outline:2px solid var(--ember-ink,var(--tide));outline-offset:3px}
+.pk-hand{display:inline-block;transform-origin:70% 60%}
+.pk-btn.jab .pk-hand{animation:pk-jab .42s cubic-bezier(.34,1.56,.64,1)}
+@keyframes pk-jab{35%{transform:translateX(7px) rotate(-8deg) scale(1.15)}}
+.pk-dot{position:absolute;left:28px;top:50%;width:6px;height:6px;border-radius:50%;pointer-events:none;background:var(--ember,var(--tide))}
+.pk-plus{position:absolute;right:10px;top:-4px;font:600 13px var(--mono,monospace);color:var(--ember-ink,var(--tide));pointer-events:none;animation:pk-up .7s ease-out forwards}
+@keyframes pk-up{to{transform:translateY(-22px);opacity:0}}
+@media (max-width:480px){.poke{top:auto;bottom:calc(env(safe-area-inset-bottom,0px) + 16px);right:auto;left:max(16px,env(safe-area-inset-left,0px))}.poke.on~.to-top{}}
+@media (prefers-reduced-motion:reduce){.poke,.pk-n .roll,.pk-btn.jab .pk-hand{transition:opacity .2s;animation:none}}
+</style>
+<aside class="poke" aria-label="Say hi">
+  <div class="pk-meta"><small class="pk-lbl">Pokes this month</small><span class="pk-n" aria-live="polite">—</span></div>
+  <button class="pk-btn" type="button" aria-label="Poke Rigo"><span class="pk-hand" aria-hidden="true">👉</span>Poke</button>
+</aside>
+<script>
+/* poke counter: shared monthly total where the page can store it, else this visitor's own pokes */
+(()=>{const box=document.querySelector('.poke');if(!box)return;const n=box.querySelector('.pk-n'),lbl=box.querySelector('.pk-lbl'),btn=box.querySelector('.pk-btn');
+const RM=matchMedia('(prefers-reduced-motion: reduce)').matches;const month=new Date().toISOString().slice(0,7);
+let total=null,mine=0,ref=null,busy=false,last=0;
+try{const s=JSON.parse(localStorage.getItem('pokes')||'{}');mine=s[month]||0}catch(e){}
+const fmt=v=>v.toLocaleString('en-US');
+const show=v=>{const t=fmt(v);if(n.textContent===t)return;n.innerHTML='';[...t].forEach((c,i)=>{const s=document.createElement('span');s.textContent=c;if(!RM&&n.dataset.ready){s.className='roll';s.style.animationDelay=i*18+'ms'}n.append(s)});n.dataset.ready=1};
+const paint=()=>{if(total!=null){lbl.textContent='Pokes this month';show(total)}else{lbl.textContent=mine?'Your pokes':'Say hi';show(mine)}};
+paint();
+/* slide in after the hero, step aside at the contact section */
+const hero=document.querySelector('.hero,#top,header+main section'),contact=document.querySelector('#contact');
+const vis=()=>{const past=scrollY>(hero?hero.offsetHeight*.7:500);const r=contact&&contact.getBoundingClientRect();box.classList.toggle('on',past&&!(r&&r.top<innerHeight*.6&&r.bottom>0))};
+addEventListener('scroll',vis,{passive:true});vis();
+const burst=()=>{if(RM)return;const p=document.createElement('span');p.className='pk-plus';p.textContent='+1';btn.append(p);setTimeout(()=>p.remove(),720);
+  for(let i=0;i<7;i++){const d=document.createElement('i');d.className='pk-dot';btn.append(d);const a=-Math.PI/2+(Math.random()-.5)*2.4,v=18+Math.random()*16;
+    d.animate([{transform:'translate(0,-50%) scale(1)',opacity:1},{transform:`translate(${Math.cos(a)*v}px,${Math.sin(a)*v-3}px) scale(.2)`,opacity:0}],{duration:520+Math.random()*200,easing:'cubic-bezier(.22,1,.36,1)'}).onfinish=()=>d.remove()}};
+btn.addEventListener('click',async()=>{const now=Date.now();if(now-last<350)return;last=now;
+  btn.classList.remove('jab');void btn.offsetWidth;btn.classList.add('jab');burst();
+  mine++;try{const s=JSON.parse(localStorage.getItem('pokes')||'{}');s[month]=mine;localStorage.setItem('pokes',JSON.stringify(s))}catch(e){}
+  if(total!=null)total++;paint();
+  if(ref&&!busy){busy=true;try{await ref.set({month,n:mine})}catch(e){}busy=false}});
+/* shared total: one document per visitor (only they write it), summed for the month */
+(async()=>{try{if(!window.claude||!claude.use)return;const db=await claude.use('db'),user=await claude.use('user');if(!db||!user)return;
+  const id=await user.id();const col=db.collection('pokes');if(id)ref=col.doc(id);
+  col.onSnapshot(s=>{let t=0;s.docs.forEach(d=>{const v=d.data();if(v&&v.month===month)t+=+v.n||0});
+    if(id){const me=s.docs.find(d=>d.id===id);const v=me&&me.data();if(v&&v.month===month&&v.n>mine)mine=v.n}
+    total=Math.max(t,mine);paint()},()=>{});
+}catch(e){}})();
+})();
+</script>

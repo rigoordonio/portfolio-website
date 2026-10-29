@@ -1,0 +1,25 @@
+{
+  "name": "rigo-ordonio-portfolio",
+  "version": "1.0.0",
+  "private": true,
+  "description": "Rigo Ordonio's portfolio: two single-file pages (light and dark) and a small build that turns either into a deployable static site.",
+  "type": "module",
+  "engines": { "node": ">=20" },
+  "scripts": {
+    "build": "node tools/build.mjs",
+    "build:light": "node tools/build.mjs --theme light",
+    "build:dark": "node tools/build.mjs --theme dark --out dist-dark",
+    "check": "node tools/check.mjs",
+    "test": "node tools/test.mjs",
+    "lighthouse": "node tools/lighthouse.mjs",
+    "assets": "node tools/make-assets.mjs",
+    "preview": "node tools/build.mjs && node tools/serve.mjs dist 8080",
+    "verify": "npm run check && npm run test && npm run build"
+  },
+  "devDependencies": {
+    "axe-core": "^4.14.0",
+    "html-validate": "^11.16.3",
+    "lighthouse": "^13.5.0",
+    "playwright": "^1.56.1"
+  }
+}

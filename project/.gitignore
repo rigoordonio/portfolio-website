@@ -1,0 +1,5 @@
+node_modules/
+.build/
+dist-dark/
+reports/
+.DS_Store

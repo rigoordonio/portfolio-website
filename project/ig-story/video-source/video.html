@@ -1,0 +1,131 @@
+<!doctype html><meta charset="utf-8"><style>
+@font-face{font-family:SG;src:url(../../../site/fonts/schibsted-grotesk-latin.woff2);font-weight:400 900}
+@font-face{font-family:GM;src:url(../../../site/fonts/geist-mono-latin.woff2);font-weight:400 500}
+*{box-sizing:border-box;margin:0}
+html,body{width:1080px;height:1920px;overflow:hidden;background:#0a0c11;color:#eceae4;font-family:SG,sans-serif}
+.f{position:relative;width:1080px;height:1920px;padding:120px 84px;background:radial-gradient(900px 700px at 85% 8%,rgba(52,211,153,.18),transparent 60%),radial-gradient(800px 600px at 0% 100%,rgba(52,211,153,.10),transparent 60%),#0a0c11;overflow:hidden}
+.grid{position:absolute;inset:0;background-image:linear-gradient(rgba(236,234,228,.035) 1px,transparent 1px),linear-gradient(90deg,rgba(236,234,228,.035) 1px,transparent 1px);background-size:60px 60px;mask-image:linear-gradient(#000,transparent 70%)}
+.top{position:relative;display:flex;justify-content:space-between;align-items:center;font:500 30px GM,monospace;letter-spacing:.12em;text-transform:uppercase;color:#8f96a3}
+.dot{display:inline-block;width:22px;height:22px;border-radius:50%;background:#34d399;box-shadow:0 0 0 10px rgba(52,211,153,.18),0 0 40px #34d399;margin-right:22px;vertical-align:-2px}
+h1{position:relative;font-weight:800;letter-spacing:-.035em;line-height:.95;text-wrap:balance}
+.g{color:#34d399}
+.pill{display:inline-flex;align-items:center;gap:18px;padding:22px 34px;border-radius:999px;border:2px solid rgba(52,211,153,.5);background:rgba(52,211,153,.08);font:500 36px GM,monospace;color:#eceae4}
+.phone{position:absolute;border-radius:78px;border:14px solid #1c2129;overflow:hidden;box-shadow:0 60px 120px -40px rgba(0,0,0,.8),0 0 0 2px #2a313b,0 0 120px rgba(52,211,153,.18)}
+.phone img{display:block;width:100%}
+.sticker{position:absolute;left:84px;right:84px;bottom:150px;height:200px;border:3px dashed rgba(236,234,228,.22);border-radius:40px;display:grid;place-items:center;font:500 28px GM,monospace;letter-spacing:.1em;text-transform:uppercase;color:rgba(236,234,228,.4)}
+.sub{position:relative;font-size:40px;line-height:1.4;color:#b9bec7;max-width:880px}
+.row{display:flex;justify-content:space-between;align-items:baseline;padding:34px 0;border-bottom:2px solid rgba(236,234,228,.1);font-size:56px;font-weight:700;letter-spacing:-.02em}
+.row span{font:500 30px GM,monospace;color:#34d399;letter-spacing:.04em}
+.foot{position:absolute;left:84px;right:84px;bottom:70px;display:flex;justify-content:space-between;font:500 26px GM,monospace;color:#5d6470;letter-spacing:.08em}
+</style><style>
+html,body{background:#000}
+#L1,#L2{position:absolute;left:0;top:0}
+#L2{clip-path:circle(0px at 546px 1247px);color:#121212}
+.day.f{background:radial-gradient(900px 700px at 85% 8%,rgba(255,90,31,.14),transparent 60%),radial-gradient(800px 600px at 0% 100%,rgba(255,182,39,.12),transparent 60%),#f7f7f5}
+.day .grid{background-image:linear-gradient(rgba(18,18,18,.045) 1px,transparent 1px),linear-gradient(90deg,rgba(18,18,18,.045) 1px,transparent 1px)}
+.day .top{color:#5c5c58}
+.day .dot{background:#ff5a1f;box-shadow:0 0 0 10px rgba(255,90,31,.16),0 0 40px #ff5a1f}
+.day .g{color:#ff5a1f}
+.day .sub{color:#5c5c58}
+.day .pill{border-color:rgba(255,90,31,.55);background:rgba(255,90,31,.08);color:#121212}
+.day p[style*="border-left"]{border-left-color:#ff5a1f!important;color:#121212}
+.day [style*="rotate(3deg)"] p{color:#c2410c!important}
+.day .phone{box-shadow:0 60px 120px -40px rgba(0,0,0,.35),0 0 0 2px #2a313b,0 0 120px rgba(255,90,31,.15)}
+#fx{position:absolute;inset:0;overflow:hidden;pointer-events:none}
+#ring{position:absolute;border-radius:50%;border:5px solid transparent;opacity:0;transform:scale(0);background:conic-gradient(from 0deg,#ff5a1f,#ffb627,#ffd9b0,#ff5a1f) border-box;-webkit-mask:linear-gradient(#000 0 0) padding-box exclude,linear-gradient(#000 0 0);mask:linear-gradient(#000 0 0) padding-box exclude,linear-gradient(#000 0 0);filter:drop-shadow(0 0 14px #ff5a1f) drop-shadow(0 0 40px #ffb627)}
+#fgrid{position:absolute;inset:0;opacity:0}
+#scan{position:absolute;left:0;right:0;top:0;height:5px;opacity:0;background:linear-gradient(90deg,transparent,#ff5a1f,transparent);box-shadow:0 0 36px #ff5a1f}
+#hero{position:absolute;left:0;top:0;width:400px;height:287px;transform-origin:193.75px 250px;will-change:transform}
+</style><div style="position:relative;width:1080px;height:1920px;overflow:hidden"><div class="f night" id="L1"><div class="grid"></div>
+<div class="top"><span><i class="dot"></i>Now live</span><span>2026</span></div>
+
+<div style="position:absolute;left:672px;top:452px;width:340px;transform:rotate(3deg)"><p style="margin:0;font-size:46px;line-height:1.2;font-weight:700;letter-spacing:-.01em;color:#34d399">Don't forget to poke me</p></div>
+<h1 style="font-size:132px;margin-top:70px">My new<br><span class="g">portfolio</span><br>is live.</h1>
+<p class="sub" style="margin-top:40px">Data analytics, forecasting and AI, in one place.</p>
+<div class="phone" style="left:220px;top:1180px;width:640px;height:1260px;transform:rotate(-5deg)"><img src="hero.png"></div>
+<div style="position:relative;margin-top:44px" class="pill">rigoordonio.vercel.app</div>
+<p style="position:relative;margin-top:64px;padding-left:36px;border-left:6px solid #34d399;font-size:50px;line-height:1.3;font-weight:600;letter-spacing:-.01em;max-width:860px">8+ years of turning data into forecasts. Come take a look.</p>
+</div><div class="f day" id="L2"><div class="grid"></div>
+<div class="top"><span><i class="dot"></i>Now live</span><span>2026</span></div>
+
+<div style="position:absolute;left:672px;top:452px;width:340px;transform:rotate(3deg)"><p style="margin:0;font-size:46px;line-height:1.2;font-weight:700;letter-spacing:-.01em;color:#34d399">Don't forget to poke me</p></div>
+<h1 style="font-size:132px;margin-top:70px">My new<br><span class="g">portfolio</span><br>is live.</h1>
+<p class="sub" style="margin-top:40px">Data analytics, forecasting and AI, in one place.</p>
+<div class="phone" style="left:220px;top:1180px;width:640px;height:1260px;transform:rotate(-5deg)"><img src="hero-day.png"></div>
+<div style="position:relative;margin-top:44px" class="pill">rigoordonio.vercel.app</div>
+<p style="position:relative;margin-top:64px;padding-left:36px;border-left:6px solid #34d399;font-size:50px;line-height:1.3;font-weight:600;letter-spacing:-.01em;max-width:860px">8+ years of turning data into forecasts. Come take a look.</p>
+</div><div id="fx"><div id="fgrid"></div><div id="ring"></div><div id="scan"></div></div><div id="hero"><svg viewBox="-4 -3 32 23" width="400" height="287" shape-rendering="crispEdges" style="overflow:visible">
+<g id="legA" fill="#cd7559"><rect x="4.5" y="13" width="2" height="4"/><rect x="13" y="13" width="2" height="4"/></g>
+<g id="legB" fill="#cd7559"><rect x="8" y="13" width="2" height="4"/><rect x="16.5" y="13" width="2" height="4"/></g>
+<rect x="4" y="5" width="15" height="9" fill="#cd7559"/>
+<rect id="armL" x="1" y="8" width="3" height="3" fill="#cd7559"/><rect id="armR" x="19" y="8" width="3" height="3" fill="#cd7559"/>
+<g fill="#0d0d0d"><rect x="6" y="8" width="1" height="1"/><rect x="7" y="7" width="1" height="1"/><rect x="8" y="8" width="1" height="1"/><rect x="14" y="8" width="1" height="1"/><rect x="15" y="7" width="1" height="1"/><rect x="16" y="8" width="1" height="1"/></g>
+<g id="mouth"><rect x="9" y="10" width="6" height="1" fill="#0d0d0d"/><rect x="9" y="11" width="6" height="1" fill="#0d0d0d"/><rect x="10" y="12" width="4" height="1" fill="#0d0d0d"/><rect x="11" y="13" width="2" height="1" fill="#0d0d0d"/><rect x="11" y="12" width="2" height="1" fill="#ff8f8f"/></g>
+<rect id="t1" x="4" y="8.5" width="1" height="1" fill="#7dd3fc"/><rect id="t2" x="4" y="9.5" width="1" height="1" fill="#7dd3fc"/>
+<rect id="t3" x="18" y="8.5" width="1" height="1" fill="#7dd3fc"/><rect id="t4" x="18" y="9.5" width="1" height="1" fill="#7dd3fc"/>
+<text id="h1" x="19.5" y="1.6" font-family="GM,monospace" font-size="3.2" font-weight="700" fill="#34d399">HA</text>
+<text id="h2" x="22.5" y="-0.2" font-family="GM,monospace" font-size="3.2" font-weight="700" fill="#34d399">HA</text>
+</svg></div></div><script>
+const $=id=>document.getElementById(id);
+const clamp=(x,a=0,b=1)=>Math.min(b,Math.max(a,x));
+const bezier=(x1,y1,x2,y2)=>{const cx=3*x1,bx=3*(x2-x1)-cx,ax=1-cx-bx,cy=3*y1,by=3*(y2-y1)-cy,ay=1-cy-by;
+ const X=t=>((ax*t+bx)*t+cx)*t,Y=t=>((ay*t+by)*t+cy)*t;
+ return p=>{p=clamp(p);let t=p;for(let i=0;i<8;i++){const d=(3*ax*t+2*bx)*t+cx;if(Math.abs(d)<1e-6)break;t-=(X(t)-p)/d}
+ let lo=0,hi=1;t=clamp(t);for(let i=0;i<20;i++){const x=X(t);if(Math.abs(x-p)<1e-5)break;if(x<p)lo=t;else hi=t;t=(lo+hi)/2}return Y(t)}};
+const revealEase=bezier(.65,0,.35,1),scanEase=bezier(.4,0,.2,1),entEase=bezier(.16,1,.3,1);
+const outBack=x=>{const c1=1.70158,c3=c1+1;return 1+c3*Math.pow(x-1,3)+c1*Math.pow(x-1,2)};
+const T0=3.35,DUR=1.1,OX=546,OY=1247,W=1080,H=1920,R=Math.hypot(Math.max(OX,W-OX),Math.max(OY,H-OY));
+const P=[[825,395],[905,330],[720,350],[840,860],[546,1215],[840,860]];
+// hops: [t0,t1,from,to,height,flip]
+const HOPS=[[.95,1.45,0,1,110,0],[1.55,2.1,1,2,150,1],[2.2,2.95,2,3,230,0],[3.0,3.3,3,4,170,0],[3.45,3.95,4,4,170,1],[4.05,4.55,4,4,130,1],[4.65,5.25,4,5,260,0]];
+const lerp=(a,b,u)=>a+(b-a)*u;
+function critter(t){
+ let x=P[0][0],y=P[0][1],rot=0,sx=1,sy=1,air=false,last=0;
+ for(const [a,b,f,to,h,flip] of HOPS){
+  if(t>=a&&t<=b){const u=(t-a)/(b-a);x=lerp(P[f][0],P[to][0],u);y=lerp(P[f][1],P[to][1],u)-4*h*u*(1-u);air=true;
+   rot=flip?360*revealEase(u):(P[to][0]-P[f][0])*0.02*Math.sin(Math.PI*u);
+   const s=u<.12?lerp(1,1.18,u/.12):u>.88?lerp(1.2,1,(1-u)/.12*0+ (1-(u-.88)/.12)*0+1):1;
+   if(u<.12){sx=lerp(1,1.18,u/.12);sy=lerp(1,.82,u/.12)}
+   else if(u>.88){const k=(u-.88)/.12;sx=lerp(.92,1.2,k);sy=lerp(1.1,.8,k)}
+   else{const k=Math.sin(Math.PI*(u-.12)/.76);sx=lerp(1.18,.92,Math.min(1,k*1.4));sy=lerp(.82,1.1,Math.min(1,k*1.4))}
+   break}
+  if(t>b){x=P[to][0];y=P[to][1];last=b}
+ }
+ if(!air){const since=t-last;if(last>0&&since<.14){const k=since/.14;sx=lerp(1.2,1,k);sy=lerp(.8,1,k)}
+  y-=(1-Math.cos(2*Math.PI*t/.25))/2*9;rot=4*Math.sin(2*Math.PI*t/.5)}
+ let pop=1;if(t<.6){pop=t<.1?0:outBack(clamp((t-.1)/.5))}
+ const hero=$('hero');
+ hero.style.left=(x-193.75)+'px';hero.style.top=(y-250)+'px';
+ hero.style.transform=`scale(${sx*pop},${sy*pop}) translate(0,-75px) rotate(${rot}deg) translate(0,75px)`;
+ hero.style.opacity=t<.1?0:1;
+ // laugh details
+ const f=Math.floor(t/.125)%2;
+ $('legA').setAttribute('transform',f?'translate(0,-1)':'');$('legB').setAttribute('transform',f?'':'translate(0,-1)');
+ $('armL').setAttribute('transform',f?'translate(0,-1.5)':'');$('armR').setAttribute('transform',f?'':'translate(0,-1.5)');
+ $('mouth').setAttribute('transform',f?'translate(0 10) scale(1 .65) translate(0 -10)':'');
+ [['t1',-3,-2,0],['t2',-4,1,.5],['t3',3,-2,.25],['t4',4,1,.75]].forEach(([id,dx,dy,o])=>{const p=((t+o)%1),q=Math.floor(p*5)/5;const e=$(id);e.setAttribute('transform',`translate(${dx*q} ${dy*q})`);e.setAttribute('opacity',1-q)});
+ const hc=t>T0+.5?'#ff5a1f':'#34d399';
+ [['h1',0],['h2',.5]].forEach(([id,o])=>{const p=((t+o)%1),e=$(id);e.setAttribute('fill',hc);e.setAttribute('opacity',p<.5?1:0);e.setAttribute('transform',`translate(0 ${-Math.min(p,.5)*1.2})`)});
+}
+function render(t){
+ // entrance
+ [['L1',0]].forEach(()=>{});
+ const ent=(sel,d)=>document.querySelectorAll(sel).forEach(el=>{const u=entEase(clamp((t-d)/.5));el.style.opacity=u;el.style.translate=`0 ${(1-u)*36}px`});
+ ent('.f h1',0);ent('.f .sub',.1);ent('.f .pill',.2);ent('.f p[style*="border-left"]',.3);ent('.f .phone',.4);ent('.f .top',0);
+ // reveal from the toggle
+ const u=clamp((t-T0)/DUR),e=revealEase(u);
+ $('L2').style.clipPath=`circle(${t<T0?0:u>=1?R*1.01:e*R}px at ${OX}px ${OY}px)`;
+ $('L1').style.filter=`brightness(${1-.15*e})`;
+ const ring=$('ring');ring.style.left=(OX-R)+'px';ring.style.top=(OY-R)+'px';ring.style.width=ring.style.height=(2*R)+'px';
+ if(t<T0||u>=1){ring.style.opacity=0;ring.style.transform='scale(0)'}else{const s=e<.8?e/.8*.8:.8+(e-.8)/.2*.2;ring.style.transform=`scale(${s})`;ring.style.opacity=e<.8?1:1-(e-.8)/.2}
+ const g=$('fgrid');g.style.background=`radial-gradient(circle at ${OX}px ${OY}px,rgba(255,182,39,.28),rgba(255,90,31,.08) 40%,transparent 70%)`;
+ if(t<T0||u>=1){g.style.opacity=0;g.style.clipPath=`circle(0px at ${OX}px ${OY}px)`}else{g.style.opacity=e<.35?e/.35:1-(e-.35)/.65;g.style.clipPath=`circle(${e*R}px at ${OX}px ${OY}px)`}
+ const sv=clamp((t-T0-.16)/.9),se=scanEase(sv),sc=$('scan');
+ if(t<T0+.16||sv>=1){sc.style.opacity=0}else{sc.style.opacity=se<.2?se/.2*.9:.9*(1-(se-.2)/.8);sc.style.transform=`translateY(${lerp(OY,-10,se)}px)`}
+ // link pill pulse once the critter is beside it
+ if(t>5.25){const k=((t-5.25)%.6)/.6,pill=document.querySelectorAll('.pill');pill.forEach(p=>{p.style.boxShadow=`0 0 0 ${k*28}px rgba(255,90,31,${.4*(1-k)})`;p.style.scale=1+.03*Math.sin(Math.PI*k)})}
+ else document.querySelectorAll('.pill').forEach(p=>{p.style.boxShadow='none';p.style.scale=1});
+ critter(t);
+}
+render(0);
+</script>

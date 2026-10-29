@@ -1,0 +1,41 @@
+<style>
+/* motion pass rebuilt from NullMotion's templates (MIT): blur-reveal headings, line growth, compare bars, leaderboard rise, icon-stack rise, typing dots */
+.nm-w{display:inline-block;white-space:pre;filter:blur(10px);opacity:0;transform:translateY(.35em);transition:filter .7s var(--nm-ease),opacity .7s var(--nm-ease),transform .7s var(--nm-ease);transition-delay:calc(var(--i) * 45ms)}
+.nm-in .nm-w{filter:none;opacity:1;transform:none}
+:root{--nm-ease:cubic-bezier(.22,1,.36,1)}
+.nm-wipe{clip-path:inset(0 100% 0 0);transition:clip-path 1.4s cubic-bezier(.65,0,.35,1)}
+.nm-wipe.nm-in{clip-path:inset(0 0 0 0)}
+.nm-bar{position:absolute;left:0;bottom:-1px;height:2px;width:calc(var(--v) * 100%);background:var(--pk-acc);transform:scaleX(0);transform-origin:0 50%;transition:transform 1s var(--nm-ease);transition-delay:calc(var(--i) * 90ms);pointer-events:none;opacity:.8}
+.nm-in .nm-bar{transform:scaleX(1)}
+.nm-rank{opacity:0;transform:translateY(28px) scale(.98);transition:opacity .6s var(--nm-ease),transform .8s cubic-bezier(.34,1.4,.64,1);transition-delay:calc(var(--i) * 110ms)}
+.nm-rank.nm-in{opacity:1;transform:none}
+.nm-chip{opacity:0;transform:translateY(18px) rotate(var(--r));transition:opacity .45s var(--nm-ease),transform .7s cubic-bezier(.34,1.56,.64,1);transition-delay:calc(var(--i) * 35ms)}
+.nm-in .nm-chip{opacity:1;transform:none}
+.nm-dots tspan,.nm-dots circle{animation:nm-dot 1s ease-in-out infinite}
+@keyframes nm-dot{0%,60%,100%{transform:translateY(0);opacity:.35}30%{transform:translateY(-4px);opacity:1}}
+@media (prefers-reduced-motion:reduce){.nm-w,.nm-wipe,.nm-bar,.nm-rank,.nm-chip{transition:none!important;filter:none!important;opacity:1!important;transform:none!important;clip-path:none!important}}
+</style>
+<script>
+(()=>{if(matchMedia('(prefers-reduced-motion: reduce)').matches)return;
+const once=(els,fn,opt)=>{const io=new IntersectionObserver(es=>es.forEach(e=>{if(e.isIntersecting){io.unobserve(e.target);fn(e.target)}}),opt||{rootMargin:'0px 0px -12% 0px'});els.forEach(el=>io.observe(el))};
+const isDark=!!document.querySelector('.portrait');   /* the dark page decodes its own headings, so it keeps that */
+/* 1 blur-reveal kinetic headings: words sharpen and rise in one after another */
+if(!isDark){const hs=[...document.querySelectorAll('main section h2')].filter(h=>!h.closest('.contact')&&!h.classList.contains('label')&&h.textContent.trim().split(/\s+/).length>1);
+  hs.forEach(h=>{const walk=n=>{[...n.childNodes].forEach(c=>{if(c.nodeType===3){const f=document.createDocumentFragment();c.textContent.split(/(\s+)/).forEach(t=>{if(!t)return;if(/^\s+$/.test(t)){f.append(t);return}const s=document.createElement('span');s.className='nm-w';s.textContent=t;f.append(s)});c.replaceWith(f)}else if(c.nodeType===1&&!c.classList.contains('nm-w'))walk(c)})};
+    walk(h);h.setAttribute('aria-label',h.textContent);[...h.querySelectorAll('.nm-w')].forEach((w,i)=>{w.style.setProperty('--i',i);w.setAttribute('aria-hidden','true')})});
+  once(hs,h=>h.classList.add('nm-in'))}
+/* 2 line growth: the services chart draws itself left to right the first time it is seen */
+const cb=document.querySelector('#chart-box canvas,#chart');if(cb){cb.classList.add('nm-wipe');once([cb],c=>c.classList.add('nm-in'))}
+/* 3 compare bars: each service row grows a bar sized by its project count */
+const rowsReady=()=>{const btns=[...document.querySelectorAll('.acc-btn')];if(!btns.length)return false;
+  const n=btns.map(b=>parseInt((b.querySelector('.svc-count,.acc-count')||{}).textContent)||0),mx=Math.max(1,...n);
+  btns.forEach((b,i)=>{if(getComputedStyle(b).position==='static')b.style.position='relative';const bar=document.createElement('i');bar.className='nm-bar';bar.setAttribute('aria-hidden','true');bar.style.setProperty('--v',(n[i]/mx).toFixed(3));bar.style.setProperty('--i',i);b.append(bar)});
+  const host=btns[0].closest('section')||document.body;once([host],h=>h.classList.add('nm-in'),{rootMargin:'0px 0px -25% 0px'});return true};
+if(!rowsReady()){let t=0;const iv=setInterval(()=>{if(rowsReady()||++t>40)clearInterval(iv)},150)}
+/* 4 leaderboard rise: experience cards climb into place in order, newest first */
+const roles=[...document.querySelectorAll('.role')];roles.forEach((r,i)=>{r.classList.add('nm-rank');r.style.setProperty('--i',i%3)});once(roles,r=>r.classList.add('nm-in'));
+/* 5 icon-stack rise: skill chips pop up on small arcs, group by group */
+const groups=[...document.querySelectorAll('#skills .chips')];groups.forEach(g=>{[...g.children].forEach((c,i)=>{c.classList.add('nm-chip');c.style.setProperty('--i',i);c.style.setProperty('--r',(i%2?4:-4)+'deg')});g.parentElement.classList.add('nm-host')});
+once(groups.map(g=>g.parentElement),h=>h.classList.add('nm-in'));
+})();
+</script>
