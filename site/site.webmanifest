@@ -1,0 +1,29 @@
+{
+  "name": "Rigo Ordonio · Data Analytics, Forecasting & AI",
+  "short_name": "Rigo Ordonio",
+  "description": "Rigo Ordonio, Global Business Analyst in Abu Dhabi, delivers data analytics, forecasting, machine learning and AI data engineering for energy, FMCG and retail.",
+  "start_url": "/",
+  "scope": "/",
+  "display": "standalone",
+  "background_color": "#f7f7f5",
+  "theme_color": "#f7f7f5",
+  "lang": "en",
+  "icons": [
+    {
+      "src": "/icon-192.png",
+      "sizes": "192x192",
+      "type": "image/png"
+    },
+    {
+      "src": "/icon-512.png",
+      "sizes": "512x512",
+      "type": "image/png"
+    },
+    {
+      "src": "/icon-maskable-512.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "maskable"
+    }
+  ]
+}
