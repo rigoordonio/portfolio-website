@@ -1476,7 +1476,6 @@ const sync=()=>{const d=root.dataset.theme==='dark';btn.setAttribute('aria-press
   document.querySelectorAll('meta[name=theme-color]').forEach(m=>m.content=d?'#0a0c11':'#f7f7f5');dispatchEvent(new Event('themechange'))};
 const set=t=>{root.dataset.theme=t;try{localStorage.setItem('theme',t)}catch(e){}sync()};
 sync();
-matchMedia('(prefers-color-scheme: dark)').addEventListener('change',e=>{let s;try{s=localStorage.getItem('theme')}catch(_){}if(!s){root.dataset.theme=e.matches?'dark':'light';sync()}});
 const fx=(x,y,R,night)=>{const w=document.createElement('div');w.className='tx-fx';
   w.style.cssText=night?'--r1:#34d399;--r2:#a3e635;--r3:#6ee7b7':'--r1:#ff5a1f;--r2:#ffb627;--r3:#ffd9b0';
   const g=document.createElement('div');g.className='tx-grid '+(night?'night':'day');g.style.setProperty('--x',x+'px');g.style.setProperty('--y',y+'px');
