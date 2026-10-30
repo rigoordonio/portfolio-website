@@ -1378,7 +1378,7 @@ addEventListener('scroll',aim,{passive:true});addEventListener('resize',aim);aim
   <button class="pk-btn" type="button" aria-label="Poke Rigo"><svg class="pk-critter" viewBox="0 0 24 18" shape-rendering="crispEdges" aria-hidden="true"><g class="pk-all"><g class="pk-legs-a" fill="#cd7559"><rect x="4.5" y="13" width="2" height="4"/><rect x="13" y="13" width="2" height="4"/></g><g class="pk-legs-b" fill="#cd7559"><rect x="8" y="13" width="2" height="4"/><rect x="16.5" y="13" width="2" height="4"/></g><g class="pk-body"><rect x="4" y="5" width="15" height="9" fill="#cd7559"/><rect class="pk-arm-l" x="1" y="8" width="3" height="3" fill="#cd7559"/><rect class="pk-arm-r" x="19" y="8" width="3" height="3" fill="#cd7559"/><rect class="pk-eye" x="6" y="7" width="2" height="2" fill="#0d0d0d"/><rect class="pk-eye" x="15" y="7" width="2" height="2" fill="#0d0d0d"/></g></g></svg>Poke</button>
 </aside>
 <script>
-/* poke counter: shared monthly total where the page can store it, else this visitor's own pokes */
+/* poke counter: one shared monthly total for all visitors (/api/poke), else this visitor's own pokes */
 (()=>{const box=document.querySelector('.poke');if(!box)return;const n=box.querySelector('.pk-n'),lbl=box.querySelector('.pk-lbl'),btn=box.querySelector('.pk-btn');
 const RM=matchMedia('(prefers-reduced-motion: reduce)').matches;const month=new Date().toISOString().slice(0,7);
 let total=null,mine=0,ref=null,busy=false,last=0;
@@ -1387,6 +1387,13 @@ const fmt=v=>v.toLocaleString('en-US');
 const show=v=>{const t=fmt(v);if(n.textContent===t)return;n.innerHTML='';[...t].forEach((c,i)=>{const s=document.createElement('span');s.textContent=c;if(!RM&&n.dataset.ready){s.className='roll';s.style.animationDelay=i*18+'ms'}n.append(s)});n.dataset.ready=1};
 const paint=()=>{if(total!=null){lbl.textContent='Pokes this month';show(total)}else{lbl.textContent=mine?'Your pokes':'Say hi';show(mine)}};
 paint();
+/* shared total across every visitor: /api/poke (Redis on Vercel). Where it isn't available the pill keeps this visitor's own count */
+let api=null,sending=0;
+const take=j=>{if(j&&j.enabled&&typeof j.month==='number'){api=true;total=j.month+sending;paint()}else if(api!==true)api=false};
+const pull=async()=>{try{const r=await fetch('/api/poke',{cache:'no-store'});take(r.ok&&await r.json())}catch(e){if(api!==true)api=false}};
+const push=async()=>{sending++;try{const r=await fetch('/api/poke',{method:'POST',cache:'no-store'});sending--;take(r.ok&&await r.json())}catch(e){sending--}};
+setInterval(()=>{if(api&&box.classList.contains('on')&&document.visibilityState==='visible')pull()},60000);
+pull();
 /* slide in after the hero, step aside at the contact section */
 const hero=document.querySelector('.hero,#top,header+main section'),contact=document.querySelector('#contact');
 const vis=()=>{const past=scrollY>(hero?hero.offsetHeight*.7:500);const r=contact&&contact.getBoundingClientRect();box.classList.toggle('on',past&&!(r&&r.top<(innerWidth<=480?innerHeight:innerHeight*.3)&&r.bottom>0))};
@@ -1398,6 +1405,7 @@ btn.addEventListener('click',async()=>{const now=Date.now();if(now-last<350)retu
   btn.classList.remove('jab');void btn.offsetWidth;btn.classList.add('jab');burst();
   mine++;try{const s=JSON.parse(localStorage.getItem('pokes')||'{}');s[month]=mine;localStorage.setItem('pokes',JSON.stringify(s))}catch(e){}
   if(total!=null)total++;paint();
+  if(api!==false)push();
   if(ref&&!busy){busy=true;try{await ref.set({month,n:mine})}catch(e){}busy=false}});
 /* shared total: one document per visitor (only they write it), summed for the month */
 (async()=>{try{if(!window.claude||!claude.use)return;const db=await claude.use('db'),user=await claude.use('user');if(!db||!user)return;

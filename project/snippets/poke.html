@@ -25,7 +25,7 @@
   <button class="pk-btn" type="button" aria-label="Poke Rigo"><span class="pk-hand" aria-hidden="true">👉</span>Poke</button>
 </aside>
 <script>
-/* poke counter: shared monthly total where the page can store it, else this visitor's own pokes */
+/* poke counter: one shared monthly total for all visitors (/api/poke), else this visitor's own pokes */
 (()=>{const box=document.querySelector('.poke');if(!box)return;const n=box.querySelector('.pk-n'),lbl=box.querySelector('.pk-lbl'),btn=box.querySelector('.pk-btn');
 const RM=matchMedia('(prefers-reduced-motion: reduce)').matches;const month=new Date().toISOString().slice(0,7);
 let total=null,mine=0,ref=null,busy=false,last=0;
@@ -34,6 +34,13 @@ const fmt=v=>v.toLocaleString('en-US');
 const show=v=>{const t=fmt(v);if(n.textContent===t)return;n.innerHTML='';[...t].forEach((c,i)=>{const s=document.createElement('span');s.textContent=c;if(!RM&&n.dataset.ready){s.className='roll';s.style.animationDelay=i*18+'ms'}n.append(s)});n.dataset.ready=1};
 const paint=()=>{if(total!=null){lbl.textContent='Pokes this month';show(total)}else{lbl.textContent=mine?'Your pokes':'Say hi';show(mine)}};
 paint();
+/* shared total across every visitor: /api/poke (Redis on Vercel). Where it isn't available the pill keeps this visitor's own count */
+let api=null,sending=0;
+const take=j=>{if(j&&j.enabled&&typeof j.month==='number'){api=true;total=j.month+sending;paint()}else if(api!==true)api=false};
+const pull=async()=>{try{const r=await fetch('/api/poke',{cache:'no-store'});take(r.ok&&await r.json())}catch(e){if(api!==true)api=false}};
+const push=async()=>{sending++;try{const r=await fetch('/api/poke',{method:'POST',cache:'no-store'});sending--;take(r.ok&&await r.json())}catch(e){sending--}};
+setInterval(()=>{if(api&&box.classList.contains('on')&&document.visibilityState==='visible')pull()},60000);
+pull();
 /* slide in after the hero, step aside at the contact section */
 const hero=document.querySelector('.hero,#top,header+main section'),contact=document.querySelector('#contact');
 const vis=()=>{const past=scrollY>(hero?hero.offsetHeight*.7:500);const r=contact&&contact.getBoundingClientRect();box.classList.toggle('on',past&&!(r&&r.top<innerHeight*.6&&r.bottom>0))};
@@ -45,6 +52,7 @@ btn.addEventListener('click',async()=>{const now=Date.now();if(now-last<350)retu
   btn.classList.remove('jab');void btn.offsetWidth;btn.classList.add('jab');burst();
   mine++;try{const s=JSON.parse(localStorage.getItem('pokes')||'{}');s[month]=mine;localStorage.setItem('pokes',JSON.stringify(s))}catch(e){}
   if(total!=null)total++;paint();
+  if(api!==false)push();
   if(ref&&!busy){busy=true;try{await ref.set({month,n:mine})}catch(e){}busy=false}});
 /* shared total: one document per visitor (only they write it), summed for the month */
 (async()=>{try{if(!window.claude||!claude.use)return;const db=await claude.use('db'),user=await claude.use('user');if(!db||!user)return;

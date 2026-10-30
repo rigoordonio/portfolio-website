@@ -256,5 +256,10 @@ const iconDir = join(ROOT, 'assets/icons', assetTheme);
 must(existsSync(iconDir), `missing ${iconDir}: run npm run assets`);
 readdirSync(iconDir).forEach(f => copyFileSync(join(iconDir, f), join(OUT, f)));
 copyFileSync(join(ROOT, 'assets', `og-${assetTheme}.png`), join(OUT, 'og-image.png'));
+/* serverless functions (Vercel): copied as they are */
+if (existsSync(join(ROOT, 'api'))) {
+  mkdirSync(join(OUT, 'api'), {recursive: true});
+  readdirSync(join(ROOT, 'api')).filter(f => f.endsWith('.js')).forEach(f => copyFileSync(join(ROOT, 'api', f), join(OUT, 'api', f)));
+}
 
 console.log(`Built ${theme} site → ${OUT.replace(ROOT + '/', '')}/ (index ${(html.length / 1024).toFixed(1)} KB, ${fontFiles.length} fonts, canonical ${SITE}${endpoint ? ', form → ' + endpoint : ''})`);

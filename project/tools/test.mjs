@@ -40,6 +40,7 @@ for (const theme of themes) {
   const site = await serve(join(ROOT, '.build', theme));
   const siteEp = await serve(join(ROOT, '.build', theme + '-endpoint'));
   const problems = [];   // console errors, warnings, failed requests: checked at the end of the theme
+  const pokes = {month: 41, off: false};   // stands in for /api/poke, which needs Redis
 
   const open = async (opts = {}, path = '', base = site.url) => {
     const {width = 1440, height = 900, reducedMotion = 'no-preference', js = true, touch, permissions, fast} = opts;
@@ -47,7 +48,12 @@ for (const theme of themes) {
       hasTouch: touch ?? width < 800, isMobile: false, permissions});
     const page = await ctx.newPage();
     /* the GitHub graph's public data API: served locally so tests never depend on the network */
-    await page.route('https://github-contributions-api.jogruber.de/**', r => r.fulfill({contentType: 'application/json', body: JSON.stringify({total: {lastYear: 3}, contributions: Array.from({length: 371}, (_, i) => ({date: '2026-01-01', count: i % 5, level: i % 5}))})}));
+    await page.route('https://github-contributions-api.jogruber.de/**', r => r.fulfill({contentType: 'application/json', body: JSON.stringify({total: {2026: 55}, contributions: Array.from({length: 302}, (_, i) => { const c = (i * 7) % 11 < 2 ? (i % 4) + 1 : 0; return {date: new Date(Date.UTC(2026, 0, 1 + i)).toISOString().slice(0, 10), count: c, level: Math.min(c, 4)}; })})}));
+    await page.route('**/api/poke', r => {
+      if (pokes.off) return r.fulfill({contentType: 'application/json', body: JSON.stringify({enabled: false})});
+      if (r.request().method() === 'POST') pokes.month++;
+      r.fulfill({contentType: 'application/json', body: JSON.stringify({enabled: true, month: pokes.month, total: pokes.month + 100})});
+    });
     const planned = url => url.startsWith(ENDPOINT) || url.includes('/missing-page');   // the mocked 500 and the 404 test
     page.on('console', m => { if (['error', 'warning'].includes(m.type()) && !NOISE.test(m.text()) && !planned(m.location().url || '')) problems.push(`${width}px console.${m.type()}: ${m.text()}`); });
     page.on('pageerror', e => problems.push(`${width}px page error: ${e.message}`));
@@ -370,6 +376,35 @@ for (const theme of themes) {
     eq(await page.inputValue('#f-name'), 'Test Person', 'form kept after failure');
     eq(await page.getAttribute('#send', 'aria-busy'), null, 'button left busy');
     await close();
+  });
+
+  await test('poke: the total is shared, so pokes from two visitors add up', async () => {
+    const a = await open(), b = await open();
+    const reach = async p => { await p.evaluate(() => scrollTo(0, 1400)); await p.waitForSelector('.poke.on'); };
+    const shown = p => p.$eval('.pk-n', e => e.textContent);
+    await reach(a.page); await reach(b.page);
+    await a.page.waitForFunction(() => document.querySelector('.pk-n').textContent === '41');
+    eq([await shown(a.page), await a.page.$eval('.pk-lbl', e => e.textContent)], ['41', 'Pokes this month'], 'starts from the shared total');
+    await a.page.click('.pk-btn');
+    await a.page.waitForFunction(() => document.querySelector('.pk-n').textContent === '42');
+    await b.page.click('.pk-btn');
+    await b.page.waitForFunction(() => document.querySelector('.pk-n').textContent === '43');
+    await a.page.reload({waitUntil: 'load'}); await reach(a.page);
+    await a.page.waitForFunction(() => document.querySelector('.pk-n').textContent === '43');
+    eq(pokes.month, 43, 'the server holds both pokes');
+    await a.close(); await b.close();
+  });
+
+  await test('poke: without the shared counter it falls back to this visitor\'s own pokes', async () => {
+    pokes.off = true;
+    try {
+      const v = await open();
+      await v.page.evaluate(() => scrollTo(0, 1400)); await v.page.waitForSelector('.poke.on');
+      await v.page.click('.pk-btn');
+      await v.page.waitForFunction(() => document.querySelector('.pk-n').textContent === '1');
+      eq(await v.page.$eval('.pk-lbl', e => e.textContent), 'Your pokes', 'label');
+      await v.close();
+    } finally { pokes.off = false; }
   });
 
   await test('copy button copies the email address', async () => {

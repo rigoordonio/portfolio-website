@@ -4,7 +4,9 @@
   "private": true,
   "description": "Rigo Ordonio's portfolio: two single-file pages (light and dark) and a small build that turns either into a deployable static site.",
   "type": "module",
-  "engines": { "node": ">=20" },
+  "engines": {
+    "node": ">=20"
+  },
   "scripts": {
     "build": "node tools/build.mjs",
     "build:light": "node tools/build.mjs --theme light",
@@ -14,7 +16,8 @@
     "lighthouse": "node tools/lighthouse.mjs",
     "assets": "node tools/make-assets.mjs",
     "preview": "node tools/build.mjs && node tools/serve.mjs dist 8080",
-    "verify": "npm run check && npm run test && npm run build"
+    "verify": "npm run check && npm run test && npm run test:api && npm run build",
+    "test:api": "node tools/test-poke-api.mjs"
   },
   "devDependencies": {
     "axe-core": "^4.14.0",

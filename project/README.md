@@ -52,6 +52,16 @@ There is no type-check step because the project has no TypeScript.
   - `analytics`: see below.
   - `person`: name, job title, city and links used in structured data.
 
+## Poke counter (shared across all visitors)
+
+The Poke pill shows one monthly total for everyone. The page calls `/api/poke` (`api/poke.js`, a Vercel serverless function): `GET` reads the counts, `POST` adds one poke. Counts live in Redis (Upstash), and the function reads the two variables that the Vercel Storage tab sets when you connect it (`KV_REST_API_URL` and `KV_REST_API_TOKEN`, or the `UPSTASH_REDIS_REST_*` pair).
+
+- **Connect it once:** Vercel project, Storage tab, Create Database, Upstash (Redis), then Connect to the project for Production. Redeploy (or push) so the function sees the variables.
+- **Until it is connected** the function answers `{enabled:false}` and the pill counts only that visitor's own pokes, so nothing breaks.
+- **Keys:** `pk:m:YYYY-MM` (that month) and `pk:total` (all time). Add `?probe=1` to a request to test the connection without touching the real counts.
+- **Limits and privacy:** at most 20 pokes per visitor per minute. The limit key is a hash of the IP address and the day that expires after a minute; no raw address is stored.
+- **Tests:** `npm run test:api` runs the function against an in-memory Redis stand-in; `npm test` includes a two-visitor browser test.
+
 ## Contact form
 
 With `formEndpoint` empty, a valid message opens in the visitor's email app, addressed to you. To receive messages directly, create a form at a form service that accepts a JSON or form POST (Formspree, Web3Forms, Basin, Getform), paste its URL into `formEndpoint` and rebuild. The form posts its fields plus `_gotcha`, a honeypot that Formspree drops automatically.

@@ -47,3 +47,6 @@
 ::view-transition-old(root){animation:tx-old 1.1s cubic-bezier(.65,0,.35,1) both}
 @keyframes tx-old{to{filter:brightness(.85)}}
 [data-theme="dark"] .contact form{--ink:#eceae4;--paper:#0a0c11}
+/* the service names are dim until hovered; the day grey is too dark on the night page (2.2:1), so night uses a lighter one (7:1) */
+[data-theme="dark"] .acc-btn{color:#9aa1ad}
+@media (hover:hover){[data-theme="dark"] .acc-btn:hover{color:var(--ink)}}
