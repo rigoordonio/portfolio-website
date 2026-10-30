@@ -59,6 +59,7 @@ The Poke pill shows one monthly total for everyone. The page calls `/api/poke` (
 - **Connect it once:** Vercel project, Storage tab, Create Database, Upstash (Redis), then Connect to the project for Production. Redeploy (or push) so the function sees the variables.
 - **Until it is connected** the function answers `{enabled:false}` and the pill counts only that visitor's own pokes, so nothing breaks.
 - **Keys:** `pk:m:YYYY-MM` (that month) and `pk:total` (all time). Add `?probe=1` to a request to test the connection without touching the real counts.
+- **Earlier pokes:** `EARLIER` in `api/poke.js` adds the 20 pokes made on the preview pages before the counter existed (16 + 4, all from one viewer in October 2026) to the October and all-time totals. The response shows them as `earlier`. Remove the constant to drop them.
 - **Limits and privacy:** at most 20 pokes per visitor per minute. The limit key is a hash of the IP address and the day that expires after a minute; no raw address is stored.
 - **Tests:** `npm run test:api` runs the function against an in-memory Redis stand-in; `npm test` includes a two-visitor browser test.
 

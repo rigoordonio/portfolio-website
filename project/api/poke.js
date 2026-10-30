@@ -7,6 +7,9 @@ const crypto = require('node:crypto');
 const URL_ = process.env.KV_REST_API_URL || process.env.UPSTASH_REDIS_REST_URL;
 const TOKEN = process.env.KV_REST_API_TOKEN || process.env.UPSTASH_REDIS_REST_TOKEN;
 const LIMIT = 20;   // pokes per visitor per minute
+/* Pokes made on the preview pages before this counter existed (16 + 4, all from one viewer in October 2026), counted once.
+   They are added to what Redis holds, so the live count can be checked against Redis alone by subtracting this. */
+const EARLIER = {months: {'2026-10': 20}, total: 20};
 
 async function redis(commands) {
   const r = await fetch(`${URL_.replace(/\/$/, '')}/pipeline`, {
@@ -18,7 +21,9 @@ async function redis(commands) {
   return (await r.json()).map(x => { if (x.error) throw new Error(x.error); return x.result; });
 }
 
-module.exports = async function handler(req, res) {
+module.exports = handler;
+module.exports.EARLIER = EARLIER;
+async function handler(req, res) {
   res.setHeader('Cache-Control', 'no-store');
   res.setHeader('Content-Type', 'application/json; charset=utf-8');
   const send = (code, body) => res.status(code).send(JSON.stringify(body));
@@ -30,6 +35,7 @@ module.exports = async function handler(req, res) {
   /* ?probe keeps connection checks out of the real totals */
   const p = new URL(req.url, 'http://localhost').searchParams.has('probe') ? 'probe:' : '';
   const mKey = `pk:${p}m:${month}`, tKey = `pk:${p}total`;
+  const oM = p ? 0 : EARLIER.months[month] || 0, oT = p ? 0 : EARLIER.total;   // probes never include them
   try {
     let limited = false;
     if (req.method === 'POST') {
@@ -39,12 +45,12 @@ module.exports = async function handler(req, res) {
       if (hits > LIMIT) limited = true;
       else {
         const [m, t] = await redis([['INCR', mKey], ['INCR', tKey]]);
-        return send(200, {enabled: true, month: m, total: t});
+        return send(200, {enabled: true, month: m + oM, total: t + oT, ...(p ? {} : {earlier: EARLIER.total})});
       }
     }
     const [m, t] = await redis([['GET', mKey], ['GET', tKey]]);
-    return send(200, {enabled: true, month: +m || 0, total: +t || 0, ...(limited ? {limited: true} : {})});
+    return send(200, {enabled: true, month: (+m || 0) + oM, total: (+t || 0) + oT, ...(p ? {} : {earlier: EARLIER.total}), ...(limited ? {limited: true} : {})});
   } catch (e) {
     return send(502, {enabled: false, error: 'counter unavailable'});
   }
-};
+}

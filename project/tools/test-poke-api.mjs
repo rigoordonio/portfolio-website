@@ -43,6 +43,8 @@ const call = async (handler, method = 'GET', path = '/api/poke', ip = '203.0.113
   return out;
 };
 const month = new Date().toISOString().slice(0, 7);
+const h0 = load({});
+const oM = h0.EARLIER.months[month] || 0, oT = h0.EARLIER.total;   // pokes from before the counter existed
 
 console.log('api/poke');
 await test('without Redis it answers enabled:false, not an error', async () => {
@@ -51,15 +53,15 @@ await test('without Redis it answers enabled:false, not an error', async () => {
   eq((await call(load({}), 'POST')).body, {enabled: false}, 'unconfigured POST');
 });
 const h = load({KV_REST_API_URL: url, KV_REST_API_TOKEN: 'secret'});
-await test('starts at zero and is never cached', async () => {
+await test('starts at the earlier pokes and is never cached', async () => {
   const r = await call(h);
-  eq(r.body, {enabled: true, month: 0, total: 0}, 'fresh counts'); eq(r.headers['Cache-Control'], 'no-store', 'cache header');
+  eq(r.body, {enabled: true, month: oM, total: oT, earlier: oT}, 'fresh counts start at the earlier pokes'); eq(r.headers['Cache-Control'], 'no-store', 'cache header');
 });
 await test('pokes from different visitors add up in one total', async () => {
-  eq((await call(h, 'POST', '/api/poke', '198.51.100.1')).body, {enabled: true, month: 1, total: 1}, 'visitor A');
-  eq((await call(h, 'POST', '/api/poke', '198.51.100.2')).body, {enabled: true, month: 2, total: 2}, 'visitor B');
-  eq((await call(h, 'POST', '/api/poke', '198.51.100.1')).body, {enabled: true, month: 3, total: 3}, 'visitor A again');
-  eq((await call(h)).body, {enabled: true, month: 3, total: 3}, 'anyone reading sees the sum');
+  eq((await call(h, 'POST', '/api/poke', '198.51.100.1')).body, {enabled: true, month: 1 + oM, total: 1 + oT, earlier: oT}, 'visitor A');
+  eq((await call(h, 'POST', '/api/poke', '198.51.100.2')).body, {enabled: true, month: 2 + oM, total: 2 + oT, earlier: oT}, 'visitor B');
+  eq((await call(h, 'POST', '/api/poke', '198.51.100.1')).body, {enabled: true, month: 3 + oM, total: 3 + oT, earlier: oT}, 'visitor A again');
+  eq((await call(h)).body, {enabled: true, month: 3 + oM, total: 3 + oT, earlier: oT}, 'anyone reading sees the sum');
 });
 await test('counts are kept per month under the UTC month key', async () => {
   eq(store.get(`pk:m:${month}`), '3', 'month key'); eq(store.get('pk:total'), '3', 'total key');
@@ -67,8 +69,8 @@ await test('counts are kept per month under the UTC month key', async () => {
 await test('one visitor is limited to 20 pokes a minute and the rest are ignored', async () => {
   for (let i = 0; i < 25; i++) await call(h, 'POST', '/api/poke', '192.0.2.9');
   const r = await call(h, 'POST', '/api/poke', '192.0.2.9');
-  eq([r.body.limited, r.body.month], [true, 3 + 20], 'limited at 20');
-  eq((await call(h, 'POST', '/api/poke', '192.0.2.10')).body.month, 24, 'others are not affected');
+  eq([r.body.limited, r.body.month], [true, 3 + 20 + oM], 'limited at 20');
+  eq((await call(h, 'POST', '/api/poke', '192.0.2.10')).body.month, 24 + oM, 'others are not affected');
 });
 await test('no raw IP address is stored', async () => {
   eq([...store.keys()].some(k => k.includes('192.0.2') || k.includes('198.51')), false, 'keys');
@@ -76,7 +78,7 @@ await test('no raw IP address is stored', async () => {
 await test('?probe uses separate counters', async () => {
   const before = store.get(`pk:m:${month}`);
   const r = await call(h, 'POST', '/api/poke?probe=1', '192.0.2.50');
-  eq([r.body.month, store.get(`pk:m:${month}`)], [1, before], 'probe stays out of the real total');
+  eq([r.body.month, store.get(`pk:m:${month}`)], [1, before], 'probe stays out of the real total and has no earlier pokes');
 });
 await test('Upstash variable names from the Marketplace integration also work', async () => {
   const r = await call(load({UPSTASH_REDIS_REST_URL: url, UPSTASH_REDIS_REST_TOKEN: 'secret'}));
