@@ -574,6 +574,64 @@ form.m-holo{transition:transform .25s var(--m-ease)}
 @keyframes nm-dot{0%,60%,100%{transform:translateY(0);opacity:.35}30%{transform:translateY(-4px);opacity:1}}
 @media (prefers-reduced-motion:reduce){.nm-w,.nm-wipe,.nm-bar,.nm-rank,.nm-chip{transition:none!important;filter:none!important;opacity:1!important;transform:none!important;clip-path:none!important}}
 </style>
+<style id="fx-css">
+:root{--fx-aura:.07;--fx-grain:.045;--fx-aurora:.07;--fx-hud:.5}
+[data-theme="dark"]{--fx-aura:.12;--fx-grain:.07;--fx-aurora:.13;--fx-hud:.75}
+html.fx .m-grid{display:none}
+.fx-terrain{position:absolute;inset:0;width:100%;height:100%;z-index:1;pointer-events:none;-webkit-mask:linear-gradient(transparent 52%,#000 92%);mask:linear-gradient(transparent 52%,#000 92%)}
+.figure-wrap{z-index:0}
+.fx-hud{position:absolute;inset:0;width:100%;height:100%;overflow:visible;pointer-events:none;z-index:-1;opacity:var(--fx-hud)}
+.fx-hud ellipse,.fx-hud path,.fx-hud line{fill:none;stroke:var(--ember);vector-effect:non-scaling-stroke}
+.fx-hud .o{stroke-width:1;stroke-dasharray:2 9;opacity:.55;animation:fx-flow 40s linear infinite}
+.fx-hud .o.b{animation-duration:60s;animation-direction:reverse;opacity:.4}
+.fx-hud .c{stroke:var(--gold);stroke-width:2;stroke-linecap:round;stroke-dasharray:70 930;animation:fx-comet 7s linear infinite;filter:drop-shadow(0 0 6px var(--ember))}
+.fx-hud .c.b{animation-duration:11s;animation-direction:reverse;stroke-dasharray:44 956}
+.fx-hud .br{stroke:var(--ink);stroke-width:1.5;opacity:.55}
+.fx-hud .tk{stroke:var(--ink);opacity:.35}
+.fx-hud text{font-family:var(--mono);font-size:11.5px;letter-spacing:.08em;fill:var(--ink-2)}
+.fx-hud .lv{fill:var(--ember-ink)}
+@keyframes fx-flow{to{stroke-dashoffset:-1000}}
+@keyframes fx-comet{to{stroke-dashoffset:-1000}}
+@media (max-width:860px){.fx-hud text,.fx-hud .tk{display:none}}
+.fx-aura{position:fixed;left:0;top:0;width:560px;height:560px;margin:-280px 0 0 -280px;border-radius:50%;pointer-events:none;z-index:18;opacity:0;transition:opacity .4s;background:radial-gradient(closest-side,rgb(from var(--ember) r g b / var(--fx-aura)),transparent);will-change:transform}
+.fx-aura.on{opacity:1}
+@media (hover:hover) and (pointer:fine){
+.step.m-holo:hover,.role.m-holo:hover{border-color:transparent;background:linear-gradient(var(--card),var(--card)) padding-box,radial-gradient(260px circle at var(--hx,50%) var(--hy,50%),var(--ember),var(--rule) 78%) border-box}
+}
+@supports (color:color-mix(in srgb,red 50%,blue)){
+.fx-lead .fx-w{color:color-mix(in srgb,var(--ink) 50%,var(--paper));transition:color .45s var(--m-ease)}
+.fx-lead .fx-w.lit{color:var(--ink)}
+}
+.fx-rail{position:fixed;left:22px;top:50%;transform:translateY(-50%);z-index:19;display:none;gap:2px;font-family:var(--mono);font-size:11px;letter-spacing:.1em;text-transform:uppercase;color:var(--ink-2);opacity:0;transition:opacity .4s;user-select:none}
+.fx-rail.on{opacity:1}
+@media (min-width:1200px) and (hover:hover) and (pointer:fine){.fx-rail{display:grid}}
+.fx-rail div{display:flex;align-items:center;gap:10px;height:22px;cursor:pointer}
+.fx-rail i{display:block;width:12px;height:1px;background:currentColor;opacity:.5;transition:width .35s var(--m-ease),opacity .2s,background .2s}
+.fx-rail span{opacity:0;transform:translateX(-6px);transition:opacity .25s,transform .35s var(--m-ease);white-space:nowrap}
+.fx-rail div:hover i{width:22px;opacity:1}
+.fx-rail .cur{color:var(--ember-ink)}
+.fx-rail .cur i{width:30px;opacity:1;height:2px;box-shadow:0 0 10px var(--ember)}
+.fx-rail .fx-pct{margin-top:10px;cursor:default;color:var(--ink-2);font-variant-numeric:tabular-nums}
+@media (min-width:1400px){.fx-rail .cur span,.fx-rail:hover span{opacity:1;transform:none}}
+.fx-grain{position:fixed;inset:0;z-index:100;pointer-events:none;opacity:var(--fx-grain);background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='160' height='160'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.9' numOctaves='2' stitchTiles='stitch'/%3E%3CfeColorMatrix values='0 0 0 0 .5 0 0 0 0 .5 0 0 0 0 .5 0 0 0 .9 0'/%3E%3C/filter%3E%3Crect width='160' height='160' filter='url(%23n)'/%3E%3C/svg%3E")}
+.fx-aurora{position:fixed;inset:0;z-index:-1;pointer-events:none;overflow:hidden}
+.fx-aurora i{position:absolute;width:70vmax;height:70vmax;border-radius:50%;will-change:transform}
+.fx-aurora i:nth-child(1){left:-22vmax;top:-18vmax;background:radial-gradient(closest-side,rgb(from var(--ember) r g b / var(--fx-aurora)),transparent);animation:fx-au1 34s ease-in-out infinite alternate}
+.fx-aurora i:nth-child(2){right:-26vmax;bottom:-30vmax;background:radial-gradient(closest-side,rgb(from var(--gold) r g b / calc(var(--fx-aurora)*.7)),transparent);animation:fx-au2 42s ease-in-out infinite alternate}
+@keyframes fx-au1{to{transform:translate(26vmax,18vmax) scale(1.15)}}
+@keyframes fx-au2{to{transform:translate(-30vmax,-22vmax) scale(.9)}}
+.fx-mag{transition:translate .35s var(--m-ease)}
+.fx-mark{margin-top:48px;font-family:var(--sans);font-weight:800;letter-spacing:-.05em;line-height:.86;white-space:nowrap;overflow:hidden;font-size:clamp(40px,12.4vw,150px);text-transform:uppercase;color:transparent;background:linear-gradient(90deg,var(--ember),var(--gold)) no-repeat 0 0/var(--fxp,0%) 100%,var(--rule);-webkit-background-clip:text;background-clip:text;user-select:none}
+.fx-mark + .foot-base{margin-top:20px}
+[data-theme="dark"] .fx-mark{filter:drop-shadow(0 0 26px rgba(52,211,153,.16))}
+@media (prefers-reduced-motion:reduce){
+.fx-hud .o,.fx-hud .c,.fx-aurora i{animation:none}
+.fx-aura{display:none}
+.fx-lead .fx-w{color:inherit;transition:none}
+.fx-mark{--fxp:100%!important}
+}
+@media print{.fx-terrain,.fx-hud,.fx-aura,.fx-rail,.fx-grain,.fx-aurora,.fx-mark{display:none}}
+</style>
 <script type="application/ld+json">{"@context":"https://schema.org","@graph":[{"@type":"WebSite","@id":"https://rigoordonio.vercel.app/#website","url":"https://rigoordonio.vercel.app/","name":"Rigo Ordonio","description":"Rigo Ordonio, Global Business Analyst in Abu Dhabi, delivers data analytics, forecasting, machine learning and AI data engineering for energy, FMCG and retail.","inLanguage":"en","publisher":{"@id":"https://rigoordonio.vercel.app/#person"}},{"@type":"ProfilePage","@id":"https://rigoordonio.vercel.app/#webpage","url":"https://rigoordonio.vercel.app/","name":"Rigo Ordonio · Data Analytics, Forecasting & AI · Abu Dhabi","isPartOf":{"@id":"https://rigoordonio.vercel.app/#website"},"about":{"@id":"https://rigoordonio.vercel.app/#person"},"mainEntity":{"@id":"https://rigoordonio.vercel.app/#person"},"inLanguage":"en"},{"@type":"Person","@id":"https://rigoordonio.vercel.app/#person","name":"Rigo Karl Ordonio","alternateName":"Rigo Ordonio","jobTitle":"Global Business Analyst","worksFor":{"@type":"Organization","name":"EnerMech"},"address":{"@type":"PostalAddress","addressLocality":"Abu Dhabi","addressCountry":"AE"},"email":"mailto:rigoordonio@gmail.com","url":"https://rigoordonio.vercel.app/","image":"https://rigoordonio.vercel.app/og-image.png","sameAs":["https://www.linkedin.com/in/rigo-karl-o-22a229134","https://github.com/rigoordonio"],"knowsAbout":["Data analytics","Forecasting","Machine learning","AI data engineering","Data engineering","S&OP","FP&A","Power BI","Databricks SQL","Salesforce","Azure"]},{"@type":"ProfessionalService","@id":"https://rigoordonio.vercel.app/#service","name":"Rigo Ordonio: Data Analytics, Forecasting & AI","url":"https://rigoordonio.vercel.app/","description":"Rigo Ordonio, Global Business Analyst in Abu Dhabi, delivers data analytics, forecasting, machine learning and AI data engineering for energy, FMCG and retail.","image":"https://rigoordonio.vercel.app/og-image.png","email":"rigoordonio@gmail.com","founder":{"@id":"https://rigoordonio.vercel.app/#person"},"address":{"@type":"PostalAddress","addressLocality":"Abu Dhabi","addressCountry":"AE"},"areaServed":[{"@type":"City","name":"Abu Dhabi"},{"@type":"Country","name":"United Arab Emirates"}],"knowsAbout":["Data analytics","Forecasting","Machine learning","AI data engineering","Data engineering","S&OP","FP&A","Power BI","Databricks SQL","Salesforce","Azure"],"hasOfferCatalog":{"@type":"OfferCatalog","name":"Services","itemListElement":[{"@type":"Offer","itemOffered":{"@type":"Service","name":"Data Analytics","url":"https://rigoordonio.vercel.app/#data-analytics","provider":{"@id":"https://rigoordonio.vercel.app/#person"}}},{"@type":"Offer","itemOffered":{"@type":"Service","name":"Forecasting","url":"https://rigoordonio.vercel.app/#forecasting","provider":{"@id":"https://rigoordonio.vercel.app/#person"}}},{"@type":"Offer","itemOffered":{"@type":"Service","name":"Machine Learning","url":"https://rigoordonio.vercel.app/#machine-learning","provider":{"@id":"https://rigoordonio.vercel.app/#person"}}},{"@type":"Offer","itemOffered":{"@type":"Service","name":"Data Engineering & Pipelines","url":"https://rigoordonio.vercel.app/#data-engineering","provider":{"@id":"https://rigoordonio.vercel.app/#person"}}},{"@type":"Offer","itemOffered":{"@type":"Service","name":"AI / LLM Solutions","url":"https://rigoordonio.vercel.app/#ai-llm","provider":{"@id":"https://rigoordonio.vercel.app/#person"}}}]}},{"@type":"CreativeWork","@id":"https://rigoordonio.vercel.app/#work-kpi-transformation","name":"KPI Transformation","description":"One KPI set and executive view across 4 regions: the Americas, APAC, Europe and AMEC.","url":"https://rigoordonio.vercel.app/#data-analytics","about":"Data Analytics","keywords":"Power BI, Databricks SQL, Salesforce","creativeWorkStatus":"Published","creator":{"@id":"https://rigoordonio.vercel.app/#person"},"sourceOrganization":{"@type":"Organization","name":"EnerMech"}},{"@type":"CreativeWork","@id":"https://rigoordonio.vercel.app/#work-large-account-management-dashboard","name":"Large Account Management dashboard","description":"Power BI dashboard for the Large Account Management Programme: the top 20 accounts, with booking plan and revenue forecast over a 3-year outlook.","url":"https://rigoordonio.vercel.app/#data-analytics","about":"Data Analytics","keywords":"Power BI","creativeWorkStatus":"Published","creator":{"@id":"https://rigoordonio.vercel.app/#person"},"sourceOrganization":{"@type":"Organization","name":"EnerMech"}},{"@type":"CreativeWork","@id":"https://rigoordonio.vercel.app/#work-unified-forecast-model","name":"Unified Forecast Model","description":"Pipeline and revenue forecasts in one model across 4 regions.","url":"https://rigoordonio.vercel.app/#forecasting","about":"Forecasting","keywords":"Databricks SQL, Power BI, Excel","creativeWorkStatus":"Published","creator":{"@id":"https://rigoordonio.vercel.app/#person"},"sourceOrganization":{"@type":"Organization","name":"EnerMech"}},{"@type":"CreativeWork","@id":"https://rigoordonio.vercel.app/#work-sandop-tools-and-global-demand-workbook","name":"S&OP Tools & Global Demand Workbook","description":"Demand and supply plans built from Salesforce pursuit data for S&OP decisions.","url":"https://rigoordonio.vercel.app/#forecasting","about":"Forecasting","keywords":"Salesforce, Excel, ERP","creativeWorkStatus":"Published","creator":{"@id":"https://rigoordonio.vercel.app/#person"},"sourceOrganization":{"@type":"Organization","name":"Emerson"}},{"@type":"CreativeWork","@id":"https://rigoordonio.vercel.app/#work-sku-demand-forecasting","name":"SKU demand forecasting","description":"Forecasts for 8,000+ SKUs across a retail and e-commerce range.","url":"https://rigoordonio.vercel.app/#forecasting","about":"Forecasting","keywords":"Excel, ERP","creativeWorkStatus":"Published","creator":{"@id":"https://rigoordonio.vercel.app/#person"},"sourceOrganization":{"@type":"Organization","name":"Beauty Oasis"}},{"@type":"CreativeWork","@id":"https://rigoordonio.vercel.app/#work-forecast-analytics","name":"Forecast Analytics","description":"Forecast dashboard on synthetic prospects and jobs data: a Python pipeline loads and checks PostgreSQL, and a React app shows pipeline, revenue against targets, and an AI chat.","url":"https://rigoordonio.vercel.app/https://business-forecasting-project.onrender.com/","about":"Forecasting","keywords":"React, PostgreSQL, Python, Gemini","creativeWorkStatus":"Published","creator":{"@id":"https://rigoordonio.vercel.app/#person"},"sourceOrganization":{"@type":"Organization","name":"Personal"}},{"@type":"CreativeWork","@id":"https://rigoordonio.vercel.app/#work-sales-to-revenue-forecast-with-ml","name":"Sales-to-Revenue Forecast with ML","description":"Blends pipeline stage probability with history, benchmarked against a weighted-pipeline baseline.","url":"https://rigoordonio.vercel.app/#ai-portfolio","about":"Machine Learning","keywords":"Python, Databricks","creativeWorkStatus":"Incomplete","creator":{"@id":"https://rigoordonio.vercel.app/#person"}},{"@type":"CreativeWork","@id":"https://rigoordonio.vercel.app/#work-win-probability-scoring","name":"Win-Probability Scoring","description":"Scores each opportunity by its likelihood to win from stage, age, value and region.","url":"https://rigoordonio.vercel.app/#ai-portfolio","about":"Machine Learning","keywords":"Gradient boosting, Power BI","creativeWorkStatus":"Incomplete","creator":{"@id":"https://rigoordonio.vercel.app/#person"}},{"@type":"CreativeWork","@id":"https://rigoordonio.vercel.app/#work-bd-reporting-automation","name":"BD Reporting Automation","description":"Automated BD pipeline reporting, cutting manual effort.","url":"https://rigoordonio.vercel.app/#data-engineering","about":"Data Engineering & Pipelines","keywords":"Databricks SQL, Salesforce, Power BI","creativeWorkStatus":"Published","creator":{"@id":"https://rigoordonio.vercel.app/#person"},"sourceOrganization":{"@type":"Organization","name":"EnerMech"}},{"@type":"CreativeWork","@id":"https://rigoordonio.vercel.app/#work-supply-chain-reporting-automation","name":"Supply Chain Reporting Automation","description":"VBA and Azure automation for more accurate planning reports.","url":"https://rigoordonio.vercel.app/#data-engineering","about":"Data Engineering & Pipelines","keywords":"Azure, Excel VBA","creativeWorkStatus":"Published","creator":{"@id":"https://rigoordonio.vercel.app/#person"},"sourceOrganization":{"@type":"Organization","name":"Henkel"}},{"@type":"CreativeWork","@id":"https://rigoordonio.vercel.app/#work-erp-data-migration","name":"ERP data migration","description":"Led the ERP data migration and a cleaner inventory process.","url":"https://rigoordonio.vercel.app/#data-engineering","about":"Data Engineering & Pipelines","keywords":"ERP, Excel","creativeWorkStatus":"Published","creator":{"@id":"https://rigoordonio.vercel.app/#person"},"sourceOrganization":{"@type":"Organization","name":"Beauty Oasis"}},{"@type":"CreativeWork","@id":"https://rigoordonio.vercel.app/#work-eu-scip-compliance","name":"EU SCIP Compliance","description":"Product data compliance for the EU SCIP database.","url":"https://rigoordonio.vercel.app/#data-engineering","about":"Data Engineering & Pipelines","keywords":"ERP, Excel","creativeWorkStatus":"Published","creator":{"@id":"https://rigoordonio.vercel.app/#person"},"sourceOrganization":{"@type":"Organization","name":"Emerson"}},{"@type":"CreativeWork","@id":"https://rigoordonio.vercel.app/#work-ai-data-assistant-in-forecast-analytics","name":"AI data assistant in Forecast Analytics","description":"Ask-the-data chat built into my forecasting dashboard: answers plain-language questions from the live data, draws charts, runs Monte Carlo and anomaly checks, and traces every figure it quotes back to the data.","url":"https://rigoordonio.vercel.app/https://business-forecasting-project.onrender.com/","about":"AI / LLM Solutions","keywords":"Gemini, Tool calling, TypeScript","creativeWorkStatus":"Published","creator":{"@id":"https://rigoordonio.vercel.app/#person"},"sourceOrganization":{"@type":"Organization","name":"Personal"}},{"@type":"CreativeWork","@id":"https://rigoordonio.vercel.app/#work-ai-assistant-on-data-lake-and-teams","name":"AI assistant on Data Lake & Teams","description":"Retrieves and analyses company data from inside Microsoft Teams.","url":"https://rigoordonio.vercel.app/#ai-llm","about":"AI / LLM Solutions","keywords":"RAG, Data Lake, Microsoft Teams","creativeWorkStatus":"Incomplete","creator":{"@id":"https://rigoordonio.vercel.app/#person"},"sourceOrganization":{"@type":"Organization","name":"EnerMech"}},{"@type":"CreativeWork","@id":"https://rigoordonio.vercel.app/#work-ask-the-pipeline-rag-assistant","name":"Ask-the-Pipeline RAG Assistant","description":"Plain-language questions over pipeline data and SOPs, with sources cited.","url":"https://rigoordonio.vercel.app/#ai-portfolio","about":"AI / LLM Solutions","keywords":"RAG, SQL, Teams","creativeWorkStatus":"Incomplete","creator":{"@id":"https://rigoordonio.vercel.app/#person"}},{"@type":"CreativeWork","@id":"https://rigoordonio.vercel.app/#work-budget-vs-actual-variance-explainer","name":"Budget vs Actual Variance Explainer","description":"AI-drafted commentary for each monthly budget-vs-actual variance.","url":"https://rigoordonio.vercel.app/#ai-portfolio","about":"AI / LLM Solutions","keywords":"Power BI, LLM","creativeWorkStatus":"Incomplete","creator":{"@id":"https://rigoordonio.vercel.app/#person"}},{"@type":"CreativeWork","@id":"https://rigoordonio.vercel.app/#work-ai-opportunity-intelligence-agent","name":"AI Opportunity Intelligence Agent","description":"Daily briefing on five energy accounts: collects public news, scores each opportunity with a local Qwen model and emails a summary.","url":"https://rigoordonio.vercel.app/https://github.com/rigoordonio/ai-opportunity-intelligence-agent","about":"AI / LLM Solutions","keywords":"Python, Ollama, Qwen3","creativeWorkStatus":"Published","creator":{"@id":"https://rigoordonio.vercel.app/#person"},"sourceOrganization":{"@type":"Organization","name":"Personal"}},{"@type":"CreativeWork","@id":"https://rigoordonio.vercel.app/#work-linkedin-job-match","name":"LinkedIn Job Match","description":"Claude Code skill that ranks fresh remote LinkedIn jobs against a CV and emails the best matches each morning.","url":"https://rigoordonio.vercel.app/https://github.com/rigoordonio/linkedin-job-match","about":"AI / LLM Solutions","keywords":"Claude Code, Python, Gmail","creativeWorkStatus":"Published","creator":{"@id":"https://rigoordonio.vercel.app/#person"},"sourceOrganization":{"@type":"Organization","name":"Personal"}},{"@type":"CreativeWork","@id":"https://rigoordonio.vercel.app/#work-weekly-oil-and-gas-ai-post","name":"Weekly Oil & Gas AI Post","description":"Claude Code skill that drafts a weekly LinkedIn post on oil and gas AI news and publishes only after email approval.","url":"https://rigoordonio.vercel.app/https://github.com/rigoordonio/weekly-oilgas-ai-post","about":"AI / LLM Solutions","keywords":"Claude Code, Composio, LinkedIn","creativeWorkStatus":"Published","creator":{"@id":"https://rigoordonio.vercel.app/#person"},"sourceOrganization":{"@type":"Organization","name":"Personal"}}]}</script>
 </head>
 <body>
@@ -1509,5 +1567,129 @@ btn.addEventListener('click',()=>{if(busy)return;const next=root.dataset.theme==
   vt.finished.then(settle).finally(()=>{busy=false})});
 })();
 </script>
+<!-- fx:start -->
+
+<script id="fx-js">
+(()=>{
+const root=document.documentElement,RM=matchMedia('(prefers-reduced-motion:reduce)').matches,FINE=matchMedia('(hover:hover) and (pointer:fine)').matches;
+const $=(s,c=document)=>c.querySelector(s),clamp=(v,a=0,b=1)=>Math.min(b,Math.max(a,v));
+const mk=(tag,cls,html)=>{const e=document.createElement(tag);if(cls)e.className=cls;if(html)e.innerHTML=html;e.setAttribute('aria-hidden','true');return e};
+root.classList.add('fx');
+/* accent colours as r,g,b; re-read when the theme flips */
+const rgb=v=>{const c=document.createElement('canvas').getContext('2d');c.fillStyle=v;const h=c.fillStyle;return /^#/.test(h)?[1,3,5].map(i=>parseInt(h.slice(i,i+2),16)).join(','):'255,90,31'};
+let C={};const readC=()=>{const s=getComputedStyle(root);C={e:rgb(s.getPropertyValue('--ember').trim()),g:rgb(s.getPropertyValue('--gold').trim()),dark:root.dataset.theme==='dark'}};readC();
+const themeSubs=[];new MutationObserver(()=>{readC();themeSubs.forEach(f=>f())}).observe(root,{attributes:true,attributeFilter:['data-theme']});
+let mx=.5,my=.5,px=-999,py=-999;
+addEventListener('pointermove',e=>{if(e.pointerType==='touch')return;px=e.clientX;py=e.clientY;mx=px/innerWidth;my=py/innerHeight},{passive:true});
+
+/* ---- 1 terrain: ridgelines rolling toward the viewer, rising under the cursor ---- */
+const hero=$('.hero');
+if(hero){try{
+  const cv=mk('canvas','fx-terrain');hero.prepend(cv);const cx=cv.getContext('2d');
+  let W=0,H=0,vis=true,raf=0,cxp=.5;
+  const size=()=>{const d=Math.min(devicePixelRatio||1,1.5);W=hero.clientWidth;H=hero.clientHeight;cv.width=W*d;cv.height=H*d;cx.setTransform(d,0,0,d,0,0)};
+  const R=34,DZ=.2,SPEED=.55;let paper='#0a0c11',hx=-999,hy=-999;
+  const readP=()=>{paper=getComputedStyle(root).getPropertyValue('--paper').trim()||paper};readP();themeSubs.push(readP);
+  hero.addEventListener('pointermove',e=>{const r=hero.getBoundingClientRect();hx=e.clientX-r.left;hy=e.clientY-r.top},{passive:true});
+  hero.addEventListener('pointerleave',()=>{hx=hy=-999});
+  /* ridgelines drawn far to near; each one hides what is behind it, so it reads as a surface */
+  const draw=t=>{
+    cx.clearRect(0,0,W,H);cxp+=(mx-cxp)*.04;
+    const y0=H*.57,f=Math.max(26,W*.028),cX=W/2-(cxp-.5)*70,adv=t*SPEED,base=Math.floor(adv),fr=adv-base,amp=H*.07,k=C.dark?.5:.3;
+    cx.lineWidth=1;cx.lineJoin='round';
+    for(let r=R;r>=0;r--){
+      const z=1+(r-fr)*DZ;if(z<=.97)continue;const n=base+r;
+      const yb=y0+(H*1.04-y0)/z,a=clamp((R-r+fr)/R*1.6)*clamp((z-.97)*6)*k;
+      const half=Math.min(140,Math.ceil((W/2+90)*z/f));
+      cx.beginPath();
+      for(let i=-half;i<=half;i++){
+        const h=Math.sin(i*.19+n*.31)*Math.cos(n*.23-i*.07)+.5*Math.sin(i*.47-t*.5+n*.6)+.25*Math.sin(i*1.3+n);
+        const x=cX+i*f/z;let y=yb-(h+.4)*amp/z;
+        const dx=x-hx,dy=y-hy;y-=30*Math.exp(-(dx*dx+dy*dy)/26000);
+        i===-half?cx.moveTo(x,y):cx.lineTo(x,y);
+      }
+      cx.globalAlpha=1;cx.save();cx.lineTo(W+100,H+10);cx.lineTo(-100,H+10);cx.closePath();cx.fillStyle=paper;cx.fill();cx.restore();
+      cx.globalAlpha=a;cx.strokeStyle=n%6===0?`rgb(${C.g})`:`rgb(${C.e})`;cx.stroke();
+    }
+    cx.globalAlpha=1;
+  };
+  const loop=ms=>{draw(ms/1000);raf=vis&&!document.hidden&&!RM?requestAnimationFrame(loop):0};
+  const kick=()=>{if(!raf&&vis&&!document.hidden&&!RM)raf=requestAnimationFrame(loop)};
+  size();draw(3);kick();
+  new ResizeObserver(()=>{size();if(!raf)draw(3)}).observe(hero);
+  new IntersectionObserver(([e])=>{vis=e.isIntersecting;kick()}).observe(hero);
+  document.addEventListener('visibilitychange',kick);themeSubs.push(()=>{if(!raf)draw(3)});
+}catch(e){}}
+
+/* ---- 2 HUD: orbit rings, corner brackets and a live Abu Dhabi clock around the figure ---- */
+const fig=$('.figure-wrap');
+if(fig){
+  let ticks='';for(let i=0;i<13;i++)ticks+=`<line class="tk" x1="${i%4?386:380}" y1="${150+i*14}" x2="392" y2="${150+i*14}"/>`;
+  const hud=mk('div');hud.style.display='contents';
+  hud.innerHTML=`<svg class="fx-hud" viewBox="0 0 400 480" focusable="false">
+  <g transform="rotate(-16 200 168)"><ellipse class="o" cx="200" cy="168" rx="186" ry="60" pathLength="1000"/><ellipse class="c" cx="200" cy="168" rx="186" ry="60" pathLength="1000"/></g>
+  <g transform="rotate(22 200 168)"><ellipse class="o b" cx="200" cy="168" rx="170" ry="104" pathLength="1000"/><ellipse class="c b" cx="200" cy="168" rx="170" ry="104" pathLength="1000"/></g>
+  <path class="br" d="M8 34V8h26M366 8h26v26M392 446v26h-26M34 472H8v-26"/>${ticks}
+  <text x="20" y="30">24.4539° N</text><text x="20" y="46">54.3773° E</text>
+  <text x="380" y="30" text-anchor="end" class="lv" id="fx-clock">GST --:--:--</text><text x="380" y="46" text-anchor="end">ABU DHABI</text></svg>`;
+  fig.prepend(hud);
+  const ck=$('#fx-clock');const tick=()=>{try{ck.textContent='GST '+new Date().toLocaleTimeString('en-GB',{timeZone:'Asia/Dubai',hour12:false})}catch(e){}};tick();setInterval(tick,1000);
+}
+
+/* ---- 6 grain + aurora ---- */
+document.body.append(mk('div','fx-aurora','<i></i><i></i>'),mk('div','fx-grain'));
+
+/* ---- 3 cursor aura ---- */
+if(FINE&&!RM){
+  const au=mk('div','fx-aura');document.body.append(au);let ax=0,ay=0,on=false,run=0;
+  const step=()=>{ax+=(px-ax)*.12;ay+=(py-ay)*.12;au.style.transform=`translate3d(${ax.toFixed(1)}px,${ay.toFixed(1)}px,0)`;run=Math.abs(px-ax)+Math.abs(py-ay)>.5?requestAnimationFrame(step):0};
+  addEventListener('pointermove',e=>{if(e.pointerType==='touch')return;if(!on){on=true;ax=px;ay=py;au.classList.add('on')}if(!run)run=requestAnimationFrame(step)},{passive:true});
+  document.addEventListener('pointerleave',()=>{on=false;au.classList.remove('on')});
+}
+
+/* ---- 4 About statement lights up word by word ---- */
+const lead=$('.lead');let words=[];
+if(lead&&!RM){
+  const walk=n=>{[...n.childNodes].forEach(c=>{if(c.nodeType===3){const fr=document.createDocumentFragment();c.textContent.split(/(\s+)/).forEach(p=>{if(!p)return;if(/^\s+$/.test(p))fr.append(p);else{const s=document.createElement('span');s.className='fx-w';s.textContent=p;fr.append(s);words.push(s)}});c.replaceWith(fr)}else if(c.nodeType===1)walk(c)})};
+  walk(lead);lead.classList.add('fx-lead');
+}
+
+/* ---- 5 section rail ---- */
+const secs=[['.hero','Intro'],['#about','About'],['#experience','Experience'],['#services','Services'],['#projects','Projects'],['#skills','Skills'],['#github','GitHub'],['#contact','Contact']].map(([s,n])=>[$(s),n]).filter(x=>x[0]);
+const rail=mk('div','fx-rail');let pct=null;
+secs.forEach(([el,n],i)=>{const d=document.createElement('div');d.innerHTML=`<i></i><span>${String(i).padStart(2,'0')} ${n}</span>`;d.addEventListener('click',()=>{i?el.scrollIntoView({behavior:RM?'auto':'smooth'}):scrollTo({top:0,behavior:RM?'auto':'smooth'})});rail.append(d)});
+pct=document.createElement('div');pct.className='fx-pct';pct.textContent='000%';rail.append(pct);document.body.append(rail);
+
+/* ---- 9 footer wordmark ---- */
+const base=$('footer .foot-base');let mark=null;
+if(base){mark=mk('div','fx-mark');mark.innerHTML='<span style="display:inline-block">Rigo Ordonio</span>';base.before(mark);
+  const fit=()=>{mark.style.fontSize='100px';const w=mark.firstChild.offsetWidth,W=mark.clientWidth;if(w)mark.style.fontSize=Math.floor(100*W/w*.975)+'px'};
+  fit();addEventListener('resize',fit);try{document.fonts.load('800 100px "Schibsted Grotesk"').then(fit);new ResizeObserver(fit).observe(mark.firstChild)}catch(e){}
+  if(RM)mark.style.setProperty('--fxp','100%')}
+
+/* ---- 8 ticker speeds up with scroll (and settles back) ---- */
+const track=$('.ticker .track');let rate=1,rateRaf=0,lastY=scrollY,lastT=performance.now();
+const settle=()=>{rate+=(1-rate)*.06;const a=track&&track.getAnimations&&track.getAnimations()[0];if(a)a.playbackRate=rate;rateRaf=rate-1>.02?requestAnimationFrame(settle):0;if(!rateRaf&&a)a.playbackRate=rate=1};
+
+/* one scroll handler for the lead, rail, wordmark and ticker */
+let sraf=0;
+const onScroll=()=>{sraf=0;const vh=innerHeight,y=scrollY;
+  if(words.length){const r=lead.getBoundingClientRect();if(r.bottom>-200&&r.top<vh+200){const p=clamp((vh*.88-r.top)/(r.height+vh*.42)),k=Math.round(p*(words.length+2));words.forEach((w,i)=>w.classList.toggle('lit',i<k))}}
+  let cur=0;secs.forEach(([el],i)=>{if(el.getBoundingClientRect().top<vh*.45)cur=i});
+  [...rail.children].forEach((d,i)=>d.classList.toggle('cur',i===cur));
+  const max=document.documentElement.scrollHeight-vh;pct.textContent=String(Math.round(clamp(y/Math.max(1,max))*100)).padStart(3,'0')+'%';
+  rail.classList.toggle('on',y>vh*.35);
+  if(mark&&!RM){const r=mark.getBoundingClientRect();if(r.top<vh+50)mark.style.setProperty('--fxp',(clamp((vh-r.top)/(r.height*1.6))*100).toFixed(1)+'%')}
+  if(track&&!RM){const now=performance.now(),v=Math.abs(y-lastY)/Math.max(8,now-lastT);lastY=y;lastT=now;rate=Math.min(7,Math.max(rate,1+v*3.2));if(!rateRaf)rateRaf=requestAnimationFrame(settle)}
+};
+addEventListener('scroll',()=>{if(!sraf)sraf=requestAnimationFrame(onScroll)},{passive:true});addEventListener('resize',onScroll);onScroll();
+
+/* ---- 7 magnetic buttons ---- */
+if(FINE&&!RM){document.querySelectorAll('.btn,.theme-btn,.to-top,.round').forEach(b=>{b.classList.add('fx-mag');
+  b.addEventListener('pointermove',e=>{const r=b.getBoundingClientRect();b.style.translate=`${((e.clientX-r.left-r.width/2)*.22).toFixed(1)}px ${((e.clientY-r.top-r.height/2)*.3).toFixed(1)}px`});
+  b.addEventListener('pointerleave',()=>{b.style.translate=''})})}
+})();
+</script>
+<!-- fx:end -->
 </body>
 </html>

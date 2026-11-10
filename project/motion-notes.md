@@ -37,3 +37,21 @@ Both pages, in the services script block and the `.svc-*` / `.spell` CSS. No ani
 
 Spells: bars grow on the spring, 60ms apart, tallest flashes the accent (450ms `--acc-ease`); forecast history draws (450ms `--acc-ease`), the dashed forecast is uncovered (350ms) and its band fades in (300ms); a packet travels the pipe (600ms linear) and each node pulses (300ms `--acc-ease`); points drift into clusters (550ms `--m-ease`) and links draw (280ms `--acc-ease`); the question types at 14ms per letter, then answer words stream in 38ms apart (150ms fade each).
 
+
+## Futuristic studio layer (added 2026-11-10, merged page)
+
+Source `snippets/futuristic-layer.html`; `node tools/apply-fx.mjs` puts it at the end of `rigo-portfolio-merged.html` (between `fx:start` and `fx:end`; delete that block to remove it). Copy, fonts and colours are unchanged. Two things are new on the page: the HUD around the hero figure and the big name in the footer.
+
+| # | Effect | Where | Notes |
+|---|---|---|---|
+| 1 | Data terrain | canvas behind the lower hero | Ridgelines roll toward the viewer and rise under the cursor; replaces the flat grid; pauses off screen |
+| 2 | HUD | around the visor figure | Two orbit rings with comets, corner brackets, Abu Dhabi coordinates and a live GST clock (text hidden under 860px) |
+| 3 | Cursor light | whole page, desktop only | Soft accent glow follows the cursor; step and role cards light their edge under it |
+| 4 | Scroll-lit statement | About lead paragraph | Words go from dim (still 3:1) to full as you scroll |
+| 5 | Section rail | left edge, 1200px and wider | Ticks per section, current one named, scroll percent; click to jump |
+| 6 | Grain and aurora | fixed layers | Static film grain; two slow accent glows behind the page |
+| 7 | Magnetic buttons | buttons, theme toggle, deck arrows | Desktop only |
+| 8 | Ticker | industries strip | Speeds up with scroll, settles back |
+| 9 | Footer wordmark | above the copyright line | Name fills with the accent gradient as it scrolls in |
+
+Reduced motion: terrain is a still frame, no cursor light, rings stop, statement and wordmark show fully lit.
